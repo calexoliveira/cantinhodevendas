@@ -1,6 +1,10 @@
 import { Routes, Route} from "react-router-dom";
-import { Login } from "../pages/Login";
 import { Home } from "../pages/Home";
+import { Login } from "../pages/Login";
+import { Produtos } from "../pages/Produtos";
+
+
+
 
 
 export function AppRoutes() {
@@ -8,6 +12,7 @@ export function AppRoutes() {
         <Routes>
         <Route path="/login" element={<Login />}/>
         <Route path="/" element={<Home />}/>
+        <Route path="/produtos" element={<Produtos />}/>
       </Routes>
     );
 }
