@@ -4,9 +4,6 @@ import { Login } from "../pages/Login";
 import { Produtos } from "../pages/Produtos";
 
 
-
-
-
 export function AppRoutes() {
     return(
         <Routes>
