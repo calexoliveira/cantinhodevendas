@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root {
     --branco-principal: #FFFFFF;
     --cinza-secundario: #C0C0C0;
@@ -28,12 +30,34 @@ body {
     display: grid;
     grid-template-columns: 50% 50%;
 }
-.container__nav__topo {
+
+.container__navbar {
+    height: 134px;
+    display: grid;
+}
+
+.container__navbar__topo {
     height: 34px;
     background-color: var(--cor-de-fundo-preto);
     color: var(--branco-principal);
+    font-family: 'Urbanist';
+    font-weight:100;
+    font-size: 8px;
     display: grid;
     grid-template-columns: 50% 50%;
+}
+
+.container__navbar__menu {
+    
+    background-color: var(--cor-de-fundo-branco);
+    color: var(--cor-de-fundo-preto);
+    font-family: 'Urbanist';
+    font-weight:100;
+    font-size: 8px;
+    display: grid;
+    grid-row:auto;
+    
+
 }
 
 .container__botao{
