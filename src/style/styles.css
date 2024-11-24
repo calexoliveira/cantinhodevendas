@@ -21,19 +21,19 @@ body {
 
 /* NavBar */
 
-.nav>* {
-    background: var(--cor-de-fundo-branco);
+.header>* {
+    background-color:burlywood;
     display: flex;
     min-height: 134px;
     align-items: center;
     justify-content: center;
     padding: 0px;
 }
-.nav {
+.header {
     display: grid;
     grid-template-rows: 34px 100px;
     grid-template-columns: 1fr 3fr 1fr;
-
+    border: solid;
 }
 
 .topo {
@@ -55,21 +55,22 @@ body {
     text-decoration: none;
 }
 
-.nav>menu {
+.header>menu {
     display: grid;
-    background-color: var(--cor-de-fundo-branco);
     color: var(--cor-de-fundo-preto);
+    background-color:burlywood;
     grid-auto-columns: auto;
     font-family: 'Urbanist';
     font-weight:100;
     font-size: 8px;
     margin-left: 10px;
+    
 }
 
-  article { 
-    min-width: 50px;       
+nav { 
+    min-width: 70px;       
     padding: 10px;
-  }
+}
 
 
 .principal {
