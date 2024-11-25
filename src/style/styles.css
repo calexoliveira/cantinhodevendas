@@ -48,10 +48,13 @@ body {
     text-align: center;
 }
 
-.logo a {
-    grid-column: 1;
+.logo>*{
+    grid-column: 1/2;
     color:brown;
+    font-size: larger;
     text-decoration: none;
+    background-color: #167BF7;
+    height: 96px;
 }
 
 .header>menu {
@@ -67,7 +70,8 @@ body {
 
 nav { 
     min-width: 70px;       
-    padding: 10px;
+    padding: 5px;
+    border: solid;
 }
 
 /* SECTION */
