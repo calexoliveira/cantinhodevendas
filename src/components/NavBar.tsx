@@ -2,7 +2,7 @@ export function NavBar(){
     return(
       <header className="header">
         <div className="topo">Sign up and get 20% off to your first order. Sign Up Now</div>
-        <p className="logo"><a href="">Cantinho de vendas</a></p>
+        <span className="logo"><a href="">Cantinho de vendas</a></span>
         <div className="menu">
           <nav><a href="">Shop</a></nav>
           <nav><a href="">On Sale</a></nav>
