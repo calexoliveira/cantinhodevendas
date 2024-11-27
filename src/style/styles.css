@@ -33,7 +33,7 @@ body {
     display: grid;
     grid-template-rows: 38px 96px;
     grid-template-columns: 1fr 3fr 1fr;
-    /*border: solid;*/
+    align-items: center;
 }
 
 .topo {
@@ -53,8 +53,6 @@ body {
     color:brown;
     font-size: larger;
     text-decoration: none;
-    background-color: #167BF7;
-    height: 96px;
 }
 
 .header>menu {
@@ -64,14 +62,13 @@ body {
     font-weight:100;
     font-size: 8px;
     margin-left: 10px;
-    border: solid;
     
 }
 
 nav { 
     min-width: 70px;       
     padding: 5px;
-    border: solid;
+
 }
 
 /* SECTION */
