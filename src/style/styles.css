@@ -136,6 +136,7 @@ body {
 
 .container__botao{
     background-color: var(--cor-de-fundo-preto);
+    border-top-color: #00030C;
     border-radius: 30px;
     width: 210px;
     height: 52px;
