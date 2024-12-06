@@ -91,8 +91,6 @@ body {
     align-items:top;
     justify-content:left;
     padding: 100px;
-
-
 }
 
 .grid-section {
@@ -130,6 +128,7 @@ body {
 }
 
 .grid-section>div {
+    display: grid;
     grid-row: 2 / 3;
     background-color: var(--cor-de-fundo-preto);
 
@@ -137,8 +136,7 @@ body {
 
 .container__botao{
     background-color: var(--cor-de-fundo-preto);
-    border-radius: 5px;
-    border-radius: 100%;
+    border-radius: 30px;
     width: 210px;
     height: 52px;
     padding: 1em;
@@ -162,4 +160,8 @@ body {
     grid-template-rows: 200px 50px;
     background-color: #167BF7;
     gap: 2rm;
+}
+
+footer{
+    grid-row: 1 / 2;
 }
