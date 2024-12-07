@@ -90,12 +90,12 @@ body {
     display: flex;
     align-items:top;
     justify-content:left;
-    padding: 100px;
+    
 }
 
 .grid-section {
     display: grid;
-    grid-template-rows: 663px 10px;
+    grid-template-rows: 663px 100px;
     background-repeat: no-repeat;
     background-color: #F2F0F1;
     background-image: url("../image/background.png");
@@ -114,12 +114,12 @@ body {
 
 }
 
-
 .texto{
     font-family: 'FSP DEMO - Integral CF Bold', 'Archivo Black';
+    padding: 100px;
     font-weight:bold;
     font-size: 60px;
-    margin-right: 50%;
+    margin-right: 40%;
 }
 .nota {
     font-family: 'Satoshi';
@@ -154,6 +154,9 @@ body {
 
 .grid-footer>*{
     display: flex;
+    align-items:top;
+    justify-content:left;
+
 }
 
 .grid-footer {
