@@ -95,7 +95,7 @@ body {
 
 .grid-section {
     display: grid;
-    grid-template-rows: 663px 100px;
+    grid-template-rows: 663px 122px;
     background-repeat: no-repeat;
     background-color: #F2F0F1;
     background-image: url("../image/background.png");
@@ -110,7 +110,6 @@ body {
     grid-column: 1 / -1;
     display: grid;
     grid-template-rows: repeat(3, auto);
-    grid-column: 1fr;
 
 }
 
@@ -130,7 +129,12 @@ body {
 .grid-section>div {
     display: grid;
     grid-row: 2 / 3;
-    background-color: var(--cor-de-fundo-preto);
+    background-color: var(--cor-de-fundo-branco);
+    align-items: center ;
+
+}
+.imagem {
+    text-align: center;
 
 }
 
@@ -162,7 +166,6 @@ body {
 .grid-footer {
     display: grid;
     grid-template-rows: 200px 50px;
-    background-color: #167BF7;
     gap: 2rm;
 }
 
