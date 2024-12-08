@@ -125,18 +125,23 @@ body {
     font-weight:100;
     font-size: 10px;
 }
+.grid-section>p>* {
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-.grid-section>div {
+}
+.grid-section>p {
     display: grid;
     grid-row: 2 / 3;
     background-color: var(--cor-de-fundo-branco);
-    align-items: center ;
+    place-items: center;
 
 }
-.imagem {
-    text-align: center;
-
-}
+/*.imagem {
+    display: block;
+}*/
 
 .container__botao{
     background-color: var(--cor-de-fundo-preto);

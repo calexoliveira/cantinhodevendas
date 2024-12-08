@@ -9,7 +9,7 @@ export function Section() {
                 </p>
                 <p><button className="container__botao">Shop Now</button></p>
             </nav>
-            <div><p className="imagem"><img src="../src/image/parceiros.png" alt="" /></p></div>
+            <p><img src="../src/image/parceiros.png" alt="" /></p>
         </div>
     );
 }
