@@ -10,7 +10,7 @@
     --preto-terciario: #00030C;
     --botao-azul: #167BF7;
     --cor-de-fundo-branco: #ffffff;
-    --cor-de-fundo-preto: #00030C;
+    --cor-de-fundo-preto: #000000;
 }
 
 body {
@@ -45,29 +45,38 @@ body {
     color: var(--branco-principal);
     font-family: 'Urbanist';
     font-weight:100;
-    font-size: 8px;
+    font-size: 14px;
     align-items: center;
     text-align: center;
 }
 .grid-warepper>header>*{
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     padding: 0px;
 }
 
 .grid-warepper>header {
     display: grid;
     grid-template-rows: 100px 100px;
-    grid-template-columns: repeat(6, auto);
-    gap: 2rem;
+    grid-template-columns: 100px repeat(8, auto);
+    gap: 1px;
 
 }
 
 .logo {
     color:rgb(0, 0, 0);
     font-family: 'FSP DEMO - Integral CF Bold';
-    font-size: 30PX;
+    font-size: 33PX;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+}
+.link-menu {
+    
+    color:rgb(0, 0, 0);
+    font-family: 'Satoshi';
+    font-size: 18px;
     text-decoration: none;
     align-items: center;
     justify-content: center;
@@ -81,6 +90,33 @@ body {
     font-size: 15px;
     margin-left: 10px;
     margin-right: 10px;
+}
+.grid-warepper>header>nav>span {
+        display: block;
+        background-color: #F0F0F0;
+        height: 48px;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        width: 50px;
+        align-content: center;   
+
+}
+.lupa {
+    margin-left: 15px;  
+}
+
+.input {
+    width: 522px;
+    height: 48px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    background-color: #F0F0F0;
+    border: none;
+    border-color: #F0F0F0;
+    box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
+    font-size: 15px;
 }
 
 /* SECTION */
@@ -109,39 +145,65 @@ body {
     grid-row: 1 / 2;
     grid-column: 1 / -1;
     display: grid;
-    grid-template-rows: repeat(3, auto);
+    gap: 1rem;
+    grid-template-rows: 180px 50px 70px 70px auto;
 
 }
 
 .texto{
     font-family: 'FSP DEMO - Integral CF Bold', 'Archivo Black';
-    padding: 100px;
+    margin-top: 80px;
+    margin-left: 100px;
     font-weight:bold;
-    font-size: 60px;
+    font-size: 64px;
     margin-right: 40%;
+    line-height: 1em;
 }
 .nota {
     font-family: 'Satoshi';
+    padding: 100px;
     font-weight:100;
-    font-size: 10px;
+    font-size: 16px;
+    margin-right: 40%;
+}
+
+.grid-section>nav>p>span>* {
+    display: flex;
+
+}
+.grid-section>nav>p>span {
+    display: grid;
+    background-color: #167BF7;
+    gap: 1rem;
+    grid-template-columns: repeat(3, auto);
+
+}
+
+
+.contagem {
+    font-family: 'Satoshi';
+    padding: 100px;
+    font-weight:100;
+    font-size: 16px;
+    margin-right: 40%;
 }
 .grid-section>p>* {
     
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: top;
 
 }
 .grid-section>p {
     display: grid;
     grid-row: 2 / 3;
-    background-color: var(--cor-de-fundo-branco);
+    background-color: var(--cor-de-fundo-preto);
     place-items: center;
 
 }
-/*.imagem {
-    display: block;
-}*/
+.imagem {
+    margin-left: 90px;
+}
 
 .container__botao{
     background-color: var(--cor-de-fundo-preto);
@@ -151,6 +213,7 @@ body {
     height: 52px;
     padding: 1em;
     color: var(--branco-principal);
+    margin: 100px;
 
 }
 

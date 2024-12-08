@@ -8,8 +8,14 @@ export function Section() {
                     and cater to your sense of style.
                 </p>
                 <p><button className="container__botao">Shop Now</button></p>
+                <p className="contagem">
+                    <span>200+ </span>
+                    <span>2,000+ </span>
+                    <span>30,000+ </span>
+                </p>
+                <p></p>
             </nav>
-            <p><img src="../src/image/parceiros.png" alt="" /></p>
+            <p><img className="imagem" src="../src/image/parceiros.png" alt="" /></p>
         </div>
     );
 }
