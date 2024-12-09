@@ -173,19 +173,31 @@ body {
 }
 .grid-section>nav>div {
     display: grid;
-    background-color: #167BF7;
     gap: 1rem;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(3, 200px);
 
 }
-
+.grid-section>nav>div>p {
+    grid-template-rows: repeat(2, auto);
+    border-color: #167BF7;
+}
 
 .contagem {
-    font-family: 'Satoshi';
     padding: 100px;
-    font-weight:100;
-    font-size: 16px;
     margin-right: 40%;
+}
+
+.fonte-media {
+    display: block;
+    font-family: 'Urbanist';
+    font-size: 30px;
+    font-weight:400;
+}
+.fonte-pequena {
+    display: block;
+    font-family: 'Urbanist';
+    font-size: 12px;
+    font-weight:400;
 }
 .grid-section>p>* {
     

@@ -9,7 +9,7 @@ export function Section() {
                 </p>
                 <p><button className="container__botao">Shop Now</button></p>
                 <div className="contagem">
-                    <p>200+ <span>International Brands</span></p>
+                    <p><span className="fonte-media">200+</span><span className="fonte-pequena">International Brands</span></p>
                     <p>2,000+ <span>High-Quality Products</span></p>
                     <p>30,000+ <span>Happy Customers</span></p>
                 </div>
