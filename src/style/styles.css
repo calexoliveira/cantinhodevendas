@@ -167,11 +167,11 @@ body {
     margin-right: 40%;
 }
 
-.grid-section>nav>p>span>* {
+.grid-section>nav>div>* {
     display: flex;
-
+ 
 }
-.grid-section>nav>p>span {
+.grid-section>nav>div {
     display: grid;
     background-color: #167BF7;
     gap: 1rem;
