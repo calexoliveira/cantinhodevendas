@@ -234,6 +234,20 @@ body {
     background-color: transparent;
     border: 2px solid var(--branco-principal);
 }
+.estrela {
+    display: grid;
+    width: 60px;
+    height: 60px;
+
+    	background: #000000; /* fallback */
+	background:
+		linear-gradient(135deg, transparent 30px, #000000 0) top left,
+		linear-gradient(225deg, transparent 30px, #000000 0) top right,
+		linear-gradient(315deg, transparent 30px, #000000 0) bottom right,
+		linear-gradient(45deg,  transparent 30px, #000000 0) bottom left;
+	background-size: 50% 50%;
+	background-repeat: no-repeat;
+}
 
 /* FOOTER */
 
