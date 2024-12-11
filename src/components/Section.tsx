@@ -1,7 +1,8 @@
 export function Section() {
     return(
         <div className="grid-section">
-            <div className="estrela"> <img src="../src/image/estrela.png" alt="" /></div>
+            <img className="estrela" src="../src/image/estrela.png" alt="" />
+            <img className="estrela-menor" src="../src/image/estrela.png" alt="" />
             <nav>
                 <p className="texto">FIND CLOTHES THAT MATCHES YOUR STYLE </p>
                 <p className="nota">Browse through our diverse range of meticulously 

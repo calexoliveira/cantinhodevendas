@@ -235,13 +235,16 @@ body {
     border: 2px solid var(--branco-principal);
 }
 .estrela {
-
-    display: grid;
-    overflow-x: 1255;
-    overflow-y: 220;
-
-
+    position: absolute;
+    margin: 86px 1255px;
 }
+.estrela-menor {
+    position: absolute;
+    margin: 297px 750px;
+    width: 56px;
+    height: 56px;
+}
+
 
 /* FOOTER */
 
