@@ -131,7 +131,7 @@ body {
 
 .grid-section {
     display: grid;
-    grid-template-rows: 663px 122px;
+    grid-template-rows: 663px 122px 745px;
     background-repeat: no-repeat;
     background-color: #F2F0F1;
     background-image: url("../image/background.png");
@@ -200,14 +200,14 @@ body {
     color: #00000086;
     font-weight:100;
 }
-.grid-section>p>* {
+.grid-section>div>* {
     
     display: flex;
     align-items: center;
     justify-content: top;
 
 }
-.grid-section>p {
+.grid-section>div {
     display: grid;
     grid-row: 2 / 3;
     background-color: var(--cor-de-fundo-preto);

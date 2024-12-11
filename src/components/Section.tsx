@@ -20,7 +20,11 @@ export function Section() {
                 </div>
                 <p></p>
             </nav>
-            <p><img className="imagem" src="../src/image/parceiros.png" alt="" /></p>
+            <div><img className="imagem" src="../src/image/parceiros.png" alt="" /></div>
+            <div>
+                <p>NEW ARRIVALS</p>
+            </div>
+            
         </div>
     );
 }
