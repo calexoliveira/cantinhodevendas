@@ -200,6 +200,7 @@ body {
     color: #00000086;
     font-weight:100;
 }
+
 .grid-section>div>* {
     
     display: flex;
@@ -245,6 +246,26 @@ body {
     height: 56px;
 }
 
+.sessao-2>* {
+    display: flex;
+    align-items: center;
+    
+    
+
+}
+.sessao-2 {
+    display: grid;
+    grid-template-rows: repeat(4, auto);
+    grid-template-columns: repeat(4, auto);
+}
+
+.section-2-titulo {
+    grid-column: 1 / -1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: larger;
+    color: #000000;
+}
 
 /* FOOTER */
 

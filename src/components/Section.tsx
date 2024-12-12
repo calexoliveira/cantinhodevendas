@@ -21,8 +21,8 @@ export function Section() {
                 <p></p>
             </nav>
             <div><img className="imagem" src="../src/image/parceiros.png" alt="" /></div>
-            <div>
-                <p>NEW ARRIVALS</p>
+            <div className="sessao-2">
+                <p className="sessao-2-titulo">NEW ARRIVALS</p>
             </div>
             
         </div>
