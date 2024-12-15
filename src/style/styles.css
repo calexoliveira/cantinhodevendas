@@ -260,22 +260,24 @@ body {
     background-color: var(--cor-de-fundo-branco);
     grid-template-rows: 130px auto;
     grid-template-columns: repeat(4, 1fr);
+        
 }
 
-.grid-section .sessao-2 .sessao-2-titulo {
+.grid-section .sessao-2>nav {
+    display: grid;
+    height: 130px;
     grid-column: 1 / -1;
     font-family: 'FSP DEMO - Integral CF Bold';
     font-weight: bold;
     font-size: 50px;
     color: #000000;
-    text-align: bottom;
     vertical-align: bottom;
+    background-color: #167BF7;
     
 }
 
 .grid-section .sessao-2>p {
-    background-color: rgb(255, 255, 255);
-    vertical-align: bottom;
+    vertical-align: text-bottom;
 }
 /* FOOTER */
 
