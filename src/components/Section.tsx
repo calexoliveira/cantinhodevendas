@@ -23,6 +23,10 @@ export function Section() {
             <div><img className="imagem" src="../src/image/parceiros.png" alt="" /></div>
             <div className="sessao-2">
                 <p className="sessao-2-titulo">NEW ARRIVALS</p>
+                <p ><img src="../src/image/tshirt.png" alt="" /></p>
+                <p ><img src="../src/image/skinny.png" alt="" /></p>
+                <p><img src="../src/image/shirt.png" alt="" /></p>
+                <p><img src="../src/image/tshirt sleeve.png" alt="" /></p>
             </div>
             
         </div>
