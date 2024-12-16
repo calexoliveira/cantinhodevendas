@@ -260,14 +260,14 @@ body {
     grid-row: 3/4;
     background-color: var(--cor-de-fundo-branco);
     grid-template-rows: 130px auto;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: auto repeat(4, 1fr) auto;
         
 }
 
 .grid-section .sessao-2>nav {
     display: grid;
     height: 130px;
-    grid-column: 1 / -1;
+    grid-column: 2 / 6;
     font-family: 'FSP DEMO - Integral CF Bold';
     font-weight: bold;
     font-size: 50px;
@@ -278,6 +278,19 @@ body {
 
 .grid-section .sessao-2>p {
     vertical-align: text-bottom;
+}
+
+.grid-section .sessao-2 .coluna-1 {
+    vertical-align: text-bottom;
+    grid-row: 1 / -1;
+    grid-column: 1 / 2;
+    background-color: #167BF7;
+}
+.grid-section .sessao-2 .coluna-2 {
+    vertical-align: text-bottom;
+    grid-row: 1 / -1;
+    grid-column: 6 / 7;
+    background-color: #167BF7;
 }
 /* FOOTER */
 
