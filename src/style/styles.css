@@ -132,7 +132,7 @@ body {
 
 .grid-section {
     display: grid;
-    grid-template-rows: 663px 122px 745px;
+    grid-template-rows: 663px 122px 745px 745px 745px 745px 745px;
     background-repeat: no-repeat;
     background-color: #F2F0F1;
     background-image: url("../image/background.png");
