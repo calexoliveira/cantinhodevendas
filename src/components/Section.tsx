@@ -12,7 +12,8 @@ export function Section() {
                 <p><button className="container__botao">Shop Now</button></p>
                 <div className="contagem">
                     <p><span className="fonte-media">200+</span>
-                        <span className="fonte-pequena">International Brands</span></p>
+                        <span className="fonte-pequena">International Brands</span>
+                    </p>
                     <p><span className="fonte-media">2,000+</span>
                         <span className="fonte-pequena">High-Quality Products</span></p>
                     <p><span className="fonte-media">30,000+ </span>
@@ -23,13 +24,21 @@ export function Section() {
             <div><img className="imagem" src="../src/image/parceiros.png" alt="" /></div>
             <div className="sessao-2">
                 <nav>NEW ARRIVALS</nav>
-                <p className="coluna-1">
+                <p >
+                    <img src="../src/image/tshirt.png" alt="" />
+                    <span>T-SHIRT WITH TAPE DETAILS</span>
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span>
+                    <span>$120</span>
                 </p>
-                <p ><img src="../src/image/tshirt.png" alt="" /></p>
-                <p ><img src="../src/image/skinny.png" alt="" /></p>
-                <p><img src="../src/image/shirt.png" alt="" /></p>
-                <p><img src="../src/image/tshirt sleeve.png" alt="" /></p>
-                <p className="coluna-2">coluna-2</p>
+                <p >
+                    <img src="../src/image/skinny.png" alt="" />
+                </p>
+                <p>
+                    <img src="../src/image/shirt.png" alt="" />
+                </p>
+                <p>
+                    <img src="../src/image/tshirt sleeve.png" alt="" />
+                </p>
             </div>
             
         </div>

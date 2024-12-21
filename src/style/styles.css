@@ -138,8 +138,6 @@ body {
     background-image: url("../image/background.png");
     background-size: 1440px;
     background-position: 0 0px;
-    width: 1440px;
-
 
 }
 
@@ -158,16 +156,29 @@ body {
     margin-left: 100px;
     font-weight:bold;
     font-size: 64px;
-    margin-right: 40%;
+    margin-right: 50%;
     line-height: 1em;
 }
+
 .nota {
     font-family: 'Satoshi';
     padding: 100px;
     color: #00000086;
     font-weight:100;
     font-size: 16px;
-    margin-right: 40%;
+    margin-right: 50%;
+}
+
+.container__botao{
+    background-color: var(--cor-de-fundo-preto);
+    border-top-color: #00030C;
+    border-radius: 30px;
+    width: 210px;
+    height: 52px;
+    padding: 1em;
+    color: var(--branco-principal);
+    margin: 100px;
+
 }
 
 .grid-section>nav>div>* {
@@ -186,7 +197,7 @@ body {
 
 .contagem {
     padding: 100px;
-    margin-right: 40%;
+    margin-right: 50%;
 }
 
 .fonte-media {
@@ -210,6 +221,7 @@ body {
     justify-content: top;
 
 }
+
 .grid-section>div {
     display: grid;
     grid-row: 2 / 3;
@@ -217,30 +229,22 @@ body {
     place-items: center;
 
 }
+
 .imagem {
     margin-left: 90px;
 }
 
-.container__botao{
-    background-color: var(--cor-de-fundo-preto);
-    border-top-color: #00030C;
-    border-radius: 30px;
-    width: 210px;
-    height: 52px;
-    padding: 1em;
-    color: var(--branco-principal);
-    margin: 100px;
-
-}
 
 .botao_secundario {
     background-color: transparent;
     border: 2px solid var(--branco-principal);
 }
+
 .estrela {
     position: absolute;
     margin: 86px 1255px;
 }
+
 .estrela-menor {
     position: absolute;
     margin: 297px 750px;
@@ -250,24 +254,26 @@ body {
 
 .grid-section .sessao-2>* {
     display: flex;
-    margin-left: 40px;
-    margin-right: 50px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 200px;
     
 }
 .grid-section .sessao-2 {
     display: grid;
     grid-column: 1 / -1;
     grid-row: 3/4;
+    gap: 10px;
     background-color: var(--cor-de-fundo-branco);
     grid-template-rows: 130px auto;
-    grid-template-columns: auto repeat(4, 1fr) auto;
+    grid-template-columns: repeat(4, 295px);
         
 }
 
 .grid-section .sessao-2>nav {
     display: grid;
     height: 130px;
-    grid-column: 2 / 6;
+    grid-column: 1 / -1;
     font-family: 'FSP DEMO - Integral CF Bold';
     font-weight: bold;
     font-size: 50px;
@@ -277,21 +283,14 @@ body {
 }
 
 .grid-section .sessao-2>p {
+    display: inline;
     vertical-align: text-bottom;
+}
+.grid-section> .sessao-2>p>span {
+    display: inline;
 }
 
-.grid-section .sessao-2 .coluna-1 {
-    vertical-align: text-bottom;
-    grid-row: 1 / -1;
-    grid-column: 1 / 2;
-    background-color: #167BF7;
-}
-.grid-section .sessao-2 .coluna-2 {
-    vertical-align: text-bottom;
-    grid-row: 1 / -1;
-    grid-column: 6 / 7;
-    background-color: #167BF7;
-}
+
 /* FOOTER */
 
 .grid-footer>*{
