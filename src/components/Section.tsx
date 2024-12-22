@@ -25,19 +25,82 @@ export function Section() {
             <div className="sessao-2">
                 <nav>NEW ARRIVALS</nav>
                 <p >
-                    <img src="../src/image/tshirt.png" alt="" />
-                    <span>T-SHIRT WITH TAPE DETAILS</span>
-                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span>
+                    <span><img src="../src/image/tshirt.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
                     <span>$120</span>
                 </p>
                 <p >
-                    <img src="../src/image/skinny.png" alt="" />
+                    <span><img src="../src/image/skinny.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
                 </p>
                 <p>
-                    <img src="../src/image/shirt.png" alt="" />
+                    <span><img src="../src/image/shirt.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
                 </p>
                 <p>
-                    <img src="../src/image/tshirt sleeve.png" alt="" />
+                    <span><img src="../src/image/tshirt sleeve.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
+                </p>
+            </div>
+            <div className="sessao-3">
+                <nav>top selling</nav>
+                <p >
+                <span><img src="../src/image/tshirt.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
+                </p>
+                <p >
+                    <span><img src="../src/image/skinny.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
+                </p>
+                <p>
+                    <span><img src="../src/image/shirt.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
+                </p>
+                <p>
+                    <span><img src="../src/image/tshirt sleeve.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
+                </p>
+            </div>
+            <div className="sessao-4">
+                <nav>BROWSE BY dress STYLE</nav>
+                <p >
+                <span><img src="../src/image/casual.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
+                </p>
+                <p >
+                    <span><img src="../src/image/formal.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
+                </p>
+                <p>
+                    <span><img src="../src/image/party.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
+                </p>
+                <p>
+                    <span><img src="../src/image/gym.png" alt="" /></span><br />
+                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$120</span>
                 </p>
             </div>
             
