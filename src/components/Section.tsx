@@ -52,26 +52,26 @@ export function Section() {
             <div className="sessao-3">
                 <nav>top selling</nav>
                 <p >
-                <span><img src="../src/image/tshirt.png" alt="" /></span><br />
-                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                <span><img src="../src/image/striped_shirt.png" alt="" /></span><br />
+                    <span>VERTICAL STRIPED SHIRT</span><br />
                     <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
                     <span>$120</span>
                 </p>
                 <p >
-                    <span><img src="../src/image/skinny.png" alt="" /></span><br />
-                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/courage.png" alt="" /></span><br />
+                    <span>COURAGE GRAPHIC T-SHIRT</span><br />
                     <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
                     <span>$120</span>
                 </p>
                 <p>
-                    <span><img src="../src/image/shirt.png" alt="" /></span><br />
-                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/loose_fit.png" alt="" /></span><br />
+                    <span>LOOSE FIT BERMUDA SHORTS</span><br />
                     <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
                     <span>$120</span>
                 </p>
                 <p>
-                    <span><img src="../src/image/tshirt sleeve.png" alt="" /></span><br />
-                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
+                    <span><img src="../src/image/faded.png" alt="" /></span><br />
+                    <span>FADED SKINNY JEANS</span><br />
                     <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
                     <span>$120</span>
                 </p>
@@ -79,28 +79,12 @@ export function Section() {
             <div className="sessao-4">
                 <nav>BROWSE BY dress STYLE</nav>
                 <p >
-                <span><img src="../src/image/casual.png" alt="" /></span><br />
-                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
-                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
-                </p>
-                <p >
-                    <span><img src="../src/image/formal.png" alt="" /></span><br />
-                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
-                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
+                    <span><img src="../src/image/casual.png" alt="" /></span>
+                    <span><img src="../src/image/formal.png" alt="" /></span>
                 </p>
                 <p>
-                    <span><img src="../src/image/party.png" alt="" /></span><br />
-                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
-                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
-                </p>
-                <p>
-                    <span><img src="../src/image/gym.png" alt="" /></span><br />
-                    <span>T-SHIRT WITH TAPE DETAILS</span><br />
-                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
+                    <span><img src="../src/image/party.png" alt="" /></span>
+                    <span><img src="../src/image/gym.png" alt="" /></span>
                 </p>
             </div>
             
