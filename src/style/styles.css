@@ -352,12 +352,50 @@ body {
     font-weight: bold;
     font-size: 50px;
     color: #000000;
-    vertical-align: bottom;
     
     
 }
 
 .grid-section .sessao-4>p {
+    display: block;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.grid-section .sessao-5>* {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 200px;
+    
+}
+.grid-section .sessao-5 {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-row: 6/7;
+    gap: 10px;
+    background-color: var(--cor-de-fundo-branco);
+    grid-template-rows: 130px auto;
+    grid-template-columns: repeat(4, 295px);
+        
+}
+
+.grid-section .sessao-5>nav {
+    display: grid;
+    height: 130px;
+    grid-column: 1 / -1;
+    font-family: 'FSP DEMO - Integral CF Bold';
+    font-weight: bold;
+    font-size: 50px;
+    color: #000000;
+    vertical-align: bottom;
+    
+    
+}
+
+.grid-section .sessao-5>p {
+    display: grid;
     align-items: center;
     justify-content: center;
 }

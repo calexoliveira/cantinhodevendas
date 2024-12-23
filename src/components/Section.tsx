@@ -33,20 +33,20 @@ export function Section() {
                 <p >
                     <span><img src="../src/image/skinny.png" alt="" /></span><br />
                     <span>T-SHIRT WITH TAPE DETAILS</span><br />
-                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
+                    <span><img src="../src/image/estrelas.png" alt="" /> 3.5/5</span><br />
+                    <span>$240 $260 -20%</span>
                 </p>
                 <p>
                     <span><img src="../src/image/shirt.png" alt="" /></span><br />
                     <span>T-SHIRT WITH TAPE DETAILS</span><br />
                     <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
+                    <span>$180</span>
                 </p>
                 <p>
                     <span><img src="../src/image/tshirt sleeve.png" alt="" /></span><br />
                     <span>T-SHIRT WITH TAPE DETAILS</span><br />
                     <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
+                    <span>$130 $160 -30%</span>
                 </p>
             </div>
             <div className="sessao-3">
@@ -54,26 +54,26 @@ export function Section() {
                 <p >
                 <span><img src="../src/image/striped_shirt.png" alt="" /></span><br />
                     <span>VERTICAL STRIPED SHIRT</span><br />
-                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
+                    <span><img src="../src/image/estrelas.png" alt="" /> 5.0/5</span><br />
+                    <span>$212 $232 -20%</span>
                 </p>
                 <p >
                     <span><img src="../src/image/courage.png" alt="" /></span><br />
                     <span>COURAGE GRAPHIC T-SHIRT</span><br />
-                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.0/5</span><br />
+                    <span>$145</span>
                 </p>
                 <p>
                     <span><img src="../src/image/loose_fit.png" alt="" /></span><br />
                     <span>LOOSE FIT BERMUDA SHORTS</span><br />
-                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
+                    <span><img src="../src/image/estrelas.png" alt="" /> 3.0/5</span><br />
+                    <span>$80</span>
                 </p>
                 <p>
                     <span><img src="../src/image/faded.png" alt="" /></span><br />
                     <span>FADED SKINNY JEANS</span><br />
                     <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
-                    <span>$120</span>
+                    <span>$210</span>
                 </p>
             </div>
             <div className="sessao-4">
@@ -87,7 +87,33 @@ export function Section() {
                     <span><img src="../src/image/gym.png" alt="" /></span>
                 </p>
             </div>
-            
+            <div className="sessao-5">
+                <nav>top selling</nav>
+                <p >
+                <span><img src="../src/image/striped_shirt.png" alt="" /></span><br />
+                    <span>VERTICAL STRIPED SHIRT</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 5.0/5</span><br />
+                    <span>$212 $232 -20%</span>
+                </p>
+                <p >
+                    <span><img src="../src/image/courage.png" alt="" /></span><br />
+                    <span>COURAGE GRAPHIC T-SHIRT</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.0/5</span><br />
+                    <span>$145</span>
+                </p>
+                <p>
+                    <span><img src="../src/image/loose_fit.png" alt="" /></span><br />
+                    <span>LOOSE FIT BERMUDA SHORTS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 3.0/5</span><br />
+                    <span>$80</span>
+                </p>
+                <p>
+                    <span><img src="../src/image/faded.png" alt="" /></span><br />
+                    <span>FADED SKINNY JEANS</span><br />
+                    <span><img src="../src/image/estrelas.png" alt="" /> 4.5/5</span><br />
+                    <span>$210</span>
+                </p>
+            </div>            
         </div>
     );
 }
