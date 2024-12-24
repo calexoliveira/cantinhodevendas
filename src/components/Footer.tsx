@@ -6,7 +6,11 @@ export function Footer() {
                 <p>teste</p>
                 <span className="fundo-direita"></span>
             </nav>
-            <footer>Footer</footer>
+            <footer>
+                <span className="fundo-esquerda"></span>
+                <p></p>
+                <span className="fundo-direita"></span>
+            </footer>
         </div>
     );
 }
