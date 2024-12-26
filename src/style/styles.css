@@ -457,9 +457,26 @@ body {
     margin-top: 43px;
     margin-bottom: 43px;
     margin-left: 64px;
+    gap: 20px;
 
 }
 .grid-footer>nav>p>span>input {
+    display: block;
+    margin-bottom: 20px;
+    width: 200px;
+    height: 48px;
+    border-radius: 30px;
+    background-color: #F0F0F0;
+    border: none;
+    border-color: #F0F0F0;
+    box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
+    font-size: 15px;
+}
+
+.grid-footer>nav>p>span>button {
+    display: block;
     width: 200px;
     height: 48px;
     border-radius: 30px;
@@ -500,7 +517,6 @@ body {
     grid-template-columns: 2fr repeat(4, 1fr);
     grid-column: 2 / 3;
     grid-row: 1 / 2;
-    background-color: var(--cor-de-fundo-branco);
     margin-top: 30px;
     gap: 40px;
 }
