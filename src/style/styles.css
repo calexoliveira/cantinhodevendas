@@ -460,6 +460,28 @@ body {
     gap: 20px;
 
 }
+.grid-warepper>header>nav { 
+    min-width: 30px;       
+    padding: 5px;
+    font-family: 'Urbanist';
+    font-weight:100;
+    font-size: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.grid-footer>p>nav>p>s {
+        display:inline-block;
+        background-color: #F0F0F0;
+        height: 48px;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        width: 50px;
+        align-content: center;   
+
+}
+.mail {
+    margin-left: 15px;  
+}
 .grid-footer>nav>p>span>input {
     display: block;
     margin-bottom: 20px;
