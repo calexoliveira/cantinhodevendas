@@ -460,6 +460,24 @@ body {
     gap: 20px;
 
 }
+
+.grid-footer>nav>p>article {
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+
+}
+
+.lupa {
+    
+    background-color: #ffffff;
+    height: 48px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    width: 100px;
+    align-content: center;   
+
+}
+
 .grid-warepper>header>nav { 
     min-width: 30px;       
     padding: 5px;
@@ -469,25 +487,17 @@ body {
     margin-left: 10px;
     margin-right: 10px;
 }
-.grid-footer>p>nav>p>s {
-        display:inline-block;
-        background-color: #F0F0F0;
-        height: 48px;
-        border-top-left-radius: 30px;
-        border-bottom-left-radius: 30px;
-        width: 50px;
-        align-content: center;   
 
-}
 .mail {
     margin-left: 15px;  
 }
-.grid-footer>nav>p>span>input {
-    display: block;
+.grid-footer>nav>p>article>span>input {
+
     margin-bottom: 20px;
     width: 200px;
     height: 48px;
-    border-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
     background-color: #F0F0F0;
     border: none;
     border-color: #F0F0F0;
@@ -497,8 +507,7 @@ body {
     font-size: 15px;
 }
 
-.grid-footer>nav>p>span>button {
-    display: block;
+.grid-footer>nav>p>article>span>button {
     width: 200px;
     height: 48px;
     border-radius: 30px;

@@ -5,7 +5,15 @@ export function Footer() {
                 <span className="fundo-esquerda"></span>
                 <p>
                     <span>STAY UPTO DATE ABOUT OUR LATEST OFFERS</span>
-                    <span><s><img src="../src/image/mail.png" alt="" /></s><input type="text" className="input"/><button name="Subscribe to Newsletter">Subscribe to Newsletter</button></span>
+                    <article>
+                        <span>
+                            <span className="lupa" ><img className="mail" src="../src/image/mail.png" alt="" /></span>
+                            <input type="text" className="input"/>
+                        </span>
+                        <span>
+                            <button name="Subscribe to Newsletter">Subscribe to Newsletter</button>
+                        </span>
+                    </article>
                 </p>
                 <span className="fundo-direita"></span>
             </nav>
