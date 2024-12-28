@@ -6,10 +6,10 @@ export function Footer() {
                 <p>
                     <span>STAY UPTO DATE ABOUT OUR LATEST OFFERS</span>
                     <article>
-                        <span>
-                            <span className="lupa" ><img className="mail" src="../src/image/mail.png" alt="" /></span>
-                            <input type="text" className="input"/>
-                        </span>
+                        <div className="lupa" >
+                            <img className="mail" src="../src/image/mail.png" alt="" />
+                            <input type="text" />
+                        </div >
                         <span>
                             <button name="Subscribe to Newsletter">Subscribe to Newsletter</button>
                         </span>
