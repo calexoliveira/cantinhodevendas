@@ -470,10 +470,11 @@ body {
 }
 
 .grid-footer>nav>p>article .lupa {
-    display: block;
-    justify-content: center;
-    /*background-color: #F0F0F0;*/
-    background-color: var(--cor-de-fundo-branco);
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    align-items: center;
+    justify-content: left;
+    background-color: #F0F0F0;
     height: 50px;
     border-radius: 30px;
     width: 349px;
@@ -493,11 +494,11 @@ body {
 }
 
 .mail {
-    margin-left: 15px;  
+    margin-left: 15px;
 }
-.grid-footer>nav>p>article>div>input {
+.inputmail {
     
-    background-color: #e96767;
+    background-color: #F0F0F0;
     border: none;
     border-color: #F0F0F0;
     box-shadow: 0 0 0 0;
@@ -505,6 +506,8 @@ body {
     outline: 0;
     font-size: 15px;
     margin-left: 10px;
+    height: 50px;
+    width: 270px;
     
 }
 

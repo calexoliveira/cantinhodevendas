@@ -8,7 +8,7 @@ export function Footer() {
                     <article>
                         <div className="lupa" >
                             <img className="mail" src="../src/image/mail.png" alt="" />
-                            <input type="text" />
+                            <input className="inputmail" type="text" />
                         </div >
                         <span>
                             <button name="Subscribe to Newsletter">Subscribe to Newsletter</button>
