@@ -8,7 +8,7 @@ export function Footer() {
                     <article>
                         <div className="lupa" >
                             <img className="mail" src="../src/image/mail.png" alt="" />
-                            <input className="inputmail" type="text" />
+                            <input className="inputmail" type="text" placeholder="Enter your email address" />
                         </div >
                         <span>
                             <button name="Subscribe to Newsletter">Subscribe to Newsletter</button>
@@ -63,6 +63,16 @@ export function Footer() {
                 </div>
                 <span className="fundo-direita"></span>
             </footer>
+            <div>
+                <p className="copyright">Shop.co © 2000-2023, All Rights Reserved</p>
+                <p className="cartao">
+                    <img src="../src/image/visa.png" alt="" />
+                    <img src="../src/image/mastercard.png" alt="" />
+                    <img src="../src/image/paypal.png" alt="" />
+                    <img src="../src/image/applepay.png" alt="" />
+                    <img src="../src/image/googlepay.png" alt="" />
+                </p>
+            </div>
         </div>
     );
 }
