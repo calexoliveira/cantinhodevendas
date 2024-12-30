@@ -616,9 +616,8 @@ body {
     justify-content: center;
 }
 
-.cartao {
+.grid-footer>div .cartao {
     
-    align-items: flex-end;
-    justify-content: left;
+
     background-color: #167BF7;
 }
