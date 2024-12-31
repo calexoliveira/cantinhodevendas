@@ -333,8 +333,6 @@ body {
 .grid-section .sessao-4>* {
     display: flex;
     width: 1239px;
-    margin-left: 100px;
-    margin-right: 100px;
     align-items: center;
     justify-content: center;
     background-color: var(--cor-de-fundo-branco);
@@ -618,6 +616,15 @@ body {
 
 .grid-footer>div .cartao {
     
+    text-align: right;
+    background-color: #F2F0F1;
+}
 
-    background-color: #167BF7;
+@media screen and (max-width: 768px){
+     .grid-section {
+
+        display: block;
+        background-size: 50vw;
+     }
+    
 }
