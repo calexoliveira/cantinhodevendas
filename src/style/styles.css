@@ -26,13 +26,6 @@ body {
 
 /* NavBar */
 
-.grid-warepper>* {
-    background-color:var(--cor-de-fundo-branco);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0px;
-}
 .grid-warepper {
     display: grid;
     grid-template-rows: 38px 96px;
@@ -51,8 +44,7 @@ body {
 }
 .grid-warepper>header>*{
     display: flex;
-    align-items: center;
-    justify-content: left;
+
     padding: 0px;
 }
 
@@ -60,6 +52,8 @@ body {
     display: grid;
     grid-template-rows: 100px 100px;
     grid-template-columns: 100px repeat(8, auto);
+    align-items: center;
+    justify-content: left;
     gap: 1px;
 
 }
@@ -224,15 +218,15 @@ body {
 }
 
 .grid-section .parceiros {
-    display: grid;
     grid-row: 2 / 3;
     background-color: var(--cor-de-fundo-preto);
     place-items: center;
+    justify-items: right;
 
 }
 
 .imagem {
-    margin-left: 90px;
+    width: 50vw;
 }
 
 
