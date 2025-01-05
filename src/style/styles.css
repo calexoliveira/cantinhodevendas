@@ -26,7 +26,7 @@ body {
 
 /* NavBar */
 
-.grid-warepper {
+.grid-Navbar {
     display: grid;
     grid-template-rows: 38px 96px;
 }
@@ -42,13 +42,13 @@ body {
     align-items: center;
     text-align: center;
 }
-.grid-warepper>header>*{
+.grid-Navbar>header>*{
     display: flex;
 
     padding: 0px;
 }
 
-.grid-warepper>header {
+.grid-Navbar>header {
     display: grid;
     grid-template-rows: 100px 100px;
     grid-template-columns: 100px repeat(8, auto);
@@ -76,7 +76,7 @@ body {
     justify-content: center;
 }
 
-.grid-warepper>header>nav { 
+.grid-Navbar>header>nav { 
     min-width: 30px;       
     padding: 5px;
     font-family: 'Urbanist';
@@ -85,7 +85,7 @@ body {
     margin-left: 10px;
     margin-right: 10px;
 }
-.grid-warepper>header>nav>span {
+.grid-Navbar>header>nav>span {
         display: block;
         background-color: #F0F0F0;
         height: 48px;

@@ -1,6 +1,6 @@
 export function NavBar(){
     return(
-      <div className="grid-warepper">
+      <div className="grid-Navbar">
         <div className="topo">Sign up and get 20% off to your first order. Sign Up Now</div>
         <header>
             <nav></nav>
