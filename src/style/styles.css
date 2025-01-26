@@ -4,6 +4,8 @@
     font-family: 'FSP DEMO - Integral CF Bold';
     src: local(FSP DEMO - Integral CF Bold),url('../fonts/Demo_Fonts/Fontspring-DEMO-integralcf-bold.otf');
   }
+
+
 :root {
     --branco-principal: #FFFFFF;
     --cinza-secundario: #C0C0C0;
@@ -13,27 +15,18 @@
     --cor-de-fundo-preto: #000000;
 }
 
-body {
-    background-color: var(--cor-de-fundo-branco);
-    color: var(--preto-terciario);
-    
-}
-
-*{
-    margin: 0;
-    padding: 0;
-}
-
+@media (min-width: 1024px)
+{
 /* NavBar */
 
 .grid-Navbar {
-    display: grid;
+    display: flex;
+    width: 90%;
     grid-template-rows: 38px 96px;
 }
 
 .topo {
-    grid-column: 1 / -1;
-    grid-row: 1 / 2;
+    display: flex;
     background-color: var(--cor-de-fundo-preto);
     color: var(--branco-principal);
     font-family: 'Urbanist';
@@ -620,5 +613,7 @@ body {
         display: block;
         background-size: 50vw;
      }
+    
+}
     
 }
