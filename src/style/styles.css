@@ -5,6 +5,16 @@
     src: local(FSP DEMO - Integral CF Bold),url('../fonts/Demo_Fonts/Fontspring-DEMO-integralcf-bold.otf');
   }
 
+  body {
+    background-color: var(--cor-de-fundo-branco);
+    color: var(--preto-terciario);
+    
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
 
 :root {
     --branco-principal: #FFFFFF;
@@ -19,8 +29,16 @@
 {
 /* NavBar */
 
+.nav {
+        display: flex;
+        width: 100%;
+        text-align: center;
+        align-items: stretch;
+
+}
 .grid-Navbar {
-    display: flex;
+    display: grid;
+    justify-content: center;
     width: 90%;
     grid-template-rows: 38px 96px;
 }

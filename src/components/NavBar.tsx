@@ -1,8 +1,9 @@
 export function NavBar(){
     return(
+      <nav>
       <div className="grid-Navbar">
         <div className="topo">Sign up and get 20% off to your first order. Sign Up Now</div>
-        <header>
+        <div>
             <nav></nav>
             <nav><a href="" className="logo">SHOP.CO</a></nav>
             <nav><a className="link-menu" href="">Shop</a></nav>
@@ -15,7 +16,8 @@ export function NavBar(){
             </nav>
             <nav><img src="../src/image/carrinho.png" alt="" /></nav>
             <nav><img src="../src/image/perfil.png" alt="" /></nav>
-        </header>
+        </div>
       </div>
+      </nav>
     );
 }
