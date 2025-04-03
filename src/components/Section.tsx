@@ -1,10 +1,11 @@
 export function Section() {
     return(
         <div className="grid-section">
-            <img src="../src/image/estrela.png" alt="" />
-            <img src="../src/image/estrela.png" alt="" />
+{/*            <img src="../src/image/estrela.png" alt="" />
+            <img 8src="../src/image/estrela.png" alt="" />
+*/}
             <nav>
-                <p className="texto">FIND CLOTHES THAT MATCHES YOUR STYLE </p>
+                <header className="texto">FIND CLOTHES THAT MATCHES YOUR STYLE </header>
                 <p className="nota">Browse through our diverse range of meticulously 
                     crafted garments, designed to bring out your individuality 
                     and cater to your sense of style.
@@ -79,12 +80,12 @@ export function Section() {
             <div className="sessao-4">
                 <nav>BROWSE BY dress STYLE</nav>
                 <p >
-                    <span><img src="../src/image/casual.png" alt="" /></span>
-                    <span><img src="../src/image/formal.png" alt="" /></span>
+                    <span><img className="imagem" src="../src/image/casual.png" alt="" /></span>
+                    <span><img className="imagem" src="../src/image/formal.png" alt="" /></span>
                 </p>
                 <p>
-                    <span><img src="../src/image/party.png" alt="" /></span>
-                    <span><img src="../src/image/gym.png" alt="" /></span>
+                    <span><img className="imagem" src="../src/image/party.png" alt="" /></span>
+                    <span><img className="imagem" src="../src/image/gym.png" alt="" /></span>
                 </p>
             </div>
             <div className="sessao-5">
@@ -125,6 +126,20 @@ export function Section() {
                         on-point with the latest trends.”</span>
                 </p>
 */}
+            </div>
+            <div className="sessao-6">
+                <span>
+                    STAY UPTO DATE ABOUT OUR LATEST OFFERS
+                </span>
+                <article>
+                    <div className="lupa" >
+                        <img className="mail" src="../src/image/mail.png" alt="" />
+                        <input className="inputmail" type="text" placeholder="Enter your email address" />
+                    </div >
+                    <span>
+                        <button name="Subscribe to Newsletter">Subscribe to Newsletter</button>
+                    </span>
+                </article>
             </div>            
         </div>
     );

@@ -1,22 +1,6 @@
 export function Footer() {
     return (
         <div className="grid-footer">
-            <nav>
-                <span className="fundo-esquerda"></span>
-                <p>
-                    <span>STAY UPTO DATE ABOUT OUR LATEST OFFERS</span>
-                    <article>
-                        <div className="lupa" >
-                            <img className="mail" src="../src/image/mail.png" alt="" />
-                            <input className="inputmail" type="text" placeholder="Enter your email address" />
-                        </div >
-                        <span>
-                            <button name="Subscribe to Newsletter">Subscribe to Newsletter</button>
-                        </span>
-                    </article>
-                </p>
-                <span className="fundo-direita"></span>
-            </nav>
             <footer>
                 <span className="fundo-esquerda"></span>
                 <div>
