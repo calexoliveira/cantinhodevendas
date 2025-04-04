@@ -5,6 +5,25 @@
     src: local(FSP DEMO - Integral CF Bold),url('../fonts/Demo_Fonts/Fontspring-DEMO-integralcf-bold.otf');
   }
 
+  @font-face {
+    font-family: 'Satoshi-Variable';
+    src: url('../fonts/Satoshi_Complete/Fonts/WEB/fonts/Satoshi-BlackItalic.woff2') format('woff2'),
+         url('../fonts/Satoshi_Complete/Fonts/WEB/fonts/Satoshi-Variable.woff') format('woff'),
+         url('../fonts/Satoshi_Complete/Fonts/WEB/fonts/Satoshi-Variable.ttf') format('truetype');
+         font-weight: 300 900;
+         font-display: swap;
+         font-style: normal;
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    src: url('../fonts/Satoshi_Complete/Fonts/OTF/Satoshi-Regular.otf') format('regular'),
+         url('../fonts/Satoshi_Complete/Fonts/OTF/Satoshi-Black.otf') format('black'),
+         url('../fonts/Satoshi_Complete/Fonts/OTF/Satoshi-Italic.otf') format('italic');
+         font-weight: 100 300 900;
+         font-display: swap;
+         font-style: normal;
+  }
+
   body {
     background-color: var(--cor-de-fundo-branco);
     color: var(--preto-terciario);
@@ -330,7 +349,7 @@
 
 
 .legenda {
-    font-family: 'Satoshi';
+    font-family: 'Urbanist';
     color: #00000086;
     font-weight:100;
     font-size: 14px;
@@ -438,52 +457,41 @@
     flex-direction: column;
     align-items:top;
     justify-content:left;
+    width: 95%;
     height: auto;
+    margin-left: 0,5%;
 
 }
-/*
-.grid-footer {
-    display: grid;
-    grid-template-rows: 180px 259px auto;
-    gap: 2rm;
-    
-}*/
 
 .grid-footer>footer{
     display: flex;
- /*   grid-row: 2 / 3;
-    background-color: #F2F0F1;
-    grid-template-rows: 202px auto;
-    grid-template-columns: 100px 1240px 100px; 
-*/
+    justify-content: space-around;
+    margin: 5%;
+    gap: 5%;
 }
 
 .grid-footer>footer>div{
     display: flex;
-/*    grid-template-columns: 2fr repeat(4, 1fr);
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
-    margin-top: 30px;
-    gap: 40px;*/
+    font-family: 'Satoshi';
+    color: #00000086;
+    font-weight:100;
+    font-size: 14px;
+    gap: 7%;
+    flex-direction: column;
+    width: 20%;
 }
-/*
-.grid-footer>footer>div>p>span {
-    display: block;
-    margin-right: 20px;
-    margin-bottom: 10px;
 
-}*/
-
-.grid-footer>footer>div>p>span .logo {
+.grid-footer>footer>div> .logo {
     color:rgb(0, 0, 0);
     font-family: 'FSP DEMO - Integral CF Bold';
     font-size: 30PX;
     text-decoration: none;
     align-items: center;
     justify-content: center;
+    padding-bottom: 10%;
     
 }
-.grid-footer>footer>div>p>span>img {
+.grid-footer>footer>div>span>img {
     width: 20px;
     height: 20px;
     margin-top: 30px;
@@ -491,28 +499,11 @@
     justify-content: space-around;
 
 }
-/*
-.grid-footer>footer> .fundo-esquerda{
-    display: block;
-    grid-column: 1 / 2;
-    grid-row: 2 / -1;
-    background-color: #F2F0F1;
-}
-
-.grid-footer>footer> .fundo-direita{
-    display: block;
-    grid-column: 3 / -1;
-    grid-row: 2 / -1;
-    background-color: #F2F0F1;
-}*/
 
 .grid-footer>div{
     display: flex;
     border-top: solid;
     border-color: #C0C0C0;
- /*   grid-row: 3 / 4;
-    background-color: #F2F0F1;
-    grid-template-columns: repeat(2, 1fr); */
 
 }
 
