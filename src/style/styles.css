@@ -16,9 +16,9 @@
   }
   @font-face {
     font-family: 'Satoshi';
-    src: url('../fonts/Satoshi_Complete/Fonts/OTF/Satoshi-Regular.otf') format('regular'),
-         url('../fonts/Satoshi_Complete/Fonts/OTF/Satoshi-Black.otf') format('black'),
-         url('../fonts/Satoshi_Complete/Fonts/OTF/Satoshi-Italic.otf') format('italic');
+    src: url('../fonts/Satoshi_Complete/Fonts/OTF/Satoshi-Regular.otf') format('truetype'),
+         url('../fonts/Satoshi_Complete/Fonts/OTF/Satoshi-Black.otf') format('truetype'),
+         url('../fonts/Satoshi_Complete/Fonts/OTF/Satoshi-Italic.otf') format('truetype');
          font-weight: 100 300 900;
          font-display: swap;
          font-style: normal;
@@ -42,493 +42,440 @@
     --botao-azul: #167BF7;
     --cor-de-fundo-branco: #ffffff;
     --cor-de-fundo-preto: #000000;
+    --font-grande: 70px;
 }
 
 @media (min-width: 1024px)
 {
-/* NavBar */
+    /* NavBar */
 
-.navbar {
+    .navbar {
+            display: flex;
+            width: 100%;
+            height: 134px;
+            flex-direction: column;
+            align-items: stretch;
+            gap:16px;
+
+    }
+    .notificacao {
+        display: flex;
+        visibility:visible;
+        width: 100%;
+        height: 38px;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--cor-de-fundo-preto);
+        color: var(--branco-principal);
+        font-family: 'Urbanist';
+        font-weight:100;
+        font-size: 14px;
+    }
+
+    .header {
+        display: grid;
+        grid-template-columns: repeat(6, auto) 7fr repeat(2, auto);
+        align-items: center;
+        justify-content: left;
+        gap: 5px;
+    }
+
+    .logo {
+        color:rgb(0, 0, 0);
+        font-family: 'FSP DEMO - Integral CF Bold';
+        font-size: 33PX;
+        text-decoration: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .link-menu {   
+        color:rgb(0, 0, 0);
+        font-family: 'Satoshi';
+        font-size: 18px;
+        text-decoration: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        background-color: #F0F0F0;
+        height: 38px;
+        border-radius: 30px;
+        align-items: center;
+        
+    }
+
+    .navbar>.header>nav { 
+        min-width: 30px;       
+        padding: 5px;
+        font-family: 'Urbanist';
+        font-weight:100;
+        font-size: 15px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .input {
+        height: 28px;
+        background-color: transparent;
+        border: none;
+        border-color: #F0F0F0;
+        box-shadow: 0 0 0 0;
+        border: 0 none;
+        outline: 0;
+        font-size: 15px;
+        margin-left: 15px;
+    }
+
+    /* SECTIONS */
+
+/*############# Características padrão para todas as sessões #############*/
+
+    .sections {
+
         display: flex;
         width: 100%;
-        height: 134px;
         flex-direction: column;
-        align-items: stretch;
-        gap:16px;
+        align-items: center;
+        justify-content:center;
 
-}
-.notificacao {
-    display: flex;
-    visibility:visible;
-    width: 100%;
-    height: 38px;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--cor-de-fundo-preto);
-    color: var(--branco-principal);
-    font-family: 'Urbanist';
-    font-weight:100;
-    font-size: 14px;
-}
+    }
+    .sections>div {
+        width: 100%;
+        font-family: 'Satoshi';
+        color: #00000086;
+        font-weight:100;
+        font-size: 14px;
 
-.header {
-    display: grid;
-    grid-template-columns: repeat(6, auto) 7fr repeat(2, auto);
-    align-items: center;
-    justify-content: left;
-    gap: 5px;
-}
+    }
 
-.logo {
-    color:rgb(0, 0, 0);
-    font-family: 'FSP DEMO - Integral CF Bold';
-    font-size: 33PX;
-    text-decoration: none;
-    align-items: center;
-    justify-content: center;
-}
+    .sections>div>div>header {
 
-.link-menu {   
-    color:rgb(0, 0, 0);
-    font-family: 'Satoshi';
-    font-size: 18px;
-    text-decoration: none;
-    align-items: center;
-    justify-content: center;
-}
-
-.search {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    background-color: #F0F0F0;
-    height: 38px;
-    border-radius: 30px;
-    align-items: center;
-    
-}
-
-.navbar>.header>nav { 
-    min-width: 30px;       
-    padding: 5px;
-    font-family: 'Urbanist';
-    font-weight:100;
-    font-size: 15px;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-.input {
-    height: 28px;
-    background-color: transparent;
-    border: none;
-    border-color: #F0F0F0;
-    box-shadow: 0 0 0 0;
-    border: 0 none;
-    outline: 0;
-    font-size: 15px;
-    margin-left: 15px;
-}
-
-/* SECTION */
-
-.grid-section>* {
-
-    display: flex;
-    justify-content:left;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-
-}
-
-/*.grid-section {
-    display: grid;
-    grid-template-rows: 663px 122px 745px 753px 866px 498px;
-
-}*/
-
-.grid-section>nav {
-/*    display: grid;
-    gap: 1rem;
-    grid-template-rows: 180px 50px 70px 70px auto;*/
-    display: flex;
-    flex-direction: column;
-    background-image: url("../image/background.png");
-    background-repeat: no-repeat;
-    background-color: #F2F0F1;
-    background-size: 100%;
-    background-position: 0 0px;
-}
-
-.texto{
-    font-family: 'FSP DEMO - Integral CF Bold', 'Archivo Black';
-    margin-left: 100px;
-    font-weight:bold;
-    font-size: 64px;
-    margin-right: 50%;
-}
-
-.nota {
-    font-family: 'Satoshi';
-    color: #00000086;
-    font-weight:100;
-    font-size: 16px;
-    margin-right: 50%;
-    margin-left: 100px;
-}
-
-.container__botao{
-    background-color: var(--cor-de-fundo-preto);
-    border-top-color: #00030C;
-    border-radius: 30px;
-    width: 210px;
-    height: 52px;
-    color: var(--branco-principal);
-}
-
-.grid-section>nav>div {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-
-}
-/*
-.grid-section>nav>div>p {
-    display: inline;
-}
-*/
-.contagem {
-    padding: 100px;
-    margin-right: 50%;
-}
-
-.fonte-media {
-    display: block;
-    font-family: 'Satoshi';
-    font-size: 40px;
-    font-weight:bold;
-}
-.fonte-pequena {
-    display: block;
-    font-family: 'Satoshi';
-    font-size: 16px;
-    color: #00000086;
-    font-weight:100;
-}
-
-/*.grid-section>div>* {
-    display: flex;
-    align-items: center;
-    justify-content: top;
-
-}
-*/
-
-.grid-section .parceiros {
-/*    grid-row: 2 / 3;*/
-    background-color: var(--cor-de-fundo-preto);
-    place-items: center;
-    justify-items: right;
-
-}
-
-.imagem {
-    width: 50vw;
-}
-
-
-.botao_secundario {
-    background-color: transparent;
-    border: 2px solid var(--branco-principal);
-}
-
-.estrela {
-    position: absolute;
-    margin: 86px 1255px;
-}
-
-.estrela-menor {
-    position: absolute;
-    margin: 297px 750px;
-    width: 56px;
-    height: 56px;
-}
-
-.grid-section .sessao-2 {
-    display: flex;
-    flex-direction: row;
-    background-color: var(--cor-de-fundo-branco);
-    align-items: center;
-    justify-content: center;
-  
-}
-
-/*.grid-section .sessao-2>nav {
-    display: flex;
-    height: 130px;
-    flex-direction: row;
-    font-family: 'FSP DEMO - Integral CF Bold';
-    font-weight: bold;
-    font-size: 50px;
-    color: #000000;
-    vertical-align: bottom;
-    
-
-}*/
-
-.grid-section .sessao-3 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--cor-de-fundo-branco);
+        font-family: 'FSP DEMO - Integral CF Bold';
+        font-weight: bold;
+        font-size: 50px;
+        color: #000000;
+        text-align: center;
+        margin-top: 3%;
+        margin-bottom: 3%;
         
-}
-/*
-.grid-section .sessao-3>nav {
-    display: grid;
-    height: 130px;
-    grid-column: 1 / -1;
-    font-family: 'FSP DEMO - Integral CF Bold';
-    font-weight: bold;
-    font-size: 50px;
-    color: #000000;
-    vertical-align: bottom;
-     
-}*/
+    }
 
-.grid-section .sessao-4 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-  
-}
-/*
-.grid-section .sessao-4>nav {
-    display: grid;
-    height: 130px;
-    grid-column: 1 / -1;
-    font-family: 'FSP DEMO - Integral CF Bold';
-    font-weight: bold;
-    font-size: 50px;
-    color: #000000;
-    
-}*/
-
-.grid-section .sessao-4>p {
-    display: block;
-    align-items: center;
-    justify-content: center;
-}
-.grid-section .sessao-4 .imagem {
-    width: 70%;
-    height: 70%;
-}
-
-.grid-section .sessao-5 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--cor-de-fundo-branco);
-    grid-template-rows: 130px auto;
-    grid-template-columns: repeat(3, 400px);
+    .sections>div>div>div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
         
-}
+    }
 
-.grid-section .sessao-5>nav {
-    font-family: 'FSP DEMO - Integral CF Bold';
-    font-weight: bold;
-    font-size: 50px;
-    color: #000000;
-    vertical-align: bottom;
-    text-align: right;
+/*########## Fim da características padrão para todas as sessões #########*/
     
-}
+/*###################### Característica da sessão 1 ######################*/
 
+    .sections .section-1 {
+        background-image: url("../image/background.png");
+        background-repeat: no-repeat;
+        background-color: #F2F0F1;
+        background-size: 102%;
+        background-position: 0 0px;
+    }
+    .estrela {
+        position: absolute;
+        margin: 6% 90%;
+    }
 
-.legenda {
-    font-family: 'Urbanist';
-    color: #00000086;
-    font-weight:100;
-    font-size: 14px;
-}
+    .estrela-menor {
+        position: absolute;
+        margin: 22% 52%;
+        width: 56px;
+        height: 56px;
+    }
+    .section-1-div {
+        display: flex;
+        flex-direction: column;
+        margin-top: 90px;
+        margin-left: 4%;
+        margin-right: 50%;
+        row-gap: 23px;
+    }
 
-.sessao-6 {
-    display: flex;
-    flex-direction: row;
-/*    grid-row: 1 / 2;
-    grid-template-rows: repeat(2, 90px);
-    grid-template-columns: 100px 1240px 100px;
+    .sections .section-1 .section-1-div>header {
+        font-size: 65px;
+        text-align: left;
+        line-height: 66px;
+    }
 
-}
+    .sections .section-1 .section-1-div>article {
+        font-size: 16px;
+    }
 
-.sessao-6{
-    display: grid;
-    grid-column: 2 / 3;
-    grid-row: 1 / -1;*/
-    background-color: var(--cor-de-fundo-preto);
-    border-radius: 20px;
-    color: var(--branco-principal);
-    font-family: "FSP DEMO - Integral CF Bold";
-    font-size: 40px;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
+    .sections .section-1 .section-1-div>div>button {
+        background-color: var(--cor-de-fundo-preto);
+        border-top-color: #00030C;
+        border-radius: 30px;
+        width: 210px;
+        height: 52px;
+        color: var(--branco-principal);
+        font-weight: 300;
+        font-size: 14px;
+    }
 
-.sessao-6>span {
-    margin-top: 43px;
-    margin-bottom: 43px;
-    margin-left: 64px;
-    gap: 20px;
+    .quantitativo {
+        display: flex;
+        flex-direction: row;
+        font-family: 'Satoshi';
+        font-size: 14px;
+        color: #00000086;
+        font-weight:100;
+        column-gap: 15%;
+        margin-bottom: 112px;
+    }
 
-}
-
-.sessao-6>article {
-    display: flex;
-/*    grid-template-rows: repeat(2, auto);*/
-    align-items: center;
-    justify-content: center;
-    margin-left: 50px;
-
-}
-
-.sessao-6>article .lupa {
-/*    display: grid;
-    grid-template-columns: repeat(2, auto);*/
-    align-items: center;
-    justify-content: left;
-    background-color: #F0F0F0;
-    height: 50px;
-    border-radius: 30px;
-    width: 349px;
-    margin: auto;
-    margin-bottom: 5px;
-
-}
-
-.sessao-6>article>span {
-    display: block;
-    justify-content: center;
-    height: 50px;
-    margin: auto;
-    margin-top: 5px;
-    gap: 10px;
-
-}
-
-.mail {
-    margin-left: 15px;
-}
-.inputmail {
-    
-    background-color: #F0F0F0;
-    border: none;
-    border-color: #F0F0F0;
-    box-shadow: 0 0 0 0;
-    border: 0 none;
-    outline: 0;
-    font-size: 15px;
-    margin-left: 10px;
-    height: 50px;
-    width: 270px;
-    
-}
-
-.sessao-6>p>article>span>button {
-    
-    height: 48px;
-    border-radius: 30px;
-    background-color: #F0F0F0;
-    border: none;
-    border-color: #F0F0F0;
-    box-shadow: 0 0 0 0;
-    border: 0 none;
-    outline: 0;
-    font-size: 15px;
-    width: 349px;
-}
-
-/* FOOTER */
-
-.grid-footer{
-    display: flex;
-    flex-direction: column;
-    align-items:top;
-    justify-content:left;
-    width: 95%;
-    height: auto;
-    margin-left: 0,5%;
-
-}
-
-.grid-footer>footer{
-    display: flex;
-    justify-content: space-around;
-    margin: 5%;
-    gap: 5%;
-}
-
-.grid-footer>footer>div{
-    display: flex;
-    font-family: 'Satoshi';
-    color: #00000086;
-    font-weight:100;
-    font-size: 14px;
-    gap: 7%;
-    flex-direction: column;
-    width: 20%;
-}
-
-.grid-footer>footer>div> .logo {
-    color:rgb(0, 0, 0);
-    font-family: 'FSP DEMO - Integral CF Bold';
-    font-size: 30PX;
-    text-decoration: none;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 10%;
-    
-}
-.grid-footer>footer>div>span>img {
-    width: 20px;
-    height: 20px;
-    margin-top: 30px;
-    margin-left: 10px;
-    justify-content: space-around;
-
-}
-
-.grid-footer>div{
-    display: flex;
-    border-top: solid;
-    border-color: #C0C0C0;
-
-}
-
-.grid-footer>div .copyright {
-    font-family: 'Satoshi';
-    color: #00000086;
-    font-weight:100;
-    font-size: 14px;
-    margin-left: 100px;
-    justify-content: center;
-}
-
-.grid-footer>div .cartao {
-    
-    text-align: right;
-    background-color: #F2F0F1;
-}
-
-@media screen and (max-width: 768px){
-     .grid-section {
-
+    .fonte-maior {
         display: block;
-        background-size: 50vw;
-     }
-    
-}
-    
+        font-size: 40px;
+        font-weight:bold;
+        color: #000000;
+    }
+
+/*###################### Característica da sessão 2 ######################*/
+
+    .sections .section-2 {
+        background-color: var(--cor-de-fundo-preto);
+        width: 100%;
+        height: 120px;
+        align-content: center;
+        text-align: center;
+        margin-top: -3%;
+        
+    }
+
+/*###################### Característica da sessão 3 ######################*/
+
+    .sections .section-3>div>div {
+        display: flex;
+        flex-direction: row;
+        gap: 1%;  
+    }
+
+    .sections .section-3>div>div>p>span>img {
+        border-radius: 10%; 
+    }
+
+    .section-3>div>div>button {
+
+        margin-top: 40px;
+        width: 200px;
+        height: 50px;
+        border-width: thin;
+        border-color: #f0f0f098;
+        border-radius: 20px; 
+        background-color: #fafafa;
+    }
+
+
+/*###################### Característica da sessão 4 ######################*/
+
+    .sections .section-4>div>div {
+    display: flex;
+    flex-direction: row;
+    gap: 1%;  
+    }
+
+    .sections .section-4>div>div>p>span>img {
+    border-radius: 20px; 
+    }
+
+    .section-4>div>div>button {
+
+    margin-top: 40px;
+    width: 200px;
+    height: 50px;
+    border-width: thin;
+    border-color: #f0f0f098;
+    border-radius: 20px; 
+    background-color: #fafafa;
+    }
+
+/*###################### Característica da sessão 6 ######################*/
+
+    .section-6>div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--cor-de-fundo-branco);
+    }
+
+    .section-6>div>div {
+        display: flex;
+        flex-direction: row;
+        margin: 5%;
+        gap: 5%;
+    }
+
+/*###################### Característica da sessão 7 ######################*/
+
+    .section-7{
+        background-image: repeating-linear-gradient(
+            to bottom,#FFFFFF 0%,
+         #FFFFFF 50%,#F0F0F0 50%,#F0F0F0 100%);
+        
+    }
+    .sections .section-7>div>* {
+        display: flex;
+        height: 180px;
+        width: 90%;
+        margin: 5%;
+        flex-direction: row;
+        background-color: var(--cor-de-fundo-preto);
+        border-radius: 20px;
+
+    }
+
+    .section-7>div>div>header {
+        display: flex;
+        flex-direction: column;
+        width: 47%;
+        color: var(--branco-principal);
+        font-family: "FSP DEMO - Integral CF Bold";
+        font-size: 40px;
+    }
+
+    .send-email {
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        background-color: #F0F0F0;
+        height: 50px;
+        border-radius: 30px;
+        width: 349px;
+        margin: auto;
+        margin-bottom: 5px;
+
+    }
+
+    .img-email {
+        margin-left: 15px;
+    }
+
+    .input-email {
+        
+        background-color: #F0F0F0;
+        border: none;
+        border-color: #F0F0F0;
+        box-shadow: 0 0 0 0;
+        border: 0 none;
+        outline: 0;
+        font-size: 15px;
+        margin-left: 10px;
+        height: 50px;
+        width: 270px;
+        
+    }
+
+    .button-email {
+        
+        height: 48px;
+        border-radius: 30px;
+        background-color: #F0F0F0;
+        border: none;
+        border-color: #F0F0F0;
+        box-shadow: 0 0 0 0;
+        border: 0 none;
+        outline: 0;
+        font-size: 15px;
+        width: 349px;
+    }
+
+/*###################### Footer ######################*/
+
+    .flex-footer{
+        display: flex;
+        flex-direction: column;
+        align-items:center;
+        justify-content:center;
+        width: 100%;
+        height: auto;
+        background-color: #F0F0F0;
+
+    }
+
+    .flex-footer>footer{
+        display: flex;
+        justify-content: space-around;
+        width: 90%;
+        gap: 5%;
+    }
+
+    .flex-footer>footer>div{
+        display: flex;
+        font-family: 'Satoshi';
+        color: #00000086;
+        font-weight:100;
+        font-size: 16px;
+        gap: 7%;
+        flex-direction: column;
+        width: auto;
+    }
+
+    .flex-footer>footer .div-logo{
+        font-size: 12px;
+        width: 30%;
+    }
+
+    .flex-footer>footer>div> .logo {
+        color:rgb(0, 0, 0);
+        font-family: 'FSP DEMO - Integral CF Bold';
+        font-size: 30PX;
+        text-decoration: none;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 10%;
+        
+    }
+
+    .flex-footer>footer>div>span>img {
+        width: 20px;
+        height: 20px;
+        margin-top: 30px;
+        margin-left: 10px;
+        justify-content: space-around;
+
+    }
+
+    .flex-footer>div{
+        display: flex;
+        flex-direction: row;
+        width: 90%;
+        border-top: solid;
+        border-color: #C0C0C0;
+        margin-top: 5%;
+        justify-content: space-between;
+        align-items: center;
+
+        font-family: 'Satoshi';
+        color: #00000086;
+        font-weight:100;
+        font-size: 14px;
+        align-items: center;
+
+    }
+
+/*
+    .botao_secundario {
+        background-color: transparent;
+        border: 2px solid var(--branco-principal);
+    }
+
+
+
+
+*/
+
+
 }

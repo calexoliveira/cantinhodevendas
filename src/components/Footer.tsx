@@ -1,12 +1,12 @@
 export function Footer() {
     return (
-        <div className="grid-footer">
+        <div className="flex-footer">
             <footer>
-                <div>
+                <div className="div-logo">
                     <span className="logo">SHOP.CO</span>
-                    <span className="legenda">
-                        We have clothes that suits your style and 
-                        which you’re proud to wear. From women to men.
+                    <span >
+                        We have clothes that suits your style and <br /> 
+                        which you’re proud to wear. From <br /> women to men.
                     </span>
                     <span>
                         <img src="../src/image/x.png" alt="" /> 
@@ -18,36 +18,36 @@ export function Footer() {
                 <div>
                        <span >Company</span>
                        <span >About</span>
-                       <span className="legenda">Features</span>
-                       <span className="legenda">Works</span>
-                       <span className="legenda">Career</span>
+                       <span >Features</span>
+                       <span >Works</span>
+                       <span >Career</span>
 
                 </div>
                 <div>
                         <span>Help</span>
-                        <span className="legenda">Customer Support</span>
-                        <span className="legenda">Delivery Details</span>
-                        <span className="legenda">Terms & Conditions</span>
-                        <span className="legenda">Privacy Policy</span>
+                        <span >Customer Support</span>
+                        <span >Delivery Details</span>
+                        <span >Terms & Conditions</span>
+                        <span >Privacy Policy</span>
                 </div>
                 <div>
                         <span>FAQ</span>
-                        <span className="legenda">Account</span>
-                        <span className="legenda">Manage Deliveries</span>
-                        <span className="legenda">Orders</span>
-                        <span className="legenda">Payments</span>
+                        <span >Account</span>
+                        <span >Manage Deliveries</span>
+                        <span >Orders</span>
+                        <span >Payments</span>
                 </div>
                 <div>
                         <span>Resources</span>
-                        <span className="legenda">Free eBooks</span>
-                        <span className="legenda">Development Tutorial</span>
-                        <span className="legenda">How to - Blog</span>
-                        <span className="legenda">Youtube Playlist</span>
+                        <span >Free eBooks</span>
+                        <span >Development Tutorial</span>
+                        <span >How to - Blog</span>
+                        <span >Youtube Playlist</span>
                 </div>
             </footer>
             <div>
-                <p className="copyright">Shop.co © 2000-2023, All Rights Reserved</p>
-                <p className="cartao">
+                <p>Shop.co © 2000-2023, All Rights Reserved</p>
+                <p>
                     <img src="../src/image/visa.png" alt="" />
                     <img src="../src/image/mastercard.png" alt="" />
                     <img src="../src/image/paypal.png" alt="" />
