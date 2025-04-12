@@ -1,20 +1,28 @@
 export function NavBar(){
     return(
       <nav className="navbar">
-        <div className="notificacao"><p>Sign up and get 20% off to your first order. Sign Up Now</p></div>
-        <div className="header">
-            <nav></nav>
-            <nav><a href="" className="logo">SHOP.CO</a></nav>
-            <nav><a className="link-menu" href="">Shop</a></nav>
-            <nav><a className="link-menu" href="">On Sale</a></nav>
-            <nav><a className="link-menu" href="">New Arrivals</a></nav>
-            <nav><a className="link-menu" href="">Brands</a></nav>
-            <nav className="search">
-              <img src="../src/image/lupa.png" alt="" />
-              <input type="text" className="input" placeholder="Search for products..." />
-            </nav>
-            <nav><img src="../src/image/carrinho.png" alt="" /></nav>
-            <nav><img src="../src/image/perfil.png" alt="" /></nav>
+        <div className="nav-alerta">
+          <p>Sign up and get 20% off to your first order. Sign Up Now</p>
+          <a href="">X</a>
+        </div>
+        <div className="nav-menu">
+          <div className="img-menu"><img src="../src/image/menu.png" alt="" /></div>
+          <div className="logo-menu"><a href="" >SHOP.CO</a></div>
+          <div className="div-menu">
+            <a href="">Shop</a>
+            <a href="">On Sale</a>
+            <a href="">New Arrivals</a>
+            <a href="">Brands</a>
+          </div>
+          <div className="search-menu">
+            <img src="../src/image/lupa.png" alt="" />
+            <input type="text" placeholder="Search for products..." />
+          </div>
+          <div className="icon-botoes-menu">
+            <img className="lupa-menu" src="../src/image/lupa_black.png" alt="" />
+            <img src="../src/image/carrinho.png" alt="" />
+            <img src="../src/image/perfil.png" alt="" />
+          </div>
         </div>
       </nav>
     );

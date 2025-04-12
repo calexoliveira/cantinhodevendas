@@ -45,89 +45,654 @@
     --font-grande: 70px;
 }
 
-@media (min-width: 1024px)
-{
-    /* NavBar */
+/*############################### Tamanho mobile ################################*/
 
-    .navbar {
-            display: flex;
-            width: 100%;
-            height: 134px;
-            flex-direction: column;
-            align-items: stretch;
-            gap:16px;
+
+/*################################### NavBar ###################################*/
+
+.navbar {
+    display: flex;
+    width: 100%;
+    height: 134px;
+    flex-direction: column;
+    align-items: center;
+    gap:16px;
+
+}
+
+    .nav-alerta {
+        display: flex;
+        flex-direction: row;
+        visibility:visible;
+        width: 95%;
+        height: 38px;
+        align-items: center;
+        background-color: var(--cor-de-fundo-preto);
 
     }
-    .notificacao {
+
+        .navbar .nav-alerta>p {
+            text-align: center;
+            align-items: center;
+            color: var(--branco-principal);
+            font-family: 'Urbanist';
+            font-weight:100;
+            font-size: 14px;
+            width: 95%;
+
+        }
+
+        .navbar .nav-alerta>a {
+            text-align: center;
+            color: var(--branco-principal);
+            font-family: 'Satoshi';
+            font-weight:100;
+            font-size: 14px;
+            width: 5%;
+
+        }
+
+    .nav-menu {
         display: flex;
+        visibility:visible;
+        width: 95%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin-left: 0%;
+        row-gap: 1px;
+        column-gap: 1px;
+
+    }
+
+        .navbar .nav-menu .img-menu {
+            position: relative;
+            visibility: visible;
+            margin-top: 5px;
+
+        }
+
+        .navbar>.nav-menu>.logo-menu{
+            width: 50%;
+            height: auto;
+            justify-content: center;
+
+        }
+
+            .navbar>.nav-menu>.logo-menu>a {
+                color:rgb(0, 0, 0);
+                font-family: 'FSP DEMO - Integral CF Bold';
+                font-size: 25px;
+                text-decoration: none;
+            }
+
+        .navbar>.nav-menu>.div-menu {
+            visibility: hidden;
+            position: absolute;
+            left: 35px;
+            top: 55px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30%;
+            height: auto;
+            align-items: center;
+            background-color: #ff0000;
+
+        }
+
+            .navbar>.nav-menu>.div-menu>a {   
+                color:rgb(0, 0, 0);
+                font-family: 'Satoshi';
+                font-size: 16px;
+                text-decoration: none;
+
+            }
+
+        .navbar>.nav-menu .search-menu {
+
+            display: flex;
+            position: absolute;
+            top: 100px;
+            visibility: hidden;
+            flex-direction: row;
+            background-color: #F0F0F0;
+            height: 38px;
+            width: 90%;
+            border-radius: 30px;
+            align-items: center;
+
+        }
+
+            .navbar .nav-menu .search-menu>img {
+                margin-left: 15px;
+            }
+
+            .navbar .nav-menu .search-menu>input {
+                height: 28px;
+                background-color: transparent;
+                border: none;
+                box-shadow: 0 0 0 0;
+                border: 0 none;
+                outline: 0;
+                font-size: 15px;
+            }
+
+        .navbar>.nav-menu> .icon-botoes-menu .lupa-menu {
+            position: relative;
+            visibility: visible;
+
+        }
+
+        .navbar>.nav-menu> .icon-botoes-menu {
+            display: flex;
+            flex-direction: row;
+            margin-left: 0px;
+            column-gap: 10px;
+            justify-content: center;
+            margin-right: 3%;
+
+        }
+
+
+/* SECTIONS */
+
+/*############# Características padrão para todas as sessões #############*/
+
+.sections {
+    display: flex;
+    width: 97%;
+    flex-direction: column;
+    align-items: center;
+    justify-content:center;
+
+}
+
+    .sections>div {
+        width: 100%;
+        font-family: 'Satoshi';
+        color: #00000086;
+        font-weight:100;
+        font-size: 14px;
+
+    }
+
+        .sections>div>div>header {
+
+            font-family: 'FSP DEMO - Integral CF Bold';
+            font-weight: bold;
+            font-size: 32px;
+            color: #000000;
+            text-align: center;
+            margin-top: 3%;
+            margin-bottom: 3%;
+
+        }
+
+/*########## Fim da características padrão para todas as sessões #########*/
+
+/*###################### Característica da sessão 1 ######################*/
+
+.sections .section-1 {
+    background-image: url("../image/background-menor.png");
+    background-repeat: no-repeat;
+    background-color: #F2F0F1;
+    background-size: auto;
+    background-position: bottom center;
+    height: 853px;
+
+}
+    .estrela {
+        position: absolute;
+        width: 76px;
+        height: 76px;
+        top: 543px;
+        right: 10px;
+
+    }
+
+    .estrela-menor {
+        position: absolute;
+        width: 44px;
+        height: 44px;
+        top: 640px;
+        left: 27px;
+
+    }
+    .section-1-div {
+        display: flex;
+        flex-direction: column;
+        margin-top: 0px;
+        margin-left: 10%;
+        margin-right: 10%;
+        row-gap: 23px;
+    }
+
+    .sections .section-1 .section-1-div>header {
+        font-size: 36px;
+        text-align: center;
+        line-height: 33px;
+    }
+
+        .sections .section-1 .section-1-div>article {
+            font-size: 14px;
+            text-align: justify;
+        }
+
+        .sections .section-1 .section-1-div .button {
+            display: flex;
+            justify-content: left;
+        }
+
+    .sections .section-1 .section-1-div>div>button {
+    background-color: var(--cor-de-fundo-preto);
+    border-top-color: #00030C;
+    border-radius: 30px;
+    width: 100%;
+    height: 52px;
+    color: var(--branco-principal);
+    font-weight: 300;
+    font-size: 14px;
+    }
+
+    .quantitativo {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        flex-direction: row;
+        font-family: 'Satoshi';
+        font-size: 12px;
+        color: #00000086;
+        font-weight:100;
+        column-gap: 15%;
+        margin-bottom: 112px;
+    }
+
+    .fonte-maior {
+        display: block;
+        font-size: 24px;
+        font-weight:bold;
+        color: #000000;
+    }
+
+/*###################### Característica da sessão 2 ######################*/
+
+.sections .section-2 {
+    background-color: var(--cor-de-fundo-preto);
+    width: 100%;
+    min-height: 100px;
+    align-content: center;
+    text-align: center;
+    margin-top: 0%;
+
+}
+    .sections .section-2 .parceiros {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: space-around;
+        
+    }
+    .parceiros>img {
+        max-width: 30%;
+        max-height: 30%;
+    }
+
+/*###################### Característica da sessão 3 ######################*/
+
+.sections .section-3>div>div {
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+gap: 1%;
+}
+
+    .sections .section-3>div>div>p>span>img {
+        border-radius: 10%;
+        max-width: 50%;
+        max-height: 50%;
+    
+    }
+
+    .section-3>div>div>button {
+        margin-top: 40px;
+        width: 200px;
+        height: 50px;
+        border-width: thin;
+        border-color: #f0f0f098;
+        border-radius: 20px; 
+        background-color: #fafafa;
+    }
+
+
+/*###################### Característica da sessão 4 ######################*/
+
+.sections .section-4>div>div {
+display: flex;
+flex-direction: row;
+gap: 1%;  
+}
+
+.sections .section-4>div>div>p>span>img {
+border-radius: 20px; 
+}
+
+.section-4>div>div>button {
+
+margin-top: 40px;
+width: 200px;
+height: 50px;
+border-width: thin;
+border-color: #f0f0f098;
+border-radius: 20px; 
+background-color: #fafafa;
+}
+
+/*###################### Característica da sessão 6 ######################*/
+
+.section-6>div {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background-color: var(--cor-de-fundo-branco);
+}
+
+.section-6>div>div {
+display: flex;
+flex-direction: row;
+margin: 5%;
+gap: 5%;
+}
+
+/*###################### Característica da sessão 7 ######################*/
+
+.section-7{
+background-image: repeating-linear-gradient(
+    to bottom,#FFFFFF 0%,
+ #FFFFFF 50%,#F0F0F0 50%,#F0F0F0 100%);
+
+}
+.sections .section-7>div>* {
+display: flex;
+height: 180px;
+width: 90%;
+margin: 5%;
+flex-direction: row;
+background-color: var(--cor-de-fundo-preto);
+border-radius: 20px;
+
+}
+
+.section-7>div>div>header {
+display: flex;
+flex-direction: column;
+width: 47%;
+color: var(--branco-principal);
+font-family: "FSP DEMO - Integral CF Bold";
+font-size: 40px;
+}
+
+.send-email {
+display: flex;
+align-items: center;
+justify-content: left;
+background-color: #F0F0F0;
+height: 50px;
+border-radius: 30px;
+width: 349px;
+margin: auto;
+margin-bottom: 5px;
+
+}
+
+.img-email {
+margin-left: 15px;
+}
+
+.input-email {
+
+background-color: #F0F0F0;
+border: none;
+border-color: #F0F0F0;
+box-shadow: 0 0 0 0;
+border: 0 none;
+outline: 0;
+font-size: 15px;
+margin-left: 10px;
+height: 50px;
+width: 270px;
+
+}
+
+.button-email {
+
+height: 48px;
+border-radius: 30px;
+background-color: #F0F0F0;
+border: none;
+border-color: #F0F0F0;
+box-shadow: 0 0 0 0;
+border: 0 none;
+outline: 0;
+font-size: 15px;
+width: 349px;
+}
+
+/*###################### Footer ######################*/
+
+.flex-footer{
+display: flex;
+flex-direction: column;
+align-items:center;
+justify-content:center;
+width: 100%;
+height: auto;
+background-color: #F0F0F0;
+
+}
+
+.flex-footer>footer{
+display: flex;
+justify-content: space-around;
+width: 90%;
+gap: 5%;
+}
+
+.flex-footer>footer>div{
+display: flex;
+font-family: 'Satoshi';
+color: #00000086;
+font-weight:100;
+font-size: 16px;
+gap: 7%;
+flex-direction: column;
+width: auto;
+}
+
+.flex-footer>footer .div-logo{
+font-size: 12px;
+width: 30%;
+}
+
+.flex-footer>footer>div> .logo {
+color:rgb(0, 0, 0);
+font-family: 'FSP DEMO - Integral CF Bold';
+font-size: 30PX;
+text-decoration: none;
+align-items: center;
+justify-content: center;
+padding-bottom: 10%;
+
+}
+
+.flex-footer>footer>div>span>img {
+width: 20px;
+height: 20px;
+margin-top: 30px;
+margin-left: 10px;
+justify-content: space-around;
+
+}
+
+.flex-footer>div{
+display: flex;
+flex-direction: row;
+width: 90%;
+border-top: solid;
+border-color: #C0C0C0;
+margin-top: 5%;
+justify-content: space-between;
+align-items: center;
+
+font-family: 'Satoshi';
+color: #00000086;
+font-weight:100;
+font-size: 14px;
+align-items: center;
+
+}
+
+
+@media (min-width: 1024px)
+{
+
+
+/*################################### NavBar ###################################*/
+
+    .navbar {
+        display: flex;
+        width: 100%;
+        height: 134px;
+        flex-direction: column;
+        align-items: stretch;
+        gap:16px;
+
+    }
+
+    .nav-alerta {
+        display: flex;
+        flex-direction: row;
         visibility:visible;
         width: 100%;
         height: 38px;
-        justify-content: center;
         align-items: center;
         background-color: var(--cor-de-fundo-preto);
+
+    }
+
+    .navbar .nav-alerta>p {
+        text-align: center;
+        align-items: center;
         color: var(--branco-principal);
         font-family: 'Urbanist';
         font-weight:100;
         font-size: 14px;
+        width: 95%;
+        
     }
 
-    .header {
-        display: grid;
-        grid-template-columns: repeat(6, auto) 7fr repeat(2, auto);
+    .navbar .nav-alerta>a {
+        text-align: center;
+        color: var(--branco-principal);
+        font-family: 'Satoshi';
+        font-weight:100;
+        font-size: 14px;
+        width: 5%;
+
+    }
+    .navbar .nav-menu .img-menu {
+        position: absolute;
+        visibility: hidden;
+        margin-top: 0px;
+    }
+    .nav-menu {
+        display: flex;
+        visibility:visible;
+        width: 95%;
+        flex-direction: row;
         align-items: center;
-        justify-content: left;
-        gap: 5px;
+        justify-content: space-between;
+        margin-left: 5%;
+        row-gap: 1px;
+        column-gap: 1px;
+
+
     }
 
-    .logo {
+    .navbar>.nav-menu>.logo-menu{
+        width: 20%;
+    }
+
+    .navbar>.nav-menu>.logo-menu>a {
         color:rgb(0, 0, 0);
         font-family: 'FSP DEMO - Integral CF Bold';
         font-size: 33PX;
         text-decoration: none;
+        
+    }
+    .navbar>.nav-menu>.div-menu {
+        position: relative;
+        left: 0px;
+        top: 0px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 30%;
+        visibility:visible;
         align-items: center;
-        justify-content: center;
+        background-color: transparent;
+
     }
 
-    .link-menu {   
+    .navbar>.nav-menu>.div-menu>a {   
         color:rgb(0, 0, 0);
         font-family: 'Satoshi';
-        font-size: 18px;
+        font-size: 16px;
         text-decoration: none;
-        align-items: center;
-        justify-content: center;
+        
     }
 
-    .search {
-        display: grid;
-        grid-template-columns: auto 1fr;
+    .navbar>.nav-menu .search-menu {
+        position: relative;
+        top: 0px;
+        visibility: visible;
+        display: flex;
+        flex-direction: row;
         background-color: #F0F0F0;
         height: 38px;
+        width: 40%;
         border-radius: 30px;
         align-items: center;
         
     }
 
-    .navbar>.header>nav { 
-        min-width: 30px;       
-        padding: 5px;
-        font-family: 'Urbanist';
-        font-weight:100;
-        font-size: 15px;
-        margin-left: 10px;
-        margin-right: 10px;
+    .navbar .nav-menu .search-menu>img {
+        margin-left: 15px;
     }
 
-    .input {
+    .navbar .nav-menu .search-menu>input {
         height: 28px;
+        width: 100%;
         background-color: transparent;
         border: none;
-        border-color: #F0F0F0;
         box-shadow: 0 0 0 0;
         border: 0 none;
         outline: 0;
         font-size: 15px;
-        margin-left: 15px;
+    }
+    .navbar>.nav-menu> .icon-botoes-menu .lupa-menu {
+        position: absolute;
+        visibility: hidden;
+    }
+    .navbar>.nav-menu> .icon-botoes-menu {
+        display: flex;
+        flex-direction: row;
+        margin-left: 0px;
+        column-gap: 10px;
+        margin-right: 1%;
+        
     }
 
     /* SECTIONS */
@@ -164,13 +729,6 @@
         
     }
 
-    .sections>div>div>div {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        
-    }
 
 /*########## Fim da características padrão para todas as sessões #########*/
     
@@ -180,19 +738,25 @@
         background-image: url("../image/background.png");
         background-repeat: no-repeat;
         background-color: #F2F0F1;
-        background-size: 102%;
-        background-position: 0 0px;
+        background-size: 100%;
+        background-position: bottom right;;
+        height: auto;
+
     }
     .estrela {
         position: absolute;
-        margin: 6% 90%;
+        width: 104px;
+        height: 104px;
+        top: 250px;
+        right: 10px;
     }
 
     .estrela-menor {
         position: absolute;
-        margin: 22% 52%;
         width: 56px;
         height: 56px;
+        top: 62%;
+        left: 50%;
     }
     .section-1-div {
         display: flex;
@@ -201,6 +765,7 @@
         margin-left: 4%;
         margin-right: 50%;
         row-gap: 23px;
+        
     }
 
     .sections .section-1 .section-1-div>header {
@@ -211,6 +776,12 @@
 
     .sections .section-1 .section-1-div>article {
         font-size: 16px;
+        text-align: justify;
+    }
+
+    .sections .section-1 .section-1-div .button {
+        display: flex;
+        justify-content: left;
     }
 
     .sections .section-1 .section-1-div>div>button {
@@ -226,6 +797,9 @@
 
     .quantitativo {
         display: flex;
+        flex-wrap: wrap;
+        flex-wrap: wrap;
+        justify-content: space-around;
         flex-direction: row;
         font-family: 'Satoshi';
         font-size: 14px;
@@ -234,7 +808,6 @@
         column-gap: 15%;
         margin-bottom: 112px;
     }
-
     .fonte-maior {
         display: block;
         font-size: 40px;
@@ -247,11 +820,24 @@
     .sections .section-2 {
         background-color: var(--cor-de-fundo-preto);
         width: 100%;
-        height: 120px;
+        min-height: 100px;
         align-content: center;
         text-align: center;
-        margin-top: -3%;
+        margin-top: 0%; 
         
+    }
+
+    .sections .section-2 .parceiros {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-around;
+        
+    }
+    .parceiros>img {
+        max-width: 100%;
+        max-height: 100%;
     }
 
 /*###################### Característica da sessão 3 ######################*/
@@ -465,17 +1051,5 @@
         align-items: center;
 
     }
-
-/*
-    .botao_secundario {
-        background-color: transparent;
-        border: 2px solid var(--branco-principal);
-    }
-
-
-
-
-*/
-
 
 }

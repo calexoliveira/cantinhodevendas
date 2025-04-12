@@ -3,15 +3,15 @@ export function Section() {
         <div className="sections">
 
             <div className="section-1">
-            <img className="estrela" src="../src/image/estrela.png" alt="" />
-            <img className="estrela-menor" src="../src/image/estrela.png" alt="" />
+                <img className="estrela" src="../src/image/estrela.png" alt="" />
+                <img className="estrela-menor" src="../src/image/estrela.png" alt="" />
                 <div className="section-1-div" >
                     <header >FIND CLOTHES THAT MATCHES YOUR STYLE </header>
                     <article >Browse through our diverse range of meticulously 
                         crafted garments, designed to bring out your individuality 
                         and cater to your sense of style.
                     </article>
-                    <div ><button >Shop Now</button></div>
+                    <div className="button"><button >Shop Now</button></div>
                     <div className="quantitativo">
                         <div><span className="fonte-maior">200+</span>
                             <span >International Brands</span>
@@ -24,8 +24,12 @@ export function Section() {
                 </div>
             </div>
             <div className="section-2">
-                <div >
-                    <img src="../src/image/parceiros.png" alt="" />
+                <div className="parceiros">
+                    <img src="../src/image/versace.png" alt="" />
+                    <img src="../src/image/zara.png" alt="" />
+                    <img src="../src/image/gucci.png" alt="" />
+                    <img src="../src/image/prada.png" alt="" />
+                    <img src="../src/image/calvinklein.png" alt="" />
                 </div>
             </div>
             <div className="section-3">
