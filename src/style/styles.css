@@ -213,7 +213,7 @@
         font-family: 'Satoshi';
         color: #00000086;
         font-weight:100;
-        font-size: 14px;
+        font-size: 12px;
 
     }
 
@@ -229,6 +229,16 @@
 
         }
 
+/*
+    .sections>div>div>div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        
+    }*/
+
+    
 /*########## Fim da características padrão para todas as sessões #########*/
 
 /*###################### Característica da sessão 1 ######################*/
@@ -342,17 +352,24 @@
 /*###################### Característica da sessão 3 ######################*/
 
 .sections .section-3>div>div {
-display: flex;
-flex-direction: row;
-flex-wrap: wrap;
-gap: 1%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1%;
+    align-items: center;
+    justify-content: center;
 }
 
-    .sections .section-3>div>div>p>span>img {
+    .sections .section-3>div>div>div>img {
         border-radius: 10%;
-        max-width: 50%;
-        max-height: 50%;
-    
+        max-width: 70%;
+        max-height: 70%;
+    }
+    .sections .section-3>div>div>div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0%;
     }
 
     .section-3>div>div>button {
@@ -365,18 +382,29 @@ gap: 1%;
         background-color: #fafafa;
     }
 
-
 /*###################### Característica da sessão 4 ######################*/
 
 .sections .section-4>div>div {
-display: flex;
-flex-direction: row;
-gap: 1%;  
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1%;
+    align-items: center;
+    justify-content: center;
 }
 
-.sections .section-4>div>div>p>span>img {
-border-radius: 20px; 
-}
+    .sections .section-4>div>div>div>img {
+        border-radius: 10%;
+        max-width: 70%;
+        max-height: 70%;
+    }
+
+    .sections .section-4>div>div>div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0%;
+    }
 
 .section-4>div>div>button {
 
@@ -815,6 +843,7 @@ align-items: center;
         color: #000000;
     }
 
+
 /*###################### Característica da sessão 2 ######################*/
 
     .sections .section-2 {
@@ -845,11 +874,24 @@ align-items: center;
     .sections .section-3>div>div {
         display: flex;
         flex-direction: row;
-        gap: 1%;  
+        flex-wrap: nowrap;
+        gap: 1%;
+        align-items: center;
+        justify-content: center;
+
     }
 
     .sections .section-3>div>div>p>span>img {
         border-radius: 10%; 
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .sections .section-3>div>div>div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0%;
     }
 
     .section-3>div>div>button {
@@ -863,7 +905,7 @@ align-items: center;
         background-color: #fafafa;
     }
 
-
+        
 /*###################### Característica da sessão 4 ######################*/
 
     .sections .section-4>div>div {
