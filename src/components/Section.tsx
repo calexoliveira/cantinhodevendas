@@ -100,12 +100,12 @@ export function Section() {
                 <div >
                     <header >BROWSE BY dress STYLE</header>
                     <div>
-                        <span><img className="imagem" src="../src/image/casual.png" alt="" /></span>
-                        <span><img className="imagem" src="../src/image/formal.png" alt="" /></span>
+                        <img className="imagem" src="../src/image/casual.png" alt="" />
+                        <img className="imagem" src="../src/image/formal.png" alt="" />
                     </div>
                     <div>
-                        <span><img className="imagem" src="../src/image/party.png" alt="" /></span>
-                        <span><img className="imagem" src="../src/image/gym.png" alt="" /></span>
+                        <img className="imagem" src="../src/image/party.png" alt="" />
+                        <img className="imagem" src="../src/image/gym.png" alt="" />
                     </div>
                 </div>
             </div>

@@ -5,8 +5,8 @@ export function Footer() {
                 <div className="div-logo">
                     <span className="logo">SHOP.CO</span>
                     <span >
-                        We have clothes that suits your style and <br /> 
-                        which you’re proud to wear. From <br /> women to men.
+                        We have clothes that suits your style and 
+                        which you’re proud to wear. From women to men.
                     </span>
                     <span>
                         <img src="../src/image/x.png" alt="" /> 
@@ -16,7 +16,7 @@ export function Footer() {
                     </span>
                 </div>
                 <div>
-                       <span >Company</span>
+                       <h1 >Company</h1>
                        <span >About</span>
                        <span >Features</span>
                        <span >Works</span>
@@ -24,21 +24,21 @@ export function Footer() {
 
                 </div>
                 <div>
-                        <span>Help</span>
+                        <h1>Help</h1>
                         <span >Customer Support</span>
                         <span >Delivery Details</span>
                         <span >Terms & Conditions</span>
                         <span >Privacy Policy</span>
                 </div>
                 <div>
-                        <span>FAQ</span>
+                        <h1>FAQ</h1>
                         <span >Account</span>
                         <span >Manage Deliveries</span>
                         <span >Orders</span>
                         <span >Payments</span>
                 </div>
                 <div>
-                        <span>Resources</span>
+                        <h1>Resources</h1>
                         <span >Free eBooks</span>
                         <span >Development Tutorial</span>
                         <span >How to - Blog</span>

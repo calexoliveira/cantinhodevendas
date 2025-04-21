@@ -406,6 +406,7 @@
         gap: 0%;
     }
 
+    
 .section-4>div>div>button {
 
 margin-top: 40px;
@@ -415,6 +416,32 @@ border-width: thin;
 border-color: #f0f0f098;
 border-radius: 20px; 
 background-color: #fafafa;
+}
+
+/*###################### Característica da sessão 5 ######################*/
+
+
+.sections>div.section-5>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sections>div.section-5>div>header {
+    
+    font-size: 32px;
+}
+
+.sections>div.section-5>div>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sections>div.section-5>div>div>img {
+    width: 80%;
 }
 
 /*###################### Característica da sessão 6 ######################*/
@@ -429,9 +456,9 @@ background-color: var(--cor-de-fundo-branco);
 
 .section-6>div>div {
 display: flex;
-flex-direction: row;
+flex-direction: column;
 margin: 5%;
-gap: 5%;
+gap: 10px;
 }
 
 /*###################### Característica da sessão 7 ######################*/
@@ -444,104 +471,138 @@ background-image: repeating-linear-gradient(
 }
 .sections .section-7>div>* {
 display: flex;
-height: 180px;
+min-height: 293px;
 width: 90%;
 margin: 5%;
-flex-direction: row;
+flex-direction: column;
+justify-content: space-around;
 background-color: var(--cor-de-fundo-preto);
 border-radius: 20px;
-
 }
 
 .section-7>div>div>header {
 display: flex;
 flex-direction: column;
-width: 47%;
+width: 80%;
 color: var(--branco-principal);
 font-family: "FSP DEMO - Integral CF Bold";
-font-size: 40px;
+font-size: 32px;
+text-align: center;
+margin-left: auto;
+margin-right: auto;
+}
+
+.sections .section-7>div>div>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
 }
 
 .send-email {
-display: flex;
-align-items: center;
-justify-content: left;
-background-color: #F0F0F0;
-height: 50px;
-border-radius: 30px;
-width: 349px;
-margin: auto;
-margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    background-color: #F0F0F0;
+    height: 50px;
+    border-radius: 30px;
+    width: 249px;
+    margin: auto;
+    margin-bottom: 5px;
 
 }
 
 .img-email {
-margin-left: 15px;
+    margin-left: 15px;
+    width: 12px;
+    height: 12px;
 }
 
 .input-email {
 
-background-color: #F0F0F0;
-border: none;
-border-color: #F0F0F0;
-box-shadow: 0 0 0 0;
-border: 0 none;
-outline: 0;
-font-size: 15px;
-margin-left: 10px;
-height: 50px;
-width: 270px;
+    background-color: #F0F0F0;
+    border: none;
+    border-color: #F0F0F0;
+    box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
+    font-size: 12px;
+    margin-left: 10px;
+    height: 50px;
+    width: 180px;
 
 }
 
 .button-email {
 
-height: 48px;
-border-radius: 30px;
-background-color: #F0F0F0;
-border: none;
-border-color: #F0F0F0;
-box-shadow: 0 0 0 0;
-border: 0 none;
-outline: 0;
-font-size: 15px;
-width: 349px;
+    height: 48px;
+    border-radius: 30px;
+    background-color: #F0F0F0;
+    border: none;
+    border-color: #F0F0F0;
+    box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
+    font-size: 12px;
+    width: 249px;
 }
 
 /*###################### Footer ######################*/
 
 .flex-footer{
-display: flex;
-flex-direction: column;
-align-items:center;
-justify-content:center;
-width: 100%;
-height: auto;
-background-color: #F0F0F0;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    width: 90%;
+    height: auto;
+    background-color: #F0F0F0;
 
 }
 
 .flex-footer>footer{
-display: flex;
-justify-content: space-around;
-width: 90%;
-gap: 5%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 90%;
+    gap: 10px;
 }
 
 .flex-footer>footer>div{
-display: flex;
-font-family: 'Satoshi';
-color: #00000086;
-font-weight:100;
-font-size: 16px;
-gap: 7%;
-flex-direction: column;
-width: auto;
+    display: flex;
+    gap: 5px;
+    font-family: 'Satoshi';
+    color: #00000086;
+    font-weight:100;
+    font-size: 14px;
+    flex-direction: column;
+    width: 40%;
+}
+
+.flex-footer>footer>div>h1{
+    
+    font-family: 'Satoshi';
+    color: #00000086;
+    font-weight:900;
+    font-size: 16px;
+    width: 40%;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .flex-footer>footer .div-logo{
-font-size: 12px;
-width: 30%;
+    display: flex;
+    font-family: 'Satoshi';
+    color: #00000086;
+    font-weight:100;
+    font-size: 16px;
+    flex-direction: column;
+    width: 90%;
+    flex-grow: 1;
+    font-size: 12px;
+    gap: 10px;
+    
 }
 
 .flex-footer>footer>div> .logo {
@@ -551,14 +612,14 @@ font-size: 30PX;
 text-decoration: none;
 align-items: center;
 justify-content: center;
-padding-bottom: 10%;
+padding-bottom: 0%;
 
 }
 
 .flex-footer>footer>div>span>img {
 width: 20px;
 height: 20px;
-margin-top: 30px;
+margin-top: 10px;
 margin-left: 10px;
 justify-content: space-around;
 
@@ -566,7 +627,7 @@ justify-content: space-around;
 
 .flex-footer>div{
 display: flex;
-flex-direction: row;
+flex-direction: column;
 width: 90%;
 border-top: solid;
 border-color: #C0C0C0;
@@ -577,7 +638,7 @@ align-items: center;
 font-family: 'Satoshi';
 color: #00000086;
 font-weight:100;
-font-size: 14px;
+font-size: 12px;
 align-items: center;
 
 }
@@ -929,7 +990,19 @@ align-items: center;
     background-color: #fafafa;
     }
 
+/*###################### Característica da sessão 5 ######################*/
+
+
+    .sections>div.section-5>div>div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        
+    }
+
 /*###################### Característica da sessão 6 ######################*/
+
 
     .section-6>div {
         display: flex;
@@ -942,6 +1015,8 @@ align-items: center;
     .section-6>div>div {
         display: flex;
         flex-direction: row;
+        align-items: center;
+        justify-content: center;
         margin: 5%;
         gap: 5%;
     }
@@ -964,7 +1039,13 @@ align-items: center;
         border-radius: 20px;
 
     }
-
+    .sections>div.section-7>div>div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        
+    }
     .section-7>div>div>header {
         display: flex;
         flex-direction: column;
