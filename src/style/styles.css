@@ -201,7 +201,7 @@
 
 .sections {
     display: flex;
-    width: 97%;
+    width: 100%;
     flex-direction: column;
     align-items: center;
     justify-content:center;
@@ -355,23 +355,26 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 1%;
     align-items: center;
     justify-content: center;
+    text-align: center;
 }
 
     .sections .section-3>div>div>div>img {
         border-radius: 10%;
-        max-width: 70%;
-        max-height: 70%;
+        max-width: 100%;
+        max-height: 100%;
     }
+
     .sections .section-3>div>div>div {
         display: flex;
         flex-direction: column;
         align-items: center;
-
+        gap: 0%;
+        flex-grow: 1; /* Permite que os itens cresçam para preencher o espaço */
+        flex-shrink: 1; /* Permite que os itens encolham quando necessário */
+        width: 50%; /* Largura percentual, ajusta-se ao container */
     }
-
     .section-3>div>div>button {
         margin-top: 40px;
         width: 200px;
@@ -388,15 +391,15 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 1%;
     align-items: center;
     justify-content: center;
+    text-align: center;
 }
 
     .sections .section-4>div>div>div>img {
         border-radius: 10%;
-        max-width: 70%;
-        max-height: 70%;
+        max-width: 100%;
+        max-height: 100%;
     }
 
     .sections .section-4>div>div>div {
@@ -404,6 +407,9 @@
         flex-direction: column;
         align-items: center;
         gap: 0%;
+        flex-grow: 1; /* Permite que os itens cresçam para preencher o espaço */
+        flex-shrink: 1; /* Permite que os itens encolham quando necessário */
+        width: 50%; /* Largura percentual, ajusta-se ao container */
     }
 
     
@@ -965,7 +971,39 @@ align-items: center;
         border-radius: 20px; 
         background-color: #fafafa;
     }
-
+    .sections .section-3>div>div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    
+        .sections .section-3>div>div>div>img {
+            border-radius: 10%;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    
+        .sections .section-3>div>div>div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0%;
+            flex-grow: 1; /* Permite que os itens cresçam para preencher o espaço */
+            flex-shrink: 1; /* Permite que os itens encolham quando necessário */
+            width: 50%; /* Largura percentual, ajusta-se ao container */
+        }
+        .section-3>div>div>button {
+            margin-top: 40px;
+            width: 200px;
+            height: 50px;
+            border-width: thin;
+            border-color: #f0f0f098;
+            border-radius: 20px; 
+            background-color: #fafafa;
+        }
         
 /*###################### Característica da sessão 4 ######################*/
 
@@ -990,6 +1028,8 @@ align-items: center;
     background-color: #fafafa;
     }
 
+
+    
 /*###################### Característica da sessão 5 ######################*/
 
 
