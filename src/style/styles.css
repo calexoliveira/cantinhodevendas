@@ -798,6 +798,8 @@ align-items: center;
 
         display: flex;
         width: 100%;
+        min-width: 1024px; /* Não encolhe menos que 1024px */
+        max-width: 1366px; /* Não expande mais que 1366px */
         flex-direction: column;
         align-items: center;
         justify-content:center;
@@ -835,7 +837,7 @@ align-items: center;
         background-color: #F2F0F1;
         background-size: 100%;
         background-position: bottom right;;
-        height: auto;
+        height: 100%;
 
     }
     .estrela {
@@ -938,16 +940,16 @@ align-items: center;
 
 /*###################### Característica da sessão 3 ######################*/
 
+
     .sections .section-3>div>div {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         flex-wrap: wrap;
-        gap: 1%;
         align-items: center;
+        gap: 1%;
         justify-content: center;
-
+        text-align: center;
     }
-
     .sections .section-3>div>div>p>span>img {
         border-radius: 10%; 
         max-width: 100%;
@@ -973,14 +975,7 @@ align-items: center;
         border-radius: 20px; 
         background-color: #fafafa;
     }
-    .sections .section-3>div>div {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
+
 /*###################### Característica da sessão 4 ######################*/
 
     .sections .section-4>div>div {
