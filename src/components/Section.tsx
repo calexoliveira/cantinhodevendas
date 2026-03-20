@@ -3,25 +3,37 @@ export function Section() {
         <div className="sections">
 
             <div className="section-1">
-                <img className="estrela" src="../src/image/estrela.png" alt="" />
-                <img className="estrela-menor" src="../src/image/estrela.png" alt="" />
-                <div className="section-1-div" >
-                    <header >FIND CLOTHES THAT MATCHES YOUR STYLE </header>
-                    <article >Browse through our diverse range of meticulously 
+                <div className="before">
+                    <p>&lt;</p>
+                </div>
+                <div className="anuncio" >
+                    <div className="titulo">FIND CLOTHES THAT MATCHES YOUR STYLE </div>
+                    <article >
+                        Browse through our diverse range of meticulously 
                         crafted garments, designed to bring out your individuality 
                         and cater to your sense of style.
                     </article>
                     <div className="button"><button >Shop Now</button></div>
                     <div className="quantitativo">
-                        <div><span className="fonte-maior">200+</span>
+                        <div>
+                            <span className="fonte-maior">200+</span>
                             <span >International Brands</span>
                         </div>
-                        <div><span className="fonte-maior">2,000+</span>
-                            <span >High-Quality Products</span></div>
-                        <div><span className="fonte-maior">30,000+ </span>
-                            <span >Happy Customers</span></div>
+                        <div>
+                            <span className="fonte-maior">2,000+</span>
+                            <span >High-Quality Products</span>
+                        </div>
+                        <div>
+                            <span className="fonte-maior">30,000+ </span>
+                            <span >Happy Customers</span>
+                        </div>
                     </div>
                 </div>
+                <div className="after">
+                    <p className="setas">&gt;</p>
+
+                </div>
+                <div className="section-1-nav">teste</div>
             </div>
             <div className="section-2">
                 <div className="parceiros">
