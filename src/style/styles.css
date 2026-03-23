@@ -31,7 +31,7 @@
 }
 
 *{
-    margin: 0;
+    margin: auto;
     padding: 0;
 }
 
@@ -801,6 +801,7 @@ align-items: center;
         min-width: 1024px; /* Não encolhe menos que 1024px */
         max-width: 1366px; /* Não expande mais que 1366px */
         flex-direction: column;
+        align-content: center;
         align-items: center;
         justify-content:center;
 
