@@ -205,9 +205,9 @@
     flex-direction: column;
     align-items: center;
     justify-content:center;
+    min-width: 540px; /* Não encolhe menos que 1024px */
 
 }
-
     .sections>div {
         width: 100%;
         font-family: 'Satoshi';
@@ -243,66 +243,81 @@
 
 /*###################### Característica da sessão 1 ######################*/
 
-.sections .section-1 {
-    background-image: url("../image/background-menor.png");
-    background-repeat: no-repeat;
-    background-color: #F2F0F1;
-    background-size: auto;
-    background-position: bottom center;
-    height: 853px;
 
-}
-    .estrela {
-        position: absolute;
-        width: 76px;
-        height: 76px;
-        top: 543px;
-        right: 10px;
-
-    }
-
-    .estrela-menor {
-        position: absolute;
-        width: 44px;
-        height: 44px;
-        top: 640px;
-        left: 27px;
-
-    }
-    .section-1-div {
+    .sections .section-1{
+        background-image: url("../image/background_imagem.png");
+        background-repeat: no-repeat;
+        background-color: #F2F0F1;
+        background-size:contain;
+        background-position: bottom right;
         display: flex;
-        flex-direction: column;
-        margin-top: 0px;
-        margin-left: 10%;
-        margin-right: 10%;
-        row-gap: 23px;
+        flex-direction: row;
+        margin-left: 2%;
+        margin-right: 2%;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 90%;
     }
 
-    .sections .section-1 .section-1-div>header {
-        font-size: 36px;
+    .sections .section-1 .before {
+        flex: 5%;
+        background-color: var(--cor-de-fundo-preto);
+        border-color: #00030C;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        width: auto;
+        height: auto;
+        color: var(--branco-principal);
+        font-weight: auto;
+        font-size: auto;
         text-align: center;
-        line-height: 33px;
+        justify-content: center;
+    }
+    .sections .section-1 .setas {
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: auto;
+        color: #167BF7;
+    }
+    .sections .section-1 .after {
+        flex: 5%;
+    }
+        .sections .section-1 .section-1-nav {
+        flex: 100%;
     }
 
-        .sections .section-1 .section-1-div>article {
+    .sections .section-1 .anuncio{
+
+        display: flex;
+        gap: 20px;
+        flex: 80%;
+        width: auto;
+        flex-direction: column;
+        
+    }
+
+    .sections .section-1 .anuncio .titulo {
+        
+        font-family: 'FSP DEMO - Integral CF Bold';
+        font-weight: bold;
+        color: #000000;
+        font-size: 30px;
+        text-align: center;
+        line-height: 40px;
+    }
+        .sections .section-1 .anuncio>article {
             font-size: 14px;
             text-align: justify;
         }
 
-        .sections .section-1 .section-1-div .button {
-            display: flex;
-            justify-content: left;
-        }
-
-    .sections .section-1 .section-1-div>div>button {
-    background-color: var(--cor-de-fundo-preto);
-    border-top-color: #00030C;
-    border-radius: 30px;
-    width: 100%;
-    height: 52px;
-    color: var(--branco-principal);
-    font-weight: 300;
-    font-size: 14px;
+    .sections .section-1 .anuncio>div>button {
+        background-color: var(--cor-de-fundo-preto);
+        border-top-color: #00030C;
+        border-radius: 30px;
+        width: 210px;
+        height: 52px;
+        color: var(--branco-principal);
+        font-weight: 300;
+        font-size: 14px;
     }
 
     .quantitativo {
@@ -315,15 +330,15 @@
         color: #00000086;
         font-weight:100;
         column-gap: 15%;
-        margin-bottom: 112px;
     }
-
     .fonte-maior {
         display: block;
         font-size: 24px;
         font-weight:bold;
         color: #000000;
     }
+
+
 
 /*###################### Característica da sessão 2 ######################*/
 
@@ -819,11 +834,12 @@ align-items: center;
 
         font-family: 'FSP DEMO - Integral CF Bold';
         font-weight: bold;
-        font-size: 50px;
         color: #000000;
-        text-align: center;
         margin-top: 3%;
         margin-bottom: 3%;
+        font-size: 50px;
+        text-align: center;
+        line-height: 66px;
         
     }
 
@@ -832,57 +848,71 @@ align-items: center;
     
 /*###################### Característica da sessão 1 ######################*/
 
-    .sections .section-1 {
+    .sections .section-1{
+
         background-image: url("../image/background.png");
         background-repeat: no-repeat;
         background-color: #F2F0F1;
-        background-size: 100%;
-        background-position: bottom right;;
-        height: 100%;
+        background-size:contain;
+        background-position: bottom right;
+        display:flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        background-color: #F2F0F1;
+        width: 100%;
+    }
+    .sections .section-1 .before {
+        flex: 2%;
+        background-color: var(--cor-de-fundo-preto);
+        border-color: #00030C;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        width: auto;
+        height: auto;
+        color: var(--branco-principal);
+        font-weight: auto;
+        font-size: auto;
+        text-align: center;
+        justify-content: center;
+    }
+    .sections .section-1 .setas {
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: auto;
+        color: #167BF7;
+    }
+    .sections .section-1 .after {
+        flex: 2%;
+    }
+        .sections .section-1 .section-1-nav {
+        flex: 100%;
+    }
 
-    }
-    .estrela {
-        position: absolute;
-        width: 104px;
-        height: 104px;
-        top: 250px;
-        right: 10px;
-    }
+    .sections .section-1 .anuncio{
 
-    .estrela-menor {
-        position: absolute;
-        width: 56px;
-        height: 56px;
-        top: 62%;
-        left: 50%;
-    }
-    .section-1-div {
         display: flex;
+        gap: 20px;
+        flex: 90%;
+        width: auto;
         flex-direction: column;
-        margin-top: 90px;
-        margin-left: 4%;
-        margin-right: 50%;
-        row-gap: 23px;
         
     }
 
-    .sections .section-1 .section-1-div>header {
-        font-size: 65px;
-        text-align: left;
-        line-height: 66px;
+    .sections .section-1 .anuncio .titulo {
+        
+        font-family: 'FSP DEMO - Integral CF Bold';
+        font-weight: bold;
+        color: #000000;
+        font-size: 50px;
+        text-align: center;
+        line-height: 40px;
     }
 
-    .sections .section-1 .section-1-div>article {
+    .sections .section-1 .anuncio>article {
         font-size: 16px;
         text-align: justify;
     }
 
-    .sections .section-1 .section-1-div .button {
-        display: flex;
-        justify-content: left;
-    }
-
-    .sections .section-1 .section-1-div>div>button {
+    .sections .section-1 .anuncio>div>button {
         background-color: var(--cor-de-fundo-preto);
         border-top-color: #00030C;
         border-radius: 30px;
@@ -896,15 +926,12 @@ align-items: center;
     .quantitativo {
         display: flex;
         flex-wrap: wrap;
-        flex-wrap: wrap;
         justify-content: space-around;
         flex-direction: row;
         font-family: 'Satoshi';
         font-size: 14px;
         color: #00000086;
         font-weight:100;
-        column-gap: 15%;
-        margin-bottom: 112px;
     }
     .fonte-maior {
         display: block;
