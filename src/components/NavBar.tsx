@@ -6,7 +6,11 @@ export function NavBar(){
           <a href="">X</a>
         </div>
         <div className="nav-menu">
-          <div className="img-menu"><img src="../src/image/menu.png" alt="" /></div>
+          <div className="img-menu">
+            <button className="hamburger" id="hamburgerButton">
+              <i className="fas fa-bars" ></i>
+            </button>
+          </div>
           <div className="logo-menu"><a href="" >SHOP.CO</a></div>
           <div className="div-menu">
             <a href="">Shop</a>

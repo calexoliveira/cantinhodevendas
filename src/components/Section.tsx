@@ -1,7 +1,6 @@
 export function Section() {
     return(
         <div className="sections">
-
             <div className="section-1">
                 <div className="before">
                     <p>&lt;</p>
