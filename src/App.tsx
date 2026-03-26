@@ -3,7 +3,7 @@ import { Footer } from "./components/Footer";
 import { AppRoutes } from "./routes";
 import { NavBar } from "./components/NavBar";
 import "./style/styles.css";
-import "./style/allmin.css";
+
 
 function App() {
 
