@@ -4,7 +4,6 @@ import { AppRoutes } from "./routes";
 import { NavBar } from "./components/NavBar";
 import "./style/styles.css";
 
-
 function App() {
 
   return (

@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=menu');
+
 @font-face {
     font-family: 'FSP DEMO - Integral CF Bold';
     src: local(FSP DEMO - Integral CF Bold),url('../fonts/Demo_Fonts/Fontspring-DEMO-integralcf-bold.otf');
@@ -60,12 +62,33 @@
 
 }
 
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Tamanho do ícone */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+.icon-custom {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 700,
+    'GRAD' 0,
+    'opsz' 48;
+  color: red; /* Você pode mudar a cor facilmente */
+}
 .hamburger {
 
-    font-size: 60px;
-    background:fixed;
-    border: solid;
-    color: #000000;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #707070;
     cursor: pointer;
     display: block;
 }

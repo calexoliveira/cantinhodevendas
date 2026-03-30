@@ -8,8 +8,16 @@ export function NavBar(){
         <div className="nav-menu">
           <div className="img-menu">
             <button className="hamburger" id="hamburgerButton">
-              <i className="fas fa-bars" ></i>
+              <span className="material-symbols-outlined">menu</span>
             </button>
+            <button className="close" id="closeButton">
+              <span className="material-symbols-outlined">close</span>
+            </button>
+            <ul className="nav-links-mobile">
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Sobre</a></li>
+              <li><a href="#">Login</a></li>
+            </ul>
           </div>
           <div className="logo-menu"><a href="" >SHOP.CO</a></div>
           <div className="div-menu">
