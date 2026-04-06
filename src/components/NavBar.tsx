@@ -13,6 +13,8 @@ export function NavBar(){
             <button className="close" id="closeButton">
               <span className="material-symbols-outlined">close</span>
             </button>
+            <button className="flex items-center">
+    </button>
             <ul className="nav-links-mobile">
               <li><a href="#">Blog</a></li>
               <li><a href="#">Sobre</a></li>
