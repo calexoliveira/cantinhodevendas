@@ -52,7 +52,7 @@
 
 /*################################### NavBar ###################################*/
 
-/*Estilo para o menu mobile*/
+/*Estilo para o menu mobile
 
 .navbar-mobile {
   background-color: #333;
@@ -250,24 +250,26 @@
         }
 
             .navbar>.nav-menu>.logo-menu>a {
-                color:rgb(0, 0, 0);
+                color:rgb(255, 255, 255);
                 font-family: 'FSP DEMO - Integral CF Bold';
                 font-size: 25px;
                 text-decoration: none;
             }
 
         .navbar>.nav-menu>.div-menu {
-            visibility: hidden;
-            position: absolute;
-            left: 35px;
-            top: 55px;
-            display: flex;
+
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 60%;
+            min-height: 200px;
+            background-color: rgba(0, 0, 0, 0.9);
             flex-direction: column;
-            justify-content: space-around;
-            width: 30%;
-            height: auto;
             align-items: center;
-            background-color: #ff0000;
+            font-size: 1.8rem;
+            z-index: 5;
+            
 
         }
 
@@ -886,7 +888,9 @@ align-items: center;
         visibility:visible;
         align-items: center;
         background-color: transparent;
+        min-height: auto;
 
+        
     }
 
     .navbar>.nav-menu>.div-menu>a {   

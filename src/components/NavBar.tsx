@@ -6,16 +6,17 @@ export function NavBar(){
           <a href="">X</a>
         </div>
         <div className="nav-menu">
-          <div className="img-menu">
+          <div className="img-menu" id="mobileMenu">
             <button className="hamburger" id="hamburgerButton">
-              <span className="material-symbols-outlined">menu</span>
+              <i className="material-symbols-outlined">menu</i>
             </button>
             <button className="close" id="closeButton">
-              <span className="material-symbols-outlined">close</span>
+              <i className="material-symbols-outlined">close</i>
             </button>
           </div>
           <div className="logo-menu"><a href="" >SHOP.CO</a></div>
           <div className="div-menu">
+
             <a href="">Shop</a>
             <a href="">On Sale</a>
             <a href="">New Arrivals</a>
