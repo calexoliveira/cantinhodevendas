@@ -1,4 +1,5 @@
 export function NavBar(){
+  
     return(
       <nav className="navbar">
         <div className="nav-alerta">
