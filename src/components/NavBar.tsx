@@ -1,5 +1,15 @@
+'use client';
+
+import { useState } from 'react';
+
 export function NavBar(){
   
+  // Estado para controlar se o menu está aberto ou fechado
+  const [isOpen, setIsMenuOpen] = useState(false);
+
+  // Função para alternar o estado
+  const toggleMenu = () => alert("ok");
+
     return(
       <nav className="navbar">
         <div className="nav-alerta">
@@ -8,7 +18,7 @@ export function NavBar(){
         </div>
         <div className="nav-menu">
           <div className="img-menu" id="mobileMenu">
-            <button className="hamburger" id="hamburgerButton">
+            <button className="hamburger" id="hamburgerButton" onClick={() => setIsMenuOpen(!toggleMenu)}>
               <i className="material-symbols-outlined">menu</i>
             </button>
             <button className="close" id="closeButton">
