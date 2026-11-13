@@ -378,7 +378,7 @@
 
 
     .sections .section-1{
-        background-image: url("../image/background_imagem.png");
+        background-image: url("/./src/image/background_imagem.png");
         background-repeat: no-repeat;
         background-color: #F2F0F1;
         background-size:contain;
@@ -988,7 +988,7 @@ align-items: center;
 
     .sections .section-1{
 
-        background-image: url("../image/background.png");
+        background-image: url("/./src/image/background.png");
         background-repeat: no-repeat;
         background-color: #F2F0F1;
         background-size:contain;

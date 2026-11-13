@@ -1,48 +1,134 @@
-'use client';
+import { type FormEvent, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
+import { useFavorites } from '../context/FavoritesContext';
 
-import { useState } from 'react';
+const menuItems = [
+ { to: '/', label: 'Início' },
+ { to: '/produtos', label: 'Produtos' },
+ { to: '/carrinho', label: 'Carrinho' },
+];
 
-export function NavBar(){
-  
-  // Estado para controlar se o menu está aberto ou fechado
-  const [isOpen, setIsMenuOpen] = useState(false);
+type NavBarProps = {
+ darkMode: boolean;
+ onToggleTheme: () => void;
+};
 
-  // Função para alternar o estado
-  const toggleMenu = () => alert("ok");
+export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
+ const [isOpen, setIsOpen] = useState(false);
+ const [searchValue, setSearchValue] = useState('');
+ const navigate = useNavigate();
+ const { itemCount } = useCart();
+ const { favorites } = useFavorites();
+ const { user, logout } = useAuth();
 
-    return(
-      <nav className="navbar">
-        <div className="nav-alerta">
-          <p>Sign up and get 20% off to your first order. Sign Up Now</p>
-          <a href="">X</a>
-        </div>
-        <div className="nav-menu">
-          <div className="img-menu" id="mobileMenu">
-            <button className="hamburger" id="hamburgerButton" onClick={() => setIsMenuOpen(!toggleMenu)}>
-              <i className="material-symbols-outlined">menu</i>
-            </button>
-            <button className="close" id="closeButton">
-              <i className="material-symbols-outlined">close</i>
-            </button>
-          </div>
-          <div className="logo-menu"><a href="" >SHOP.CO</a></div>
-          <div className="div-menu">
+ const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+   event.preventDefault();
+   const trimmedValue = searchValue.trim();
+   navigate(trimmedValue ? `/produtos?search=${encodeURIComponent(trimmedValue)}` : '/produtos');
+   setIsOpen(false);
+ };
 
-            <a href="">Shop</a>
-            <a href="">On Sale</a>
-            <a href="">New Arrivals</a>
-            <a href="">Brands</a>
-          </div>
-          <div className="search-menu">
-            <img src="../src/image/lupa.png" alt="" />
-            <input type="text" placeholder="Search for products..." />
-          </div>
-          <div className="icon-botoes-menu">
-            <img className="lupa-menu" src="../src/image/lupa_black.png" alt="" />
-            <img src="../src/image/carrinho.png" alt="" />
-            <img src="../src/image/perfil.png" alt="" />
-          </div>
-        </div>
-      </nav>
-    );
+ return (
+   <header className="site-header">
+     <div className="top-alert">
+       <span>Cadastre-se e ganhe 20% de desconto na sua primeira compra.</span>
+       <NavLink to="/login">{user ? `Olá, ${user.name}` : 'Entrar'}</NavLink>
+     </div>
+
+     <div className="navbar">
+       <button
+         type="button"
+         className="mobile-toggle"
+         aria-label="Abrir menu"
+         onClick={() => setIsOpen((open) => !open)}
+       >
+         {isOpen ? '✕' : '☰'}
+       </button>
+
+       <NavLink to="/" className="brand">
+         MINHALOJA
+       </NavLink>
+
+       <nav className="nav-links" aria-label="Menu principal">
+         {menuItems.map((item) => (
+           <NavLink
+             key={item.to}
+             to={item.to}
+             className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+           >
+             {item.label}
+           </NavLink>
+         ))}
+
+         {user?.isAdmin ? (
+           <NavLink to="/admin" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+             Admin
+           </NavLink>
+         ) : null}
+       </nav>
+
+       <form className="nav-search" aria-label="Pesquisar produtos" onSubmit={handleSearch}>
+         <input
+           type="text"
+           placeholder="Buscar produtos..."
+           value={searchValue}
+           onChange={(event) => setSearchValue(event.target.value)}
+         />
+       </form>
+
+       <div className="nav-actions">
+         <button type="button" className="icon-button theme-toggle" aria-label="Alternar tema" onClick={onToggleTheme}>
+           {darkMode ? '☀' : '☾'}
+         </button>
+
+         <NavLink to="/favoritos" className="icon-button favorite-pill" aria-label="Favoritos">
+           ♥
+           {favorites.length > 0 ? <span>{favorites.length}</span> : null}
+         </NavLink>
+         <NavLink to="/carrinho" className="icon-button cart-pill" aria-label="Carrinho">
+           🛒
+           {itemCount > 0 ? <span>{itemCount}</span> : null}
+         </NavLink>
+
+         {user ? (
+           <>
+             <NavLink to="/conta" className="icon-button" aria-label="Minha conta">
+               👤
+             </NavLink>
+             <button type="button" className="icon-button" aria-label="Sair" onClick={logout}>
+               ↩
+             </button>
+           </>
+         ) : (
+           <NavLink to="/login" className="icon-button" aria-label="Perfil">
+             👤
+           </NavLink>
+         )}
+       </div>
+     </div>
+
+     <nav className={isOpen ? 'mobile-menu open' : 'mobile-menu'} aria-label="Menu mobile">
+       {menuItems.map((item) => (
+         <NavLink key={item.to} to={item.to} onClick={() => setIsOpen(false)}>
+           {item.label}
+         </NavLink>
+       ))}
+       <NavLink to="/favoritos" onClick={() => setIsOpen(false)}>
+         Favoritos
+       </NavLink>
+       {user ? (
+         <NavLink to="/conta" onClick={() => setIsOpen(false)}>
+           Minha conta
+         </NavLink>
+       ) : null}
+       {user?.isAdmin ? (
+         <NavLink to="/admin" onClick={() => setIsOpen(false)}>
+           Admin
+         </NavLink>
+       ) : null}
+     </nav>
+   </header>
+ );
 }
