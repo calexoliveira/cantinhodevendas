@@ -1,14 +1,15 @@
-const hamburgerButton = document.querySelector("#hamburgerButton");
-const closeButton = document.querySelector("#closeButton");
+const hamburgerButton = document.querySelector('#hamburgerButton');
+const closeButton = document.querySelector('#closeButton');
+const mobileMenu = document.querySelector('#mobileMenu');
 
-const mobileMenu = document.querySelector("#mobileMenu");
+if (hamburgerButton && mobileMenu) {
+  hamburgerButton.addEventListener('click', function () {
+    mobileMenu.classList.add('flex');
+  });
+}
 
-hamburgerButton.addEventListener("click", function () {
-  mobileMenu.classList.add("flex");
-  alert("teste");
-});
-
-closeButton.addEventListener("click", function () {
-  mobileMenu.classList.remove("flex");
-  alert("teste");
-});
+if (closeButton && mobileMenu) {
+  closeButton.addEventListener('click', function () {
+    mobileMenu.classList.remove('flex');
+  });
+}
