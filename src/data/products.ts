@@ -139,7 +139,18 @@ export function getCatalogProducts(): Product[] {
   }
 
   try {
-    return JSON.parse(storedValue) as Product[];
+    const storedProducts = JSON.parse(storedValue) as Product[];
+    const defaultProductsById = new Map(defaultProducts.map((product) => [product.id, product]));
+    const productsWithCurrentImages = storedProducts.map((product) => {
+      const defaultProduct = defaultProductsById.get(product.id);
+      return defaultProduct ? { ...product, image: defaultProduct.image } : product;
+    });
+
+    if (productsWithCurrentImages.some((product, index) => product.image !== storedProducts[index].image)) {
+      window.localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(productsWithCurrentImages));
+    }
+
+    return productsWithCurrentImages;
   } catch {
     window.localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(defaultProducts));
     return defaultProducts;

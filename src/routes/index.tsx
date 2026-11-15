@@ -8,12 +8,14 @@ import { Favoritos } from '../pages/Favoritos';
 import { Home } from '../pages/Home';
 import { Login } from '../pages/Login';
 import { Produtos } from '../pages/Produtos';
+import { Servicos } from '../pages/Servicos';
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/produtos" element={<Produtos />} />
+      <Route path="/servicos" element={<Servicos />} />
       <Route path="/produtos/:id" element={<Detalhes />} />
       <Route path="/favoritos" element={<Favoritos />} />
       <Route path="/conta" element={<Conta />} />

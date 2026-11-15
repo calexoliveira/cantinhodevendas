@@ -7,7 +7,7 @@ import { useFavorites } from '../context/FavoritesContext';
 const menuItems = [
  { to: '/', label: 'Início' },
  { to: '/produtos', label: 'Produtos' },
- { to: '/carrinho', label: 'Carrinho' },
+ { to: '/servicos', label: 'Serviços' },
 ];
 
 type NavBarProps = {
@@ -48,7 +48,7 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
        </button>
 
        <NavLink to="/" className="brand">
-         MINHALOJA
+         Cantinho de vendas
        </NavLink>
 
        <nav className="nav-links" aria-label="Menu principal">
