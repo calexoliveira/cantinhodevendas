@@ -1,8 +1,11 @@
+import { type FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProductCard } from '../../components/ProductCard';
 import { categoryImages, heroVisual, products } from '../../data/products';
 
 const featuredProducts = products.filter((product) => product.featured).slice(0, 4);
+
+const usedProducts = products.filter((product) => product.condition).slice(0, 3);
 
 const curatedCollections = [
   {
@@ -23,6 +26,21 @@ const curatedCollections = [
 ];
 
 export function Home() {
+  const [email, setEmail] = useState('');
+  const [newsletterMessage, setNewsletterMessage] = useState('');
+
+  const handleNewsletterSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!email.trim()) {
+      setNewsletterMessage('Informe um e-mail para receber as ofertas.');
+      return;
+    }
+
+    setNewsletterMessage('E-mail cadastrado com sucesso! Você receberá ofertas exclusivas em breve.');
+    setEmail('');
+  };
+
   return (
     <main className="page-shell">
       <section className="hero">
@@ -86,6 +104,53 @@ export function Home() {
          {featuredProducts.map((product) => (
            <ProductCard key={product.id} product={product} />
          ))}
+        </div>
+      </section>
+
+      <section className="section bazar-section">
+        <div className="section-header bazar-header">
+          <div>
+            <span className="eyebrow bazar-eyebrow">Bazar Colaborativo</span>
+            <h2>Boas descobertas merecem uma segunda vida.</h2>
+          </div>
+          <Link to="/produtos?condition=used">Ver bazar</Link>
+        </div>
+
+        <div className="bazar-story">
+          <div className="bazar-story-copy">
+            <p>
+              Um espaço para encontrar peças de segunda mão anunciadas pela comunidade. Cada compra
+              ajuda a prolongar a vida dos produtos e incentiva escolhas mais conscientes.
+            </p>
+            <div className="bazar-values">
+              <div>
+                <span aria-hidden="true">↻</span>
+                <strong>Reaproveitar</strong>
+                <small>Mais tempo de uso para cada peça.</small>
+              </div>
+              <div>
+                <span aria-hidden="true">♡</span>
+                <strong>Compartilhar</strong>
+                <small>Achados de pessoas da comunidade.</small>
+              </div>
+              <div>
+                <span aria-hidden="true">◇</span>
+                <strong>Escolher bem</strong>
+                <small>Condição indicada em cada anúncio.</small>
+              </div>
+            </div>
+          </div>
+          <div className="bazar-story-note">
+            <span className="bazar-note-mark" aria-hidden="true">♻</span>
+            <strong>Seu próximo favorito já pode ter uma história.</strong>
+            <Link to="/produtos?condition=used">Explorar peças selecionadas <span aria-hidden="true">→</span></Link>
+          </div>
+        </div>
+
+        <div className="product-grid bazar-grid">
+          {usedProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </section>
 
@@ -191,13 +256,20 @@ export function Home() {
       <section className="section">
         <div className="newsletter">
          <h3>Receba ofertas exclusivas.</h3>
-         <form className="newsletter-form">
-           <input type="email" placeholder="Seu melhor e-mail" />
+         <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
+           <input
+             type="email"
+             placeholder="Seu melhor e-mail"
+             value={email}
+             onChange={(event) => setEmail(event.target.value)}
+             aria-label="E-mail para receber ofertas"
+           />
            <button type="submit" className="primary-btn">
              Assinar
            </button>
          </form>
         </div>
+        {newsletterMessage ? <p className="newsletter-feedback">{newsletterMessage}</p> : null}
       </section>
     </main>
   );

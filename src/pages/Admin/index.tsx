@@ -1,7 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { addProductToCatalog, getCatalogProducts, type Product } from '../../data/products';
+import {
+  addProductToCatalog,
+  getCatalogProducts,
+  persistCatalogProducts,
+  type Product,
+} from '../../data/products';
 
 const defaultForm = {
   name: '',
@@ -58,6 +63,12 @@ export function Admin() {
     const nextProducts = addProductToCatalog(newProduct);
     setProducts(nextProducts);
     setForm(defaultForm);
+  };
+
+  const removeProduct = (productId: number) => {
+    const nextProducts = getCatalogProducts().filter((product) => product.id !== productId);
+    persistCatalogProducts(nextProducts);
+    setProducts(nextProducts);
   };
 
   return (
@@ -156,6 +167,9 @@ export function Admin() {
                   <span>{product.category}</span>
                   <small>R$ {product.price}</small>
                 </div>
+                <button type="button" className="remove-item" onClick={() => removeProduct(product.id)}>
+                  Remover
+                </button>
               </article>
             ))}
           </div>

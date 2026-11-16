@@ -77,9 +77,14 @@ export function Conta() {
               <span>Tipo</span>
             </div>
           </div>
-          <Link to="/favoritos" className="secondary-btn account-link">
-            Ver favoritos
-          </Link>
+          <div className="account-actions">
+            <Link to="/favoritos" className="secondary-btn account-link">
+              Ver favoritos
+            </Link>
+            <Link to="/pedidos" className="secondary-btn account-link">
+              Ver pedidos
+            </Link>
+          </div>
         </section>
       </div>
     </main>

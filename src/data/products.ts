@@ -19,6 +19,7 @@ export type Product = {
   image: string;
   badge?: string;
   featured?: boolean;
+  condition?: 'novo' | 'seminovo' | 'usado';
   description: string;
 };
 
@@ -127,6 +128,32 @@ const defaultProducts: Product[] = [
     badge: 'Trending',
     description: 'Monitoramento e tecnologia em um relógio elegante e prático.',
   },
+  {
+    id: 9,
+    name: 'Jaqueta Vintage Restauro',
+    category: 'Roupas',
+    price: 149,
+    originalPrice: 260,
+    rating: 4.6,
+    reviews: 64,
+    image: jaqueta,
+    badge: 'Usado',
+    condition: 'usado',
+    description: 'Modelagem clássica com leve uso, mantida em ótimo estado e pronta para uso.',
+  },
+  {
+    id: 10,
+    name: 'Bolsa de Trilha Revisada',
+    category: 'Acessórios',
+    price: 109,
+    originalPrice: 190,
+    rating: 4.7,
+    reviews: 41,
+    image: bolsa,
+    badge: 'Seminovo',
+    condition: 'seminovo',
+    description: 'Acessório funcional com sinais discretos de uso, mas em excelente condição.',
+  },
 ];
 
 const PRODUCTS_STORAGE_KEY = 'minhaloja.products';
@@ -148,12 +175,29 @@ export function getCatalogProducts(): Product[] {
   try {
     const storedProducts = JSON.parse(storedValue) as Product[];
     const defaultProductsById = new Map(defaultProducts.map((product) => [product.id, product]));
-    const productsWithCurrentImages = storedProducts.map((product) => {
+    const mergedProducts = [...storedProducts];
+
+    defaultProducts.forEach((defaultProduct) => {
+      const existingIndex = mergedProducts.findIndex((product) => product.id === defaultProduct.id);
+
+      if (existingIndex >= 0) {
+        mergedProducts[existingIndex] = {
+          ...mergedProducts[existingIndex],
+          ...defaultProduct,
+          image: defaultProduct.image,
+        };
+        return;
+      }
+
+      mergedProducts.push(defaultProduct);
+    });
+
+    const productsWithCurrentImages = mergedProducts.map((product) => {
       const defaultProduct = defaultProductsById.get(product.id);
       return defaultProduct ? { ...product, image: defaultProduct.image } : product;
     });
 
-    if (productsWithCurrentImages.some((product, index) => product.image !== storedProducts[index].image)) {
+    if (JSON.stringify(productsWithCurrentImages) !== JSON.stringify(storedProducts)) {
       window.localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(productsWithCurrentImages));
     }
 

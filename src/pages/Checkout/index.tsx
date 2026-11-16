@@ -1,12 +1,61 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { addOrder } from '../../data/orders';
 
 export function Checkout() {
   const { items, subtotal, shipping, total, clearCart } = useCart();
+  const { user } = useAuth();
   const [completed, setCompleted] = useState(false);
+  const [confirmedOrderId, setConfirmedOrderId] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState('cartao');
   const [cardNumber, setCardNumber] = useState('');
+  const [promoCode, setPromoCode] = useState('');
+  const [promoFeedback, setPromoFeedback] = useState('');
+  const [formValues, setFormValues] = useState({
+    name: user?.name ?? '',
+    lastName: '',
+    email: user?.email ?? '',
+    address: user?.address ?? '',
+    city: '',
+    zipCode: '',
+  });
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    setFormValues((current) => ({
+      ...current,
+      name: user.name || current.name,
+      email: user.email || current.email,
+      address: user.address || current.address,
+    }));
+  }, [user]);
+
+  const hasValidCoupon =
+    promoFeedback === 'Cupom aplicado com sucesso!' &&
+    ['minhaloja', 'primeiracompra'].includes(promoCode.trim().toLowerCase());
+  const discount = hasValidCoupon ? subtotal * 0.1 : 0;
+  const finalTotal = Math.max(total - discount, 0);
+
+  const applyCoupon = () => {
+    const normalizedCoupon = promoCode.trim().toLowerCase();
+
+    if (!normalizedCoupon) {
+      setPromoFeedback('Digite um código antes de aplicar.');
+      return;
+    }
+
+    if (normalizedCoupon === 'minhaloja' || normalizedCoupon === 'primeiracompra') {
+      setPromoFeedback('Cupom aplicado com sucesso!');
+      return;
+    }
+
+    setPromoFeedback('Cupom inválido. Tente: MINHALOJA');
+  };
 
   if (items.length === 0 && !completed) {
     return (
@@ -25,12 +74,22 @@ export function Checkout() {
   if (completed) {
     return (
       <main className="page-shell empty-cart-shell">
-        <div className="empty-cart">
-          <h1>Pedido confirmado!</h1>
-          <p>Seu pedido foi registrado com sucesso. Em breve você receberá o status por e-mail.</p>
-          <Link to="/produtos" className="primary-btn" onClick={clearCart}>
-            Continuar comprando
-          </Link>
+        <div className="success-order-box">
+          <div className="success-order-badge">✔ Pedido confirmado</div>
+          <h1>Seu pedido foi registrado com sucesso!</h1>
+          <p>
+            Pedido <strong>{confirmedOrderId}</strong> está sendo processado e você pode acompanhar o status em qualquer
+            momento.
+          </p>
+
+          <div className="success-order-actions">
+            <Link to={`/pedidos/${confirmedOrderId}`} className="primary-btn">
+              Ver detalhes do pedido
+            </Link>
+            <Link to="/produtos" className="secondary-btn" onClick={clearCart}>
+              Continuar comprando
+            </Link>
+          </div>
         </div>
       </main>
     );
@@ -51,41 +110,98 @@ export function Checkout() {
             className="checkout-form"
             onSubmit={(event) => {
               event.preventDefault();
+
+              const orderId = `pedido-${Date.now()}`;
+              const order = {
+                id: orderId,
+                date: new Date().toISOString(),
+                total: Number(finalTotal.toFixed(2)),
+                itemCount: items.reduce((count, item) => count + item.quantity, 0),
+                status: 'Em processamento' as const,
+                items: items.map((item) => ({
+                  id: item.id,
+                  name: item.name,
+                  category: item.category,
+                  quantity: item.quantity,
+                  price: item.price,
+                  image: item.image,
+                })),
+              };
+
+              addOrder(order);
+              clearCart();
               setCardNumber('');
+              setConfirmedOrderId(orderId);
               setCompleted(true);
             }}
           >
             <div className="two-column">
               <label>
                 Nome
-                <input type="text" placeholder="Seu nome" required />
+                <input
+                  type="text"
+                  placeholder="Seu nome"
+                  value={formValues.name}
+                  onChange={(event) => setFormValues((current) => ({ ...current, name: event.target.value }))}
+                  required
+                />
               </label>
 
               <label>
                 Sobrenome
-                <input type="text" placeholder="Seu sobrenome" required />
+                <input
+                  type="text"
+                  placeholder="Seu sobrenome"
+                  value={formValues.lastName}
+                  onChange={(event) => setFormValues((current) => ({ ...current, lastName: event.target.value }))}
+                  required
+                />
               </label>
             </div>
 
             <label>
               E-mail
-              <input type="email" placeholder="voce@email.com" required />
+              <input
+                type="email"
+                placeholder="voce@email.com"
+                value={formValues.email}
+                onChange={(event) => setFormValues((current) => ({ ...current, email: event.target.value }))}
+                required
+              />
             </label>
 
             <label>
               Endereço
-              <input type="text" placeholder="Rua, número, bairro" required />
+              <input
+                type="text"
+                placeholder="Rua, número, bairro"
+                value={formValues.address}
+                onChange={(event) => setFormValues((current) => ({ ...current, address: event.target.value }))}
+                required
+              />
             </label>
 
             <div className="two-column">
               <label>
                 Cidade
-                <input type="text" placeholder="São Paulo" required />
+                <input
+                  type="text"
+                  placeholder="São Paulo"
+                  value={formValues.city}
+                  onChange={(event) => setFormValues((current) => ({ ...current, city: event.target.value }))}
+                  required
+                />
               </label>
 
               <label>
                 CEP
-                <input type="text" placeholder="01000-000" required />
+                <input
+                  type="text"
+                  placeholder="01000-000"
+                  value={formValues.zipCode}
+                  onChange={(event) => setFormValues((current) => ({ ...current, zipCode: event.target.value }))}
+                  required
+                />
               </label>
             </div>
 
@@ -123,6 +239,22 @@ export function Checkout() {
               </label>
             ) : null}
 
+            <div className="coupon-row">
+              <label>
+                Cupom de desconto
+                <input
+                  type="text"
+                  placeholder="MINHALOJA"
+                  value={promoCode}
+                  onChange={(event) => setPromoCode(event.target.value)}
+                />
+              </label>
+              <button type="button" className="secondary-btn compact-btn" onClick={applyCoupon}>
+                Aplicar
+              </button>
+            </div>
+            {promoFeedback ? <p className="checkout-feedback">{promoFeedback}</p> : null}
+
             <button type="submit" className="primary-btn checkout-submit">
               Confirmar pedido
             </button>
@@ -147,9 +279,15 @@ export function Checkout() {
             <span>Entrega</span>
             <strong>R$ {shipping}</strong>
           </div>
+          {discount > 0 ? (
+            <div className="summary-row discount-row">
+              <span>Desconto</span>
+              <strong>-R$ {discount.toFixed(2)}</strong>
+            </div>
+          ) : null}
           <div className="summary-row total">
             <span>Total</span>
-            <strong>R$ {total}</strong>
+            <strong>R$ {finalTotal.toFixed(2)}</strong>
           </div>
         </aside>
       </div>

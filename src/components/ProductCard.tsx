@@ -13,9 +13,16 @@ export function ProductCard({ product }: ProductCardProps) {
   const favorite = isFavorite(product.id);
 
   return (
-    <article className="product-card">
+    <article className={`product-card${product.condition ? ' bazar-product-card' : ''}`}>
       <div className="product-image-wrap">
-        {product.badge ? <span className="product-badge">{product.badge}</span> : null}
+        {product.condition ? (
+          <>
+            <span className="product-badge bazar-product-badge">Bazar</span>
+            <span className="product-condition">{product.condition}</span>
+          </>
+        ) : product.badge ? (
+          <span className="product-badge">{product.badge}</span>
+        ) : null}
         <button
           type="button"
           className={`favorite-toggle ${favorite ? 'active' : ''}`}
@@ -35,6 +42,15 @@ export function ProductCard({ product }: ProductCardProps) {
           <strong>{product.rating}</strong>
           <small>({product.reviews})</small>
         </div>
+        {product.condition ? (
+          <div className="community-seller">
+            <span className="community-seller-avatar" aria-hidden="true">VC</span>
+            <span>
+              <strong>Vendedor da comunidade</strong>
+              <small>Anúncio do Bazar Colaborativo</small>
+            </span>
+          </div>
+        ) : null}
         <div className="product-price-row">
           <span className="product-price">R$ {product.price}</span>
           {product.originalPrice ? (

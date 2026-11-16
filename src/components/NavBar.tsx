@@ -87,11 +87,6 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
              Admin
            </NavLink>
          ) : null}
-         {user ? (
-           <NavLink to="/conta" className="nav-link nav-user" title={accountLabel}>
-             {accountLabel}
-           </NavLink>
-         ) : null}
        </nav>
 
        <form className="nav-search" aria-label="Pesquisar produtos" onSubmit={handleSearch}>
@@ -104,33 +99,45 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
        </form>
 
        <div className="nav-actions">
-         <button type="button" className="icon-button theme-toggle" aria-label="Alternar tema" onClick={onToggleTheme}>
-           {darkMode ? '☀' : '☾'}
-         </button>
-
-         <NavLink to="/favoritos" className="icon-button favorite-pill" aria-label="Favoritos">
-           ♥
-           {favorites.length > 0 ? <span>{favorites.length}</span> : null}
-         </NavLink>
-         <NavLink to="/carrinho" className="icon-button cart-pill" aria-label="Carrinho">
-           🛒
-           {itemCount > 0 ? <span>{itemCount}</span> : null}
-         </NavLink>
-
          {user ? (
-           <>
-             <NavLink to="/conta" className="icon-button" aria-label="Minha conta">
+           <NavLink to="/conta" className="nav-account" aria-label={accountLabel} title={accountLabel}>
+             <span className="nav-account-name">Olá, {user.name}</span>
+             {user.address ? <span className="nav-account-address">{user.address}</span> : null}
+           </NavLink>
+         ) : null}
+
+         <div className="nav-action-icons">
+           <button type="button" className="icon-button theme-toggle" aria-label="Alternar tema" onClick={onToggleTheme}>
+             {darkMode ? '☀' : '☾'}
+           </button>
+
+           <NavLink to="/favoritos" className="icon-button favorite-pill" aria-label="Favoritos">
+             ♥
+             {favorites.length > 0 ? <span>{favorites.length}</span> : null}
+           </NavLink>
+           <NavLink to="/carrinho" className="icon-button cart-pill" aria-label="Carrinho">
+             🛒
+             {itemCount > 0 ? <span>{itemCount}</span> : null}
+           </NavLink>
+
+           {user ? (
+             <>
+               <NavLink to="/pedidos" className="icon-button" aria-label="Pedidos">
+                 🧾
+               </NavLink>
+               <NavLink to="/conta" className="icon-button" aria-label="Minha conta">
+                 👤
+               </NavLink>
+               <button type="button" className="icon-button" aria-label="Sair" onClick={logout}>
+                 ↩
+               </button>
+             </>
+           ) : (
+             <NavLink to="/login" className="icon-button" aria-label="Perfil">
                👤
              </NavLink>
-             <button type="button" className="icon-button" aria-label="Sair" onClick={logout}>
-               ↩
-             </button>
-           </>
-         ) : (
-           <NavLink to="/login" className="icon-button" aria-label="Perfil">
-             👤
-           </NavLink>
-         )}
+           )}
+         </div>
        </div>
      </div>
 

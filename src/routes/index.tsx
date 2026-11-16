@@ -7,6 +7,7 @@ import { Detalhes } from '../pages/Detalhes';
 import { Favoritos } from '../pages/Favoritos';
 import { Home } from '../pages/Home';
 import { Login } from '../pages/Login';
+import { PedidoDetalhes, Pedidos } from '../pages/Pedidos';
 import { Produtos } from '../pages/Produtos';
 import { Servicos } from '../pages/Servicos';
 
@@ -19,6 +20,8 @@ export function AppRoutes() {
       <Route path="/produtos/:id" element={<Detalhes />} />
       <Route path="/favoritos" element={<Favoritos />} />
       <Route path="/conta" element={<Conta />} />
+      <Route path="/pedidos" element={<Pedidos />} />
+      <Route path="/pedidos/:id" element={<PedidoDetalhes />} />
       <Route path="/login" element={<Login />} />
       <Route path="/carrinho" element={<Carrinho />} />
       <Route path="/checkout" element={<Checkout />} />

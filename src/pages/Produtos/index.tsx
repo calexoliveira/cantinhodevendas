@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ProductCard } from '../../components/ProductCard';
 import { categories, products } from '../../data/products';
@@ -7,20 +7,33 @@ export function Produtos() {
   const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [sortBy, setSortBy] = useState<'featured' | 'priceAsc' | 'priceDesc'>('featured');
+  const [maxPrice, setMaxPrice] = useState(500);
+  const [freeShippingOnly, setFreeShippingOnly] = useState(false);
+  const [offersOnly, setOffersOnly] = useState(false);
+  const [newOnly, setNewOnly] = useState(false);
+  const [usedOnly, setUsedOnly] = useState(searchParams.get('condition') === 'used');
+
+  useEffect(() => {
+    setUsedOnly(searchParams.get('condition') === 'used');
+  }, [searchParams]);
 
   const query = (searchParams.get('search') ?? '').trim().toLowerCase();
 
   const visibleProducts = useMemo(() => {
     const filteredProducts = (selectedCategory === 'Todos' ? [...products] : products.filter((product) => product.category === selectedCategory)).filter((product) => {
-      if (!query) {
-        return true;
-      }
-
-      return (
+      const matchesSearch =
+        !query ||
         product.name.toLowerCase().includes(query) ||
         product.category.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query)
-      );
+        product.description.toLowerCase().includes(query);
+
+      const matchesPrice = product.price <= maxPrice;
+      const matchesShipping = !freeShippingOnly || product.price >= 200;
+      const matchesOffers = !offersOnly || Boolean(product.originalPrice && product.originalPrice > product.price);
+      const matchesNew = !newOnly || (product.badge ? ['Novidade', 'Novo', 'Oferta', 'Mais vendido', 'Top review'].includes(product.badge) : false);
+      const matchesUsed = !usedOnly || product.condition !== undefined;
+
+      return matchesSearch && matchesPrice && matchesShipping && matchesOffers && matchesNew && matchesUsed;
     });
 
     const sortedProducts = [...filteredProducts];
@@ -38,7 +51,9 @@ export function Produtos() {
     }
 
     return sortedProducts;
-  }, [selectedCategory, query, sortBy]);
+  }, [selectedCategory, query, sortBy, maxPrice, freeShippingOnly, offersOnly, newOnly, usedOnly]);
+
+  const usedProducts = products.filter((product) => product.condition);
 
   return (
     <main className="page-shell">
@@ -71,20 +86,50 @@ export function Produtos() {
           <div className="filter-group">
             <label>
               <span>Frete grátis</span>
-              <input type="checkbox" defaultChecked />
+              <input type="checkbox" checked={freeShippingOnly} onChange={() => setFreeShippingOnly((value) => !value)} />
             </label>
             <label>
               <span>Ofertas</span>
-              <input type="checkbox" />
+              <input type="checkbox" checked={offersOnly} onChange={() => setOffersOnly((value) => !value)} />
             </label>
             <label>
               <span>Novos</span>
-              <input type="checkbox" defaultChecked />
+              <input type="checkbox" checked={newOnly} onChange={() => setNewOnly((value) => !value)} />
             </label>
+            <label>
+              <span>Bazar colaborativo</span>
+              <input type="checkbox" checked={usedOnly} onChange={() => setUsedOnly((value) => !value)} />
+            </label>
+          </div>
+
+          <div className="filter-price">
+            <label htmlFor="price-limit">Máximo: R$ {maxPrice}</label>
+            <input
+              id="price-limit"
+              type="range"
+              min={50}
+              max={500}
+              step={10}
+              value={maxPrice}
+              onChange={(event) => setMaxPrice(Number(event.target.value))}
+            />
           </div>
         </aside>
 
         <div className="catalog-content">
+          {usedOnly && usedProducts.length > 0 ? (
+            <section className="bazar-banner">
+              <div>
+                <span className="eyebrow bazar-eyebrow">Bazar Colaborativo</span>
+                <h2>Uma segunda vida para boas peças.</h2>
+              </div>
+              <p>
+                Encontre itens de segunda mão anunciados pela comunidade. Confira a condição de cada
+                peça e descubra seu próximo achado.
+              </p>
+            </section>
+          ) : null}
+
           <div className="catalog-toolbar">
             <span>{visibleProducts.length} produtos encontrados</span>
             <label>
@@ -97,7 +142,7 @@ export function Produtos() {
             </label>
           </div>
 
-          <div className="product-grid">
+          <div className={`product-grid${usedOnly ? ' bazar-grid' : ''}`}>
             {visibleProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

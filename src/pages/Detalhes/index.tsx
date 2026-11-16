@@ -34,12 +34,24 @@ export function Detalhes() {
 
       <section className="product-detail-card">
         <div className="product-detail-image-wrap">
+          {product.condition ? (
+            <span className="detail-condition-badge">Bazar · {product.condition}</span>
+          ) : null}
           <img src={product.image} alt={product.name} />
         </div>
 
         <div className="product-detail-info">
           <span className="product-category">{product.category}</span>
           <h1>{product.name}</h1>
+          {product.condition ? (
+            <div className="detail-community-seller">
+              <span className="community-seller-avatar" aria-hidden="true">VC</span>
+              <span>
+                <strong>Anúncio da comunidade</strong>
+                <small>Produto de segunda mão · condição: {product.condition}</small>
+              </span>
+            </div>
+          ) : null}
           <div className="product-rating">
             <span>★</span>
             <strong>{product.rating}</strong>
@@ -72,18 +84,37 @@ export function Detalhes() {
           </div>
 
           <div className="detail-benefits">
-            <div>
-              <strong>Entrega</strong>
-              <span>Em até 3 dias úteis</span>
-            </div>
-            <div>
-              <strong>Garantia</strong>
-              <span>12 meses de suporte</span>
-            </div>
-            <div>
-              <strong>Pagamento</strong>
-              <span>Cartão, boleto e Pix</span>
-            </div>
+            {product.condition ? (
+              <>
+                <div>
+                  <strong>Origem</strong>
+                  <span>Bazar colaborativo</span>
+                </div>
+                <div>
+                  <strong>Condição</strong>
+                  <span>{product.condition}</span>
+                </div>
+                <div>
+                  <strong>Pagamento</strong>
+                  <span>Cartão, boleto e Pix</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <strong>Entrega</strong>
+                  <span>Em até 3 dias úteis</span>
+                </div>
+                <div>
+                  <strong>Garantia</strong>
+                  <span>12 meses de suporte</span>
+                </div>
+                <div>
+                  <strong>Pagamento</strong>
+                  <span>Cartão, boleto e Pix</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
