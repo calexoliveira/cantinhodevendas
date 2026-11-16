@@ -5,6 +5,8 @@ import { useCart } from '../../context/CartContext';
 export function Checkout() {
   const { items, subtotal, shipping, total, clearCart } = useCart();
   const [completed, setCompleted] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('cartao');
+  const [cardNumber, setCardNumber] = useState('');
 
   if (items.length === 0 && !completed) {
     return (
@@ -49,6 +51,7 @@ export function Checkout() {
             className="checkout-form"
             onSubmit={(event) => {
               event.preventDefault();
+              setCardNumber('');
               setCompleted(true);
             }}
           >
@@ -88,12 +91,37 @@ export function Checkout() {
 
             <label>
               Método de pagamento
-              <select defaultValue="cartao">
+              <select
+                value={paymentMethod}
+                onChange={(event) => {
+                  setPaymentMethod(event.target.value);
+                  if (event.target.value !== 'cartao') {
+                    setCardNumber('');
+                  }
+                }}
+              >
                 <option value="cartao">Cartão de crédito</option>
                 <option value="pix">Pix</option>
                 <option value="boleto">Boleto</option>
               </select>
             </label>
+
+            {paymentMethod === 'cartao' ? (
+              <label>
+                Número do cartão
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="cc-number"
+                  placeholder="0000000000000000"
+                  value={cardNumber}
+                  onChange={(event) => setCardNumber(event.target.value.replace(/\D/g, '').slice(0, 19))}
+                  minLength={13}
+                  maxLength={19}
+                  required
+                />
+              </label>
+            ) : null}
 
             <button type="submit" className="primary-btn checkout-submit">
               Confirmar pedido

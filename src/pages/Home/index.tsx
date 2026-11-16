@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ProductCard } from '../../components/ProductCard';
-import { heroVisual, products } from '../../data/products';
+import { categoryImages, heroVisual, products } from '../../data/products';
 
 const featuredProducts = products.filter((product) => product.featured).slice(0, 4);
 
@@ -95,9 +95,9 @@ export function Home() {
         </div>
 
         <div className="categories-grid">
-         {['Roupas', 'Calçados', 'Acessórios', 'Eletrônicos'].map((category, index) => (
+         {Object.entries(categoryImages).map(([category, image]) => (
            <Link key={category} to="/produtos" className="category-card">
-             <img src={products[index + (index === 3 ? 4 : 0)].image} alt={category} />
+             <img src={image} alt={category} />
              <div>
                <strong>{category}</strong>
                <span>→</span>

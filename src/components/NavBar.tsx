@@ -18,10 +18,14 @@ type NavBarProps = {
 export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
  const [isOpen, setIsOpen] = useState(false);
  const [searchValue, setSearchValue] = useState('');
+ const [showTopAlert, setShowTopAlert] = useState(true);
  const navigate = useNavigate();
  const { itemCount } = useCart();
  const { favorites } = useFavorites();
  const { user, logout } = useAuth();
+ const accountLabel = user
+   ? `Olá, ${user.name}${user.address ? ` · ${user.address}` : ''}`
+   : '';
 
  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
    event.preventDefault();
@@ -32,10 +36,26 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
 
  return (
    <header className="site-header">
-     <div className="top-alert">
-       <span>Cadastre-se e ganhe 20% de desconto na sua primeira compra.</span>
-       <NavLink to="/login">{user ? `Olá, ${user.name}` : 'Entrar'}</NavLink>
-     </div>
+     {showTopAlert ? (
+       <div className="top-alert">
+         <span>Cadastre-se e ganhe 20% de desconto na sua primeira compra.</span>
+         {user ? (
+           <NavLink to="/conta" className="top-alert-user" title={accountLabel}>
+             {accountLabel}
+           </NavLink>
+         ) : (
+           <NavLink to="/login">Entrar</NavLink>
+         )}
+         <button
+           type="button"
+           className="top-alert-close"
+           aria-label="Ocultar aviso"
+           onClick={() => setShowTopAlert(false)}
+         >
+           ×
+         </button>
+       </div>
+     ) : null}
 
      <div className="navbar">
        <button
@@ -48,7 +68,7 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
        </button>
 
        <NavLink to="/" className="brand">
-         Cantinho de vendas
+         Cantinho <br />de <br />vendas
        </NavLink>
 
        <nav className="nav-links" aria-label="Menu principal">
@@ -65,6 +85,11 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
          {user?.isAdmin ? (
            <NavLink to="/admin" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
              Admin
+           </NavLink>
+         ) : null}
+         {user ? (
+           <NavLink to="/conta" className="nav-link nav-user" title={accountLabel}>
+             {accountLabel}
            </NavLink>
          ) : null}
        </nav>

@@ -1,23 +1,29 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 
 export type AuthUser = {
   name: string;
   email: string;
   isAdmin: boolean;
+  address?: string;
+};
+
+type StoredUser = AuthUser & {
+  password: string;
 };
 
 type AuthContextValue = {
   user: AuthUser | null;
   login: (email: string, password: string) => boolean;
   register: (name: string, email: string, password: string) => boolean;
+  updateAddress: (address: string) => void;
   logout: () => void;
 };
 
 const AUTH_STORAGE_KEY = 'minhaloja.auth.user';
 const USERS_STORAGE_KEY = 'minhaloja.auth.users';
 
-const defaultUsers = [
+const defaultUsers: StoredUser[] = [
   {
     name: 'Administrador',
     email: 'admin@minhaloja.com',
@@ -32,7 +38,7 @@ const defaultUsers = [
   },
 ];
 
-const getStoredUsers = () => {
+const getStoredUsers = (): StoredUser[] => {
   if (typeof window === 'undefined') {
     return defaultUsers;
   }
@@ -45,12 +51,7 @@ const getStoredUsers = () => {
   }
 
   try {
-    return JSON.parse(storedValue) as Array<{
-      name: string;
-      email: string;
-      password: string;
-      isAdmin: boolean;
-    }>;
+    return JSON.parse(storedValue) as StoredUser[];
   } catch {
     window.localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(defaultUsers));
     return defaultUsers;
@@ -85,6 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       name: matchedUser.name,
       email: matchedUser.email,
       isAdmin: matchedUser.isAdmin,
+      address: matchedUser.address,
     };
 
     setUser(authUser);
@@ -133,9 +135,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.localStorage.removeItem(AUTH_STORAGE_KEY);
   };
 
+  const updateAddress = useCallback((address: string) => {
+    if (!user) {
+      throw new Error('Cannot update the delivery address without an authenticated user.');
+    }
+
+    const updatedUser = { ...user, address: address.trim() };
+    const storedUsers = getStoredUsers();
+    const accountExists = storedUsers.some(
+      (account) => account.email.toLowerCase() === user.email.toLowerCase(),
+    );
+
+    if (!accountExists) {
+      throw new Error('Cannot update the delivery address because the user profile was not found.');
+    }
+
+    const nextUsers = storedUsers.map((account) =>
+      account.email.toLowerCase() === user.email.toLowerCase()
+        ? { ...account, address: updatedUser.address }
+        : account,
+    );
+
+    window.localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(nextUsers));
+    window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser));
+    setUser(updatedUser);
+  }, [user]);
+
   const value = useMemo<AuthContextValue>(
-    () => ({ user, login, register, logout }),
-    [user],
+    () => ({ user, login, register, updateAddress, logout }),
+    [user, updateAddress],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

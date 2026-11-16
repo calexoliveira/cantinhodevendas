@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useFavorites } from '../../context/FavoritesContext';
 
 export function Conta() {
-  const { user, logout } = useAuth();
+  const { user, logout, updateAddress } = useAuth();
   const { favorites } = useFavorites();
+  const [address, setAddress] = useState(user?.address ?? '');
+  const [addressSaved, setAddressSaved] = useState(false);
 
   if (!user) {
     return (
@@ -32,6 +35,31 @@ export function Conta() {
           <span className="account-label">Perfil</span>
           <h2>{user.name}</h2>
           <p>{user.email}</p>
+          <form
+            className="account-address-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              updateAddress(address);
+              setAddressSaved(true);
+            }}
+          >
+            <label htmlFor="delivery-address">Endereço de entrega</label>
+            <textarea
+              id="delivery-address"
+              rows={3}
+              autoComplete="street-address"
+              placeholder="Rua, número, bairro, cidade e CEP"
+              value={address}
+              onChange={(event) => {
+                setAddress(event.target.value);
+                setAddressSaved(false);
+              }}
+            />
+            <button type="submit" className="primary-btn">
+              Salvar endereço
+            </button>
+            {addressSaved ? <p className="account-feedback" role="status">Endereço salvo.</p> : null}
+          </form>
           <button type="button" className="primary-btn" onClick={logout}>
             Sair da conta
           </button>

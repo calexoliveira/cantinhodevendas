@@ -3,9 +3,9 @@ import calcaJeans from '../image/skinny.png';
 import camisaEstampada from '../image/shirt.png';
 import jaqueta from '../image/tshirt sleeve.png';
 import bermuda from '../image/loose_fit.png';
-import tenis from '../image/courage.png';
-import bolsa from '../image/striped_shirt.png';
-import relogio from '../image/faded.png';
+import tenis from '../image/Tênis Street Run.png';
+import bolsa from '../image/Bolsa_Crossbody.png';
+import relogio from '../image/relogio.png';
 import heroImage from '../image/background_imagem.png';
 
 export type Product = {
@@ -23,6 +23,13 @@ export type Product = {
 };
 
 export const heroVisual = heroImage;
+
+export const categoryImages: Record<Product['category'], string> = {
+  Roupas: camisaBasica,
+  'Calçados': tenis,
+  'Acessórios': bolsa,
+  'Eletrônicos': relogio,
+};
 
 const defaultProducts: Product[] = [
   {
