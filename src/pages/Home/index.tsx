@@ -80,8 +80,8 @@ export function Home() {
         <div className="hero-visual">
          <img src={heroVisual} alt="Coleção premium da Minhaloja" />
          <div className="hero-badge">
-           <strong>R$ 299</strong>
-           <span>Kit de estreia</span>
+           <strong>Lojas</strong>
+           <span>Afiliadas</span>
          </div>
         </div>
       </section>

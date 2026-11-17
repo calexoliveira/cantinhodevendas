@@ -6,7 +6,7 @@ import bermuda from '../image/loose_fit.png';
 import tenis from '../image/Tênis Street Run.png';
 import bolsa from '../image/Bolsa_Crossbody.png';
 import relogio from '../image/relogio.png';
-import heroImage from '../image/background_imagem.png';
+import heroImage from '../image/marketplace.jpg';
 
 export type Product = {
   id: number;
