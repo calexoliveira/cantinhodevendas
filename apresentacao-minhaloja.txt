@@ -1,0 +1,71 @@
+# Minhaloja Marketplace
+## Apresentação geral do projeto
+
+A Minhaloja Marketplace é uma vitrine de e-commerce fictícia desenvolvida com React + TypeScript, com foco em UX premium, conversão e apresentação visual sofisticada. O projeto simula uma loja moderna com catálogo, autenticação, carrinho, checkout, favoritos e painel administrativo.
+
+## Objetivo
+
+Criar uma experiência de compra moderna e visualmente refinada, com foco em:
+- apresentação premium para conversão;
+- navegação simples e eficiente;
+- jornada de compra clara;
+- autenticação simulada de cliente e administrador;
+- fluxo completo de catálogo até checkout.
+
+## Funcionalidades principais
+
+- Landing page premium com hero, destaques, categorias e depoimentos
+- Catálogo completo com filtros por categoria e ordenação
+- Busca funcional por produtos
+- Página de detalhes do produto
+- Sistema de favoritos com persistência local
+- Carrinho com quantidade e cálculo de subtotal
+- Fluxo de checkout com resumo do pedido
+- Autenticação local para cliente e administrador
+- Área de conta do cliente
+- Painel administrativo para cadastrar novos produtos
+- Tema claro e escuro
+- Persistência em localStorage para simular comportamento realista
+
+## Stack tecnológica
+
+- React
+- TypeScript
+- Vite
+- React Router
+- CSS personalizado
+- localStorage para persistência
+
+## Estrutura do projeto
+
+- src/pages/Home — landing page
+- src/pages/Produtos — catálogo
+- src/pages/Detalhes — detalhes do produto
+- src/pages/Carrinho — carrinho
+- src/pages/Checkout — checkout
+- src/pages/Login — autenticação
+- src/pages/Conta — área do cliente
+- src/pages/Pedidos — pedidos
+- src/pages/Admin — painel administrativo
+- src/context — estados globais de autenticação, carrinho e favoritos
+- src/data/products.ts — catálogo e dados iniciais
+- src/styles.css — design system e estilos globais
+
+## Credenciais de demonstração
+
+- Admin:
+  - e-mail: admin@minhaloja.com
+  - senha: admin123
+
+- Cliente:
+  - e-mail: cliente@minhaloja.com
+  - senha: cliente123
+
+## Como executar
+
+1. Abra o terminal no diretório do projeto
+2. Execute:
+
+```bash
+npm install
+npm run dev
