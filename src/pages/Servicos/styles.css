@@ -2,91 +2,14 @@
   padding-bottom: 56px;
 }
 
-.services-hero {
-  min-height: 380px;
-  margin: 40px 0 24px;
-  padding: clamp(30px, 6vw, 72px);
-  border: 1px solid rgba(201, 166, 107, 0.18);
-  border-radius: 30px;
-  background:
-    radial-gradient(circle at 82% 18%, rgba(201, 166, 107, 0.22), transparent 28%),
-    linear-gradient(125deg, #17120e 0%, #2a241f 62%, #3b3027 100%);
-  color: #fffdfb;
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.6fr);
-  align-items: center;
-  gap: 48px;
-  overflow: hidden;
-}
-
-.services-hero-copy {
-  max-width: 700px;
-}
-
-.services-hero .eyebrow,
 .services-cta .eyebrow {
   color: #d3b07c;
 }
 
-.services-hero h1 {
-  max-width: 700px;
-  margin: 18px 0;
-  font-size: clamp(2.4rem, 5vw, 4.3rem);
-  letter-spacing: -0.07em;
-  line-height: 1.03;
-}
-
-.services-hero-copy > p,
 .services-cta > p {
   max-width: 58ch;
   color: rgba(255, 253, 251, 0.75);
   line-height: 1.75;
-}
-
-.services-hero .primary-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 26px;
-  background: #f3e6d0;
-  color: #1a120d;
-}
-
-.services-hero .service-provider-cta {
-  display: inline-flex;
-  margin: 26px 0 0 12px;
-}
-
-.services-hero-note {
-  min-height: 230px;
-  padding: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(8px);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.services-note-icon {
-  color: #d3b07c;
-  font-size: 2rem;
-}
-
-.services-hero-note p {
-  max-width: 20ch;
-  font-size: 1.45rem;
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1.35;
-}
-
-.services-note-caption {
-  color: rgba(255, 253, 251, 0.58);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
 }
 
 .services-section {
@@ -340,61 +263,51 @@
 }
 
 .registered-services {
-  padding-top: 64px;
+  margin: 32px 0 64px;
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid rgba(201, 166, 107, 0.3);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(201, 166, 107, 0.13), transparent 32%),
+    var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.registered-services-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+
+.registered-services-heading .services-section-heading {
+  margin-bottom: 0;
+}
+
+.registered-services-heading h1 {
+  margin: 10px 0;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  letter-spacing: -0.06em;
+}
+
+.registered-services-heading .secondary-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .registered-services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: 18px;
-}
-
-.registered-service-card {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  background: var(--panel);
-}
-
-.registered-service-topline {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-
-.registered-service-card h3 {
-  font-size: 1.2rem;
-}
-
-.registered-service-card > p,
-.registered-service-details {
-  color: var(--muted);
-  line-height: 1.6;
-}
-
-.registered-service-details {
-  display: grid;
-  gap: 5px;
-  margin-top: auto;
-  font-size: 0.88rem;
-}
-
-.registered-service-details strong {
-  color: var(--text);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: 20px;
 }
 
 .registered-services-empty {
-  padding: 24px;
+  padding: 32px 24px;
   border: 1px dashed var(--line);
   border-radius: 18px;
   color: var(--muted);
+  line-height: 1.6;
   text-align: center;
 }
 
@@ -405,14 +318,9 @@
 }
 
 @media (max-width: 700px) {
-  .services-hero {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    margin-top: 24px;
-  }
-
-  .services-hero-note {
-    min-height: 180px;
+  .registered-services-heading {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .services-guidance {

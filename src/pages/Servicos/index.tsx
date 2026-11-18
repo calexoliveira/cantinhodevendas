@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+import { ServiceListingCard } from '../../components/ServiceListingCard';
 import { addServiceListing, getServiceListings, serviceCategories, type ServiceListing, type ServiceProviderType } from '../../data/services';
 import {
   formatBrazilianDocument,
@@ -123,27 +124,29 @@ export function Servicos() {
 
   return (
     <main className="page-shell services-page">
-      <section className="services-hero">
-        <div className="services-hero-copy">
-          <span className="eyebrow">Cuidado em cada etapa</span>
-          <h1>Uma experiência de compra mais simples, do início ao pós-venda.</h1>
-          <p>
-            Estamos aqui para ajudar você a escolher, comprar e encontrar as informações de que
-            precisa sobre seu pedido.
-          </p>
-          <Link to="/produtos" className="primary-btn">
-            Explorar produtos <span aria-hidden="true">→</span>
-          </Link>
-          <a href="#cadastrar-servico" className="secondary-btn service-provider-cta">
-            Ofereça seu serviço
+      <section className="registered-services" aria-labelledby="registered-services-title">
+        <div className="registered-services-heading">
+          <div className="services-section-heading">
+            <span className="eyebrow">Profissionais da comunidade</span>
+            <h1 id="registered-services-title">Serviços cadastrados</h1>
+            <p>Conheça os prestadores e encontre um serviço para a sua necessidade.</p>
+          </div>
+          <a href="#cadastrar-servico" className="secondary-btn">
+            Anuncie seu serviço
           </a>
         </div>
 
-        <div className="services-hero-note">
-          <span className="services-note-icon" aria-hidden="true">✦</span>
-          <p>Seu estilo, suas escolhas e uma loja pronta para acompanhar você.</p>
-          <span className="services-note-caption">MINHALOJA · SERVIÇOS</span>
-        </div>
+        {registeredServices.length ? (
+          <div className="registered-services-grid">
+            {registeredServices.map((service) => (
+              <ServiceListingCard key={service.id} service={service} />
+            ))}
+          </div>
+        ) : (
+          <p className="registered-services-empty">
+            Ainda não há serviços cadastrados. Seja o primeiro prestador a divulgar seu trabalho.
+          </p>
+        )}
       </section>
 
       <section className="services-section" aria-labelledby="services-title">
@@ -331,40 +334,6 @@ export function Servicos() {
           {successMessage ? <p className="service-form-success" role="status">{successMessage}</p> : null}
           <button type="submit" className="primary-btn">Publicar serviço</button>
         </form>
-
-        <div className="registered-services">
-          <div className="services-section-heading">
-            <span className="eyebrow">Encontre um profissional</span>
-            <h2>Serviços cadastrados</h2>
-          </div>
-          {registeredServices.length ? (
-            <div className="registered-services-grid">
-              {registeredServices.map((service) => (
-                <article className="registered-service-card" key={service.id}>
-                  <div className="registered-service-topline">
-                    <span>{service.category}</span>
-                    <span>{service.providerType === 'individual' ? 'Pessoa física' : 'Pessoa jurídica'}</span>
-                  </div>
-                  <h3>{service.serviceName}</h3>
-                  <p>{service.description}</p>
-                  <div className="registered-service-details">
-                    <span><strong>Prestador:</strong> {service.businessName || service.providerName}</span>
-                    <span><strong>Local:</strong> {service.city}</span>
-                    <span><strong>Contato:</strong> {service.phone}</span>
-                    <span>
-                      <strong>Valor inicial:</strong>{' '}
-                      {service.startingPrice === undefined
-                        ? 'A combinar'
-                        : service.startingPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                    </span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <p className="registered-services-empty">Seja o primeiro prestador a cadastrar um serviço.</p>
-          )}
-        </div>
       </section>
 
       <section className="services-guidance">

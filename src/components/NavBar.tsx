@@ -32,7 +32,7 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
    event.preventDefault();
    const trimmedValue = searchValue.trim();
-   navigate(trimmedValue ? `/produtos?search=${encodeURIComponent(trimmedValue)}` : '/produtos');
+   navigate(trimmedValue ? `/buscar?search=${encodeURIComponent(trimmedValue)}` : '/buscar');
    setIsOpen(false);
  };
 
@@ -91,10 +91,11 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
          ) : null}
        </nav>
 
-       <form className="nav-search" aria-label="Pesquisar produtos" onSubmit={handleSearch}>
+       <form className="nav-search" aria-label="Pesquisar produtos e serviços" onSubmit={handleSearch}>
          <input
            type="text"
-           placeholder="Buscar produtos..."
+           placeholder="Buscar produtos e serviços..."
+           aria-label="Buscar produtos e serviços"
            value={searchValue}
            onChange={(event) => setSearchValue(event.target.value)}
          />

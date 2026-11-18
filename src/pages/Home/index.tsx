@@ -2,6 +2,7 @@ import { type FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProductCard } from '../../components/ProductCard';
 import { categoryImages, heroVisual, products } from '../../data/products';
+import './services-hero.css';
 
 const featuredProducts = products.filter((product) => product.featured).slice(0, 4);
 
@@ -93,6 +94,29 @@ export function Home() {
         <span>Prada</span>
         <span>Calvin Klein</span>
       </div>
+
+      <section className="services-hero">
+        <div className="services-hero-copy">
+          <span className="eyebrow">Cuidado em cada etapa</span>
+          <h2>Trabalhos técnico, intelectual ou operacional feito por profissionais qualificados.</h2>
+          <p>
+            Estamos aqui para ajudar você a escolher, contratar e encontrar as informações de que
+            precisa de acordo com a sua necessidade.
+          </p>
+          <Link to="/servicos" className="primary-btn">
+            Explorar serviços <span aria-hidden="true">→</span>
+          </Link>
+          <Link to="/servicos#cadastrar-servico" className="secondary-btn service-provider-cta">
+            Cadastre seu serviço
+          </Link>
+        </div>
+
+        <div className="services-hero-note">
+          <span className="services-note-icon" aria-hidden="true">✦</span>
+          <p>Seu estilo, suas escolhas e uma loja pronta para acompanhar você.</p>
+          <span className="services-note-caption">MINHALOJA · SERVIÇOS</span>
+        </div>
+      </section>
 
       <section className="section">
         <div className="section-header">
