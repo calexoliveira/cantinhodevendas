@@ -1,21 +1,58 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
+import {
+  getDocumentDigits,
+  identifyBrazilianDocument,
+  isValidBrazilianDocument,
+  type BrazilianDocumentType,
+} from '../utils/brazilianDocument';
+
+export type AccountType = 'customer' | 'merchant';
 
 export type AuthUser = {
   name: string;
   email: string;
   isAdmin: boolean;
+  accountType: AccountType;
+  documentNumber?: string;
+  documentType?: BrazilianDocumentType;
+  phone?: string;
+  storeName?: string;
+  businessAddress?: string;
   address?: string;
+};
+
+export type MerchantStore = {
+  id: string;
+  name: string;
+  address: string;
+};
+
+type LegacyDocumentFields = {
+  cpf?: string;
+  cnpj?: string;
 };
 
 type StoredUser = AuthUser & {
   password: string;
+} & LegacyDocumentFields;
+
+type RegistrationData = {
+  name: string;
+  email: string;
+  password: string;
+  accountType: AccountType;
+  documentNumber: string;
+  phone: string;
+  storeName?: string;
+  businessAddress?: string;
 };
 
 type AuthContextValue = {
   user: AuthUser | null;
-  login: (email: string, password: string) => boolean;
-  register: (name: string, email: string, password: string) => boolean;
+  merchants: MerchantStore[];
+  login: (email: string, password: string) => AccountType | null;
+  register: (registration: RegistrationData) => boolean;
   updateAddress: (address: string) => void;
   logout: () => void;
 };
@@ -29,14 +66,38 @@ const defaultUsers: StoredUser[] = [
     email: 'admin@minhaloja.com',
     password: 'admin123',
     isAdmin: true,
+    accountType: 'customer',
   },
   {
     name: 'Cliente Demo',
     email: 'cliente@minhaloja.com',
     password: 'cliente123',
     isAdmin: false,
+    accountType: 'customer',
   },
 ];
+
+const normalizeAccountType = (accountType: unknown): AccountType =>
+  accountType === 'merchant' ? 'merchant' : 'customer';
+
+const getStoredDocument = (
+  account: Pick<AuthUser, 'documentNumber' | 'documentType'> & LegacyDocumentFields,
+): Pick<AuthUser, 'documentNumber' | 'documentType'> => {
+  const documentNumber = account.documentNumber ?? account.cnpj ?? account.cpf;
+
+  if (!documentNumber) {
+    return {};
+  }
+
+  const normalizedDocument = getDocumentDigits(documentNumber);
+  const documentType =
+    identifyBrazilianDocument(normalizedDocument) ?? account.documentType;
+
+  return {
+    documentNumber: normalizedDocument,
+    ...(documentType ? { documentType } : {}),
+  };
+};
 
 const getStoredUsers = (): StoredUser[] => {
   if (typeof window === 'undefined') {
@@ -51,12 +112,30 @@ const getStoredUsers = (): StoredUser[] => {
   }
 
   try {
-    return JSON.parse(storedValue) as StoredUser[];
+    const storedUsers = JSON.parse(storedValue) as StoredUser[];
+    return storedUsers.map((account) => ({
+      ...account,
+      accountType: normalizeAccountType(account.accountType),
+      ...getStoredDocument(account),
+    }));
   } catch {
     window.localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(defaultUsers));
     return defaultUsers;
   }
 };
+
+const getMerchantDirectory = (): MerchantStore[] =>
+  getStoredUsers().flatMap((account) => {
+    if (account.accountType !== 'merchant' || !account.storeName?.trim()) {
+      return [];
+    }
+
+    return [{
+      id: account.email,
+      name: account.storeName,
+      address: account.businessAddress ?? '',
+    }];
+  });
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
@@ -68,8 +147,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const stored = window.localStorage.getItem(AUTH_STORAGE_KEY);
 
-    return stored ? (JSON.parse(stored) as AuthUser) : null;
+    if (!stored) {
+      return null;
+    }
+
+    const storedUser = JSON.parse(stored) as AuthUser & LegacyDocumentFields;
+    return {
+      ...storedUser,
+      accountType: normalizeAccountType(storedUser.accountType),
+      ...getStoredDocument(storedUser),
+    };
   });
+  const [merchants, setMerchants] = useState<MerchantStore[]>(getMerchantDirectory);
 
   const login = (email: string, password: string) => {
     const normalizedEmail = email.trim().toLowerCase();
@@ -79,26 +168,57 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 
     if (!matchedUser) {
-      return false;
+      return null;
     }
 
     const authUser: AuthUser = {
       name: matchedUser.name,
       email: matchedUser.email,
       isAdmin: matchedUser.isAdmin,
+      accountType: normalizeAccountType(matchedUser.accountType),
+      ...getStoredDocument(matchedUser),
+      phone: matchedUser.phone,
+      storeName: matchedUser.storeName,
+      businessAddress: matchedUser.businessAddress,
       address: matchedUser.address,
     };
 
     setUser(authUser);
     window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authUser));
-    return true;
+    return authUser.accountType;
   };
 
-  const register = (name: string, email: string, password: string) => {
-    const trimmedName = name.trim();
-    const normalizedEmail = email.trim().toLowerCase();
+  const register = (registration: RegistrationData) => {
+    const trimmedName = registration.name.trim();
+    const normalizedEmail = registration.email.trim().toLowerCase();
+    const documentNumber = getDocumentDigits(registration.documentNumber);
+    const documentType = identifyBrazilianDocument(documentNumber);
+    const trimmedPhone = registration.phone.trim();
+    const trimmedStoreName = registration.storeName?.trim();
+    const trimmedBusinessAddress = registration.businessAddress?.trim();
 
-    if (!trimmedName || !normalizedEmail || !password.trim()) {
+    if (
+      !trimmedName ||
+      !normalizedEmail ||
+      !registration.password.trim() ||
+      !trimmedPhone ||
+      !documentType ||
+      !isValidBrazilianDocument(documentNumber)
+    ) {
+      return false;
+    }
+
+    const merchantDetails =
+      registration.accountType === 'merchant' &&
+      trimmedStoreName &&
+      trimmedBusinessAddress
+        ? {
+            storeName: trimmedStoreName,
+            businessAddress: trimmedBusinessAddress,
+          }
+        : undefined;
+
+    if (registration.accountType === 'merchant' && !merchantDetails) {
       return false;
     }
 
@@ -112,17 +232,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const newUser = {
       name: trimmedName,
       email: normalizedEmail,
-      password,
+      password: registration.password,
       isAdmin: false,
+      accountType: registration.accountType,
+      documentNumber,
+      documentType,
+      phone: trimmedPhone,
+      ...merchantDetails,
     };
 
     const nextUsers = [...users, newUser];
     window.localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(nextUsers));
 
+    if (merchantDetails) {
+      setMerchants((current) => [
+        ...current,
+        {
+          id: normalizedEmail,
+          name: merchantDetails.storeName,
+          address: merchantDetails.businessAddress,
+        },
+      ]);
+    }
+
     const authUser: AuthUser = {
       name: trimmedName,
       email: normalizedEmail,
       isAdmin: false,
+      accountType: registration.accountType,
+      documentNumber,
+      documentType,
+      phone: trimmedPhone,
+      ...merchantDetails,
     };
 
     setUser(authUser);
@@ -162,8 +303,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const value = useMemo<AuthContextValue>(
-    () => ({ user, login, register, updateAddress, logout }),
-    [user, updateAddress],
+    () => ({ user, merchants, login, register, updateAddress, logout }),
+    [user, merchants, updateAddress],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

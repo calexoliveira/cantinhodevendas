@@ -1,13 +1,18 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useFavorites } from '../../context/FavoritesContext';
+import { formatBrazilianDocument } from '../../utils/brazilianDocument';
 
 export function Conta() {
   const { user, logout, updateAddress } = useAuth();
   const { favorites } = useFavorites();
   const [address, setAddress] = useState(user?.address ?? '');
   const [addressSaved, setAddressSaved] = useState(false);
+
+  if (user?.accountType === 'merchant') {
+    return <Navigate to="/lojista/painel" replace />;
+  }
 
   if (!user) {
     return (
@@ -35,6 +40,13 @@ export function Conta() {
           <span className="account-label">Perfil</span>
           <h2>{user.name}</h2>
           <p>{user.email}</p>
+          <div className="account-profile-details">
+            <p><strong>Telefone:</strong> {user.phone || 'Não informado'}</p>
+            <p>
+              <strong>{user.documentType?.toUpperCase() ?? 'CPF/CNPJ'}:</strong>{' '}
+              {user.documentNumber ? formatBrazilianDocument(user.documentNumber) : 'Não informado'}
+            </p>
+          </div>
           <form
             className="account-address-form"
             onSubmit={(event) => {
@@ -73,7 +85,9 @@ export function Conta() {
               <span>Favoritos</span>
             </div>
             <div>
-              <strong>{user.isAdmin ? 'Admin' : 'Cliente'}</strong>
+              <strong>
+                {user.isAdmin ? 'Admin' : 'Cliente'}
+              </strong>
               <span>Tipo</span>
             </div>
           </div>

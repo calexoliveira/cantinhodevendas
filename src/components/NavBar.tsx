@@ -8,6 +8,7 @@ const menuItems = [
  { to: '/', label: 'Início' },
  { to: '/produtos', label: 'Produtos' },
  { to: '/servicos', label: 'Serviços' },
+ { to: '/lojistas', label: 'Lojistas' },
 ];
 
 type NavBarProps = {
@@ -23,6 +24,7 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
  const { itemCount } = useCart();
  const { favorites } = useFavorites();
  const { user, logout } = useAuth();
+ const accountPath = user?.accountType === 'merchant' ? '/lojista/painel' : '/conta';
  const accountLabel = user
    ? `Olá, ${user.name}${user.address ? ` · ${user.address}` : ''}`
    : '';
@@ -40,7 +42,7 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
        <div className="top-alert">
          <span>Cadastre-se e ganhe 20% de desconto na sua primeira compra.</span>
          {user ? (
-           <NavLink to="/conta" className="top-alert-user" title={accountLabel}>
+           <NavLink to={accountPath} className="top-alert-user" title={accountLabel}>
              {accountLabel}
            </NavLink>
          ) : (
@@ -100,7 +102,7 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
 
        <div className="nav-actions">
          {user ? (
-           <NavLink to="/conta" className="nav-account" aria-label={accountLabel} title={accountLabel}>
+           <NavLink to={accountPath} className="nav-account" aria-label={accountLabel} title={accountLabel}>
              <span className="nav-account-name">Olá, {user.name}</span>
              {user.address ? <span className="nav-account-address">{user.address}</span> : null}
            </NavLink>
@@ -125,7 +127,7 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
                <NavLink to="/pedidos" className="icon-button" aria-label="Pedidos">
                  🧾
                </NavLink>
-               <NavLink to="/conta" className="icon-button" aria-label="Minha conta">
+               <NavLink to={accountPath} className="icon-button" aria-label="Minha conta">
                  👤
                </NavLink>
                <button type="button" className="icon-button" aria-label="Sair" onClick={logout}>
@@ -151,7 +153,7 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
          Favoritos
        </NavLink>
        {user ? (
-         <NavLink to="/conta" onClick={() => setIsOpen(false)}>
+         <NavLink to={accountPath} onClick={() => setIsOpen(false)}>
            Minha conta
          </NavLink>
        ) : null}
