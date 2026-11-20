@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useFavorites } from '../context/FavoritesContext';
+import brandImage from '../image/cantinhodevendas.png';
 
 const menuItems = [
  { to: '/', label: 'Início' },
@@ -69,8 +70,11 @@ export function NavBar({ darkMode, onToggleTheme }: NavBarProps) {
          {isOpen ? '✕' : '☰'}
        </button>
 
-       <NavLink to="/" className="brand">
-         Cantinho <br />de <br />vendas
+       <NavLink to="/" className="brand" aria-label="Cantinho de Vendas - Início">
+         <span className="brand-image-frame" aria-hidden="true">
+           <img src={brandImage} alt="" />
+         </span>
+         <span className="brand-name">Cantinho<br />de Vendas</span>
        </NavLink>
 
        <nav className="nav-links" aria-label="Menu principal">

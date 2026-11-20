@@ -37,7 +37,7 @@ export function Checkout() {
 
   const hasValidCoupon =
     promoFeedback === 'Cupom aplicado com sucesso!' &&
-    ['minhaloja', 'primeiracompra'].includes(promoCode.trim().toLowerCase());
+    ['cantinhodevendas', 'minhaloja', 'primeiracompra'].includes(promoCode.trim().toLowerCase());
   const discount = hasValidCoupon ? subtotal * 0.1 : 0;
   const finalTotal = Math.max(total - discount, 0);
 
@@ -49,12 +49,12 @@ export function Checkout() {
       return;
     }
 
-    if (normalizedCoupon === 'minhaloja' || normalizedCoupon === 'primeiracompra') {
+    if (['cantinhodevendas', 'minhaloja', 'primeiracompra'].includes(normalizedCoupon)) {
       setPromoFeedback('Cupom aplicado com sucesso!');
       return;
     }
 
-    setPromoFeedback('Cupom inválido. Tente: MINHALOJA');
+    setPromoFeedback('Cupom inválido. Tente: CANTINHODEVENDAS');
   };
 
   if (items.length === 0 && !completed) {
@@ -244,7 +244,7 @@ export function Checkout() {
                 Cupom de desconto
                 <input
                   type="text"
-                  placeholder="MINHALOJA"
+                  placeholder="CANTINHODEVENDAS"
                   value={promoCode}
                   onChange={(event) => setPromoCode(event.target.value)}
                 />

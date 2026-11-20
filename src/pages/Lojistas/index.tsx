@@ -18,7 +18,10 @@ export function Lojistas() {
               <span className="account-label">Loja cadastrada</span>
               <h2>{merchant.name}</h2>
               <p>{merchant.address || 'Endereço comercial não informado.'}</p>
-              <Link to="/produtos" className="secondary-btn">
+              <Link
+                to={`/produtos?storeId=${encodeURIComponent(merchant.id)}&storeName=${encodeURIComponent(merchant.name)}`}
+                className="secondary-btn"
+              >
                 Explorar produtos
               </Link>
             </article>

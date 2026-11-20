@@ -127,8 +127,8 @@ export function Servicos() {
       <section className="registered-services" aria-labelledby="registered-services-title">
         <div className="registered-services-heading">
           <div className="services-section-heading">
-            <span className="eyebrow">Profissionais da comunidade</span>
-            <h1 id="registered-services-title">Serviços cadastrados</h1>
+            <span className="eyebrow">Profissionais e Parceiros Credenciados</span>
+            <h1 id="registered-services-title">Rede de Serviços</h1>
             <p>Conheça os prestadores e encontre um serviço para a sua necessidade.</p>
           </div>
           <a href="#cadastrar-servico" className="secondary-btn">
@@ -354,7 +354,7 @@ export function Servicos() {
       <section className="services-cta">
         <span className="eyebrow">Pronto para encontrar seu próximo favorito?</span>
         <h2>Seu próximo look começa por aqui.</h2>
-        <p>Descubra a seleção da Minhaloja e escolha o que combina com você.</p>
+        <p>Descubra a seleção do Cantinho de Vendas e escolha o que combina com você.</p>
         <Link to="/produtos" className="primary-btn">
           Ver catálogo <span aria-hidden="true">→</span>
         </Link>

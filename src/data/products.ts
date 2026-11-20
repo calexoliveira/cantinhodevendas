@@ -21,6 +21,15 @@ export type Product = {
   featured?: boolean;
   condition?: 'novo' | 'seminovo' | 'usado';
   description: string;
+  storeId?: string;
+  storeName?: string;
+  stock?: number;
+  sku?: string;
+  brand?: string;
+  warrantyMonths?: number;
+  deliveryDays?: number;
+  freeShipping?: boolean;
+  soldCount?: number;
 };
 
 export const heroVisual = heroImage;
@@ -162,18 +171,40 @@ export const categories = ['Todos', 'Roupas', 'Calçados', 'Acessórios', 'Eletr
 
 export function getCatalogProducts(): Product[] {
   if (typeof window === 'undefined') {
-    return defaultProducts;
+    return defaultProducts.map((product) => ({
+      stock: 10,
+      warrantyMonths: 12,
+      deliveryDays: 3,
+      freeShipping: false,
+      soldCount: 0,
+      ...product,
+    }));
   }
 
   const storedValue = window.localStorage.getItem(PRODUCTS_STORAGE_KEY);
 
   if (!storedValue) {
-    window.localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(defaultProducts));
-    return defaultProducts;
+    const normalizedDefaults = defaultProducts.map((product) => ({
+      stock: 10,
+      warrantyMonths: 12,
+      deliveryDays: 3,
+      freeShipping: false,
+      soldCount: 0,
+      ...product,
+    }));
+    window.localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(normalizedDefaults));
+    return normalizedDefaults;
   }
 
   try {
-    const storedProducts = JSON.parse(storedValue) as Product[];
+    const storedProducts = (JSON.parse(storedValue) as Product[]).map((product) => ({
+      stock: 10,
+      warrantyMonths: 12,
+      deliveryDays: 3,
+      freeShipping: false,
+      soldCount: 0,
+      ...product,
+    }));
     const defaultProductsById = new Map(defaultProducts.map((product) => [product.id, product]));
     const mergedProducts = [...storedProducts];
 
@@ -189,7 +220,14 @@ export function getCatalogProducts(): Product[] {
         return;
       }
 
-      mergedProducts.push(defaultProduct);
+      mergedProducts.push({
+        stock: 10,
+        warrantyMonths: 12,
+        deliveryDays: 3,
+        freeShipping: false,
+        soldCount: 0,
+        ...defaultProduct,
+      });
     });
 
     const productsWithCurrentImages = mergedProducts.map((product) => {

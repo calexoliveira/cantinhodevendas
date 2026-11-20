@@ -79,7 +79,7 @@ export function Home() {
         </div>
 
         <div className="hero-visual">
-         <img src={heroVisual} alt="Coleção premium da Minhaloja" />
+         <img src={heroVisual} alt="Coleção premium do Cantinho de Vendas" />
          <div className="hero-badge">
            <strong>Lojas</strong>
            <span>Afiliadas</span>
@@ -114,7 +114,7 @@ export function Home() {
         <div className="services-hero-note">
           <span className="services-note-icon" aria-hidden="true">✦</span>
           <p>Seu estilo, suas escolhas e uma loja pronta para acompanhar você.</p>
-          <span className="services-note-caption">MINHALOJA · SERVIÇOS</span>
+          <span className="services-note-caption">CANTINHO DE VENDAS · SERVIÇOS</span>
         </div>
       </section>
 
@@ -206,7 +206,7 @@ export function Home() {
            <article key={collection.title} className="collection-card">
              <img src={collection.image} alt={collection.title} />
              <div className="collection-copy">
-               <span>Curadoria Minhaloja</span>
+               <span>Curadoria Cantinho de Vendas</span>
                <h3>{collection.title}</h3>
                <p>{collection.description}</p>
                <Link to="/produtos">Explorar coleção</Link>
@@ -221,7 +221,7 @@ export function Home() {
          <div>
            <h3>Uma experiência de compra pensada para você.</h3>
            <p>
-             Qualidade premium, atendimento ágil e entrega confiável em todo o país. A Minhaloja
+             Qualidade premium, atendimento ágil e entrega confiável em todo o país. O Cantinho de Vendas
              combina moda, tecnologia e conveniência em um só lugar.
            </p>
            <div className="feature-points">

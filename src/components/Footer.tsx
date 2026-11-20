@@ -1,9 +1,16 @@
+import brandImage from '../image/cantinhodevendas.png';
+
 export function Footer() {
  return (
    <footer className="site-footer">
      <div className="footer-grid">
        <div className="footer-brand">
-         <div className="brand" style={{ color: '#fff' }}>MINHALOJA</div>
+         <div className="brand footer-brand-logo">
+           <span className="brand-image-frame" aria-hidden="true">
+             <img src={brandImage} alt="" />
+           </span>
+           <span className="brand-name">Cantinho<br />de Vendas</span>
+         </div>
          <p>
            Descubra peças, acessórios e novidades pensadas para o seu estilo e para a sua rotina.
          </p>
@@ -49,7 +56,7 @@ export function Footer() {
      </div>
 
      <div className="footer-bottom">
-       <span>Minhaloja © 2026. Todos os direitos reservados.</span>
+       <span>Cantinho de Vendas © 2026. Todos os direitos reservados.</span>
        <div className="payments">
          <span>VISA</span>
          <span>MC</span>

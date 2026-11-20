@@ -25,6 +25,10 @@ export function Detalhes() {
   }
 
   const favorite = isFavorite(product.id);
+  const stock = product.stock ?? 10;
+  const inStock = stock > 0;
+  const deliveryDays = product.deliveryDays ?? 3;
+  const warrantyMonths = product.warrantyMonths ?? 12;
 
   return (
     <main className="page-shell product-detail-page">
@@ -51,6 +55,14 @@ export function Detalhes() {
                 <small>Produto de segunda mão · condição: {product.condition}</small>
               </span>
             </div>
+          ) : product.storeName ? (
+            <div className="detail-community-seller">
+              <span className="community-seller-avatar" aria-hidden="true">LO</span>
+              <span>
+                <strong>{product.storeName}</strong>
+                <small>Produto vendido por esta loja</small>
+              </span>
+            </div>
           ) : null}
           <div className="product-rating">
             <span>★</span>
@@ -70,9 +82,24 @@ export function Detalhes() {
 
           <p className="detail-description">{product.description}</p>
 
+          <div className="detail-stock">
+            <strong className={inStock ? 'in-stock' : 'out-of-stock'}>
+              {inStock ? `${stock} unidades disponíveis` : 'Produto indisponível'}
+            </strong>
+            {product.sku ? <span>SKU: {product.sku}</span> : null}
+            {product.brand ? <span>Marca: {product.brand}</span> : null}
+            {product.soldCount ? <span>{product.soldCount}+ vendidos</span> : null}
+          </div>
+
+          <div className="detail-marketplace-info">
+            <span><strong>Loja</strong>{product.storeName ?? 'Cantinho de Vendas'}</span>
+            <span><strong>Condição</strong>{product.condition ?? 'Novo'}</span>
+            <span><strong>Estoque</strong>{stock}</span>
+          </div>
+
           <div className="detail-actions">
-            <button type="button" className="primary-btn" onClick={() => addItem(product)}>
-              Adicionar ao carrinho
+            <button type="button" className="primary-btn" onClick={() => addItem(product)} disabled={!inStock}>
+              {inStock ? 'Adicionar ao carrinho' : 'Sem estoque'}
             </button>
             <button
               type="button"
@@ -103,11 +130,11 @@ export function Detalhes() {
               <>
                 <div>
                   <strong>Entrega</strong>
-                  <span>Em até 3 dias úteis</span>
+                  <span>{product.freeShipping ? 'Frete grátis · ' : ''}Em até {deliveryDays} dias úteis</span>
                 </div>
                 <div>
                   <strong>Garantia</strong>
-                  <span>12 meses de suporte</span>
+                  <span>{warrantyMonths} meses de garantia</span>
                 </div>
                 <div>
                   <strong>Pagamento</strong>

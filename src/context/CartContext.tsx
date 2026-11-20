@@ -86,8 +86,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const addItem = (product: Product) => {
     setItems((currentItems) => {
       const existingItem = currentItems.find((item) => item.id === product.id);
+      const availableStock = product.stock ?? 10;
 
       if (existingItem) {
+        if (existingItem.quantity >= availableStock) {
+          return currentItems;
+        }
         const nextItems = currentItems.map((item) =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item,
         );
@@ -170,7 +174,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     setItems((currentItems) => {
       const nextItems = currentItems.map((item) =>
-        item.id === productId ? { ...item, quantity } : item,
+        item.id === productId
+          ? { ...item, quantity: Math.min(quantity, item.stock ?? 10) }
+          : item,
       );
       return persistCart(nextItems);
     });

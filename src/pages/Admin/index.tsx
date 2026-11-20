@@ -17,10 +17,15 @@ const defaultForm = {
   reviews: '0',
   badge: 'Novo',
   description: '',
+  stock: '10',
+  sku: '',
+  brand: '',
+  warrantyMonths: '12',
+  deliveryDays: '3',
 };
 
 export function Admin() {
-  const { user } = useAuth();
+  const { user, merchants } = useAuth();
   const [products, setProducts] = useState<Product[]>(() => getCatalogProducts());
   const [form, setForm] = useState(defaultForm);
 
@@ -58,6 +63,14 @@ export function Admin() {
       badge: form.badge || 'Novo',
       description: form.description || 'Produto cadastrado no catálogo.',
       featured: true,
+      storeId: merchants[0]?.id,
+      storeName: merchants[0]?.name,
+      stock: Number(form.stock),
+      sku: form.sku.trim() || undefined,
+      brand: form.brand.trim() || undefined,
+      warrantyMonths: Number(form.warrantyMonths),
+      deliveryDays: Number(form.deliveryDays),
+      soldCount: 0,
     };
 
     const nextProducts = addProductToCatalog(newProduct);
@@ -147,6 +160,33 @@ export function Admin() {
             <label>
               Descrição
               <textarea value={form.description} onChange={(event) => handleChange('description', event.target.value)} rows={4} />
+            </label>
+
+            <div className="two-column">
+              <label>
+                Estoque
+                <input type="number" min="0" step="1" value={form.stock} onChange={(event) => handleChange('stock', event.target.value)} required />
+              </label>
+              <label>
+                SKU
+                <input value={form.sku} onChange={(event) => handleChange('sku', event.target.value)} />
+              </label>
+            </div>
+
+            <div className="two-column">
+              <label>
+                Marca
+                <input value={form.brand} onChange={(event) => handleChange('brand', event.target.value)} />
+              </label>
+              <label>
+                Prazo de entrega (dias)
+                <input type="number" min="1" value={form.deliveryDays} onChange={(event) => handleChange('deliveryDays', event.target.value)} />
+              </label>
+            </div>
+
+            <label>
+              Garantia (meses)
+              <input type="number" min="0" value={form.warrantyMonths} onChange={(event) => handleChange('warrantyMonths', event.target.value)} />
             </label>
 
             <button type="submit" className="primary-btn">

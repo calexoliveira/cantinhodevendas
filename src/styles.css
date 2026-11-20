@@ -165,13 +165,41 @@ a {
 .brand {
   grid-column: 1;
   grid-row: 1 / span 2;
-  align-self: center;
-  justify-self: center;
-  font-size: clamp(1.6rem, 2vw, 2.1rem);
+  display: flex;
+  align-items: center;
+  justify-self: start;
+  gap: 10px;
+  color: var(--text);
+  font-size: 1rem;
   font-weight: 900;
-  letter-spacing: -0.08em;
-  line-height: 1;
-  text-align: center;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.brand-image-frame {
+  position: relative;
+  display: block;
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.brand-image-frame img {
+  position: absolute;
+  top: -37px;
+  left: 50%;
+  width: 150px;
+  max-width: none;
+  height: 150px;
+  transform: translateX(-50%);
+}
+
+.footer-brand-logo {
+  color: #fff;
+  justify-self: start;
 }
 
 .nav-links {
@@ -969,6 +997,55 @@ a {
   line-height: 1.8;
   font-size: 1.02rem;
   margin-bottom: 18px;
+}
+
+.detail-stock {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin: -4px 0 16px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.detail-stock .in-stock {
+  color: #16803c;
+}
+
+.detail-stock .out-of-stock {
+  color: #b42318;
+}
+
+.detail-marketplace-info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.detail-marketplace-info span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.detail-marketplace-info strong {
+  color: var(--text);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detail-actions button:disabled,
+.primary-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .detail-actions {

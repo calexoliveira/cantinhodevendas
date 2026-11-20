@@ -22,6 +22,14 @@ export function ProductCard({ product }: ProductCardProps) {
           </>
         ) : product.badge ? (
           <span className="product-badge">{product.badge}</span>
+        ) : product.storeName ? (
+          <div className="community-seller">
+            <span className="community-seller-avatar" aria-hidden="true">LO</span>
+            <span>
+              <strong>{product.storeName}</strong>
+              <small>Loja parceira</small>
+            </span>
+          </div>
         ) : null}
         <button
           type="button"

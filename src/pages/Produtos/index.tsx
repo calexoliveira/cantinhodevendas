@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ProductCard } from '../../components/ProductCard';
-import { categories, products } from '../../data/products';
+import { categories, getCatalogProducts } from '../../data/products';
 
 export function Produtos() {
   const [searchParams] = useSearchParams();
+  const products = getCatalogProducts();
+  const storeId = searchParams.get('storeId');
+  const storeName = searchParams.get('storeName');
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [sortBy, setSortBy] = useState<'featured' | 'priceAsc' | 'priceDesc'>('featured');
   const [maxPrice, setMaxPrice] = useState(500);
@@ -20,12 +23,15 @@ export function Produtos() {
   const query = (searchParams.get('search') ?? '').trim().toLowerCase();
 
   const visibleProducts = useMemo(() => {
-    const filteredProducts = (selectedCategory === 'Todos' ? [...products] : products.filter((product) => product.category === selectedCategory)).filter((product) => {
+    const filteredProducts = (selectedCategory === 'Todos' ? [...products] : products.filter((product) => product.category === selectedCategory))
+      .filter((product) => !storeId || product.storeId === storeId)
+      .filter((product) => {
       const matchesSearch =
         !query ||
         product.name.toLowerCase().includes(query) ||
         product.category.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query);
+        product.description.toLowerCase().includes(query) ||
+        (product.storeName ?? '').toLowerCase().includes(query);
 
       const matchesPrice = product.price <= maxPrice;
       const matchesShipping = !freeShippingOnly || product.price >= 200;
@@ -51,7 +57,7 @@ export function Produtos() {
     }
 
     return sortedProducts;
-  }, [selectedCategory, query, sortBy, maxPrice, freeShippingOnly, offersOnly, newOnly, usedOnly]);
+  }, [selectedCategory, query, sortBy, maxPrice, freeShippingOnly, offersOnly, newOnly, usedOnly, storeId, products]);
 
   const usedProducts = products.filter((product) => product.condition);
 
@@ -60,8 +66,9 @@ export function Produtos() {
       <header className="page-header">
         <h1>Catálogo completo</h1>
         <p>
-          Descubra roupas, acessórios e itens modernos para o seu dia a dia. Filtre por categoria e
-          encontre a opção ideal para o seu estilo.
+          {storeName
+            ? `Produtos da loja ${storeName}.`
+            : 'Descubra roupas, acessórios e itens modernos para o seu dia a dia. Filtre por categoria e encontre a opção ideal para o seu estilo.'}
         </p>
         {query ? <p className="search-summary">Resultados para: “{query}”</p> : null}
       </header>

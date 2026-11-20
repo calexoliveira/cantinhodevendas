@@ -1,6 +1,6 @@
-# Minhaloja Marketplace
+# Cantinho de Vendas
 
-Minhaloja é uma vitrine de e-commerce fictícia desenvolvida com React + TypeScript, com foco em UX premium, conversão e apresentação visual sofisticada. O projeto simula uma loja moderna com catálogo, autenticação, carrinho, checkout, favoritos e painel administrativo.
+Cantinho de Vendas é uma vitrine de e-commerce fictícia desenvolvida com React + TypeScript, com foco em UX premium, conversão e apresentação visual sofisticada. O projeto simula um marketplace moderno com catálogo, autenticação, carrinho, checkout, favoritos e painel administrativo.
 
 ## Visão geral
 
@@ -69,7 +69,7 @@ npm run dev
 
 ## Pitch profissional
 
-A Minhaloja é uma experiência de marketplace premium desenvolvida para demonstrar como uma loja digital moderna pode unir estética, conversão e funcionalidade. O projeto combina uma identidade visual refinada com uma jornada de compra clara e eficiente, abordando os principais elementos de um storefront de alto nível: catálogo, autenticação, carrinho, checkout, gestão de produtos e personalização de experiência.
+O Cantinho de Vendas é uma experiência de marketplace premium desenvolvida para demonstrar como uma loja digital moderna pode unir estética, conversão e funcionalidade. O projeto combina uma identidade visual refinada com uma jornada de compra clara e eficiente, abordando os principais elementos de um storefront de alto nível: catálogo, autenticação, carrinho, checkout, gestão de produtos e personalização de experiência.
 
 Esse projeto funciona como uma base sólida para apresentação de portfólio, demonstração de UI/UX e prova de domínio em React, arquitetura de componentes e fluxo de e-commerce front-end.
 

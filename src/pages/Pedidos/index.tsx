@@ -27,7 +27,7 @@ export function Pedidos() {
       <main className="page-shell empty-cart-shell">
         <div className="empty-cart">
           <h1>Você ainda não fez nenhuma compra</h1>
-          <p>Explore as melhores ofertas da Minhaloja e aproveite seu primeiro pedido.</p>
+          <p>Explore as melhores ofertas do Cantinho de Vendas e aproveite seu primeiro pedido.</p>
           <Link to="/produtos" className="primary-btn">
             Explorar catálogo
           </Link>
