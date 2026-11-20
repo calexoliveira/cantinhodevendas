@@ -8,6 +8,7 @@ import { Conta } from '../pages/Conta';
 import { Detalhes } from '../pages/Detalhes';
 import { Favoritos } from '../pages/Favoritos';
 import { Home } from '../pages/Home';
+import { Informacoes } from '../pages/Informacoes';
 import { Login } from '../pages/Login';
 import { PainelLojista } from '../pages/Lojista';
 import { Lojistas } from '../pages/Lojistas';
@@ -22,6 +23,7 @@ export function AppRoutes() {
       <Route path="/buscar" element={<Busca />} />
       <Route path="/produtos" element={<Produtos />} />
       <Route path="/servicos" element={<Servicos />} />
+      <Route path="/informacoes/:slug" element={<Informacoes />} />
       <Route path="/lojistas" element={<Lojistas />} />
       <Route path="/produtos/:id" element={<Detalhes />} />
       <Route path="/favoritos" element={<Favoritos />} />

@@ -277,7 +277,7 @@ export function Home() {
         </div>
       </section>
 
-      <section className="section">
+      <section id="newsletter" className="section newsletter-section">
         <div className="newsletter">
          <h3>Receba ofertas exclusivas.</h3>
          <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>

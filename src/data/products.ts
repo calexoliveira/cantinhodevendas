@@ -7,6 +7,7 @@ import tenis from '../image/Tênis Street Run.png';
 import bolsa from '../image/Bolsa_Crossbody.png';
 import relogio from '../image/relogio.png';
 import heroImage from '../image/marketplace.jpg';
+import computador from '../image/computador.png';
 
 export type Product = {
   id: number;
@@ -38,7 +39,7 @@ export const categoryImages: Record<Product['category'], string> = {
   Roupas: camisaBasica,
   'Calçados': tenis,
   'Acessórios': bolsa,
-  'Eletrônicos': relogio,
+  'Eletrônicos': computador,
 };
 
 const defaultProducts: Product[] = [
@@ -162,6 +163,19 @@ const defaultProducts: Product[] = [
     badge: 'Seminovo',
     condition: 'seminovo',
     description: 'Acessório funcional com sinais discretos de uso, mas em excelente condição.',
+  },
+    {
+    id: 11,
+    name: 'Computador de escritório Seminovo',
+    category: 'Eletrônicos',
+    price: 550,
+    originalPrice: 600,
+    rating: 4.7,
+    reviews: 41,
+    image: computador,
+    badge: 'Seminovo',
+    condition: 'seminovo',
+    description: 'Computador de bom desempenho, ideal para tarefas de escritório.',
   },
 ];
 

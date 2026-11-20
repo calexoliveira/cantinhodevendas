@@ -1,4 +1,5 @@
 import brandImage from '../image/cantinhodevendas.png';
+import { Link } from 'react-router-dom';
 
 export function Footer() {
  return (
@@ -24,34 +25,34 @@ export function Footer() {
 
        <div className="footer-column">
          <h4>Empresa</h4>
-         <a href="#">Sobre</a>
-         <a href="#">Recursos</a>
-         <a href="#">Trabalhe conosco</a>
-         <a href="#">Carreiras</a>
+         <Link to="/informacoes/sobre">Sobre</Link>
+         <Link to="/informacoes/recursos">Recursos</Link>
+         <Link to="/informacoes/trabalhe-conosco">Trabalhe conosco</Link>
+         <Link to="/informacoes/carreiras">Carreiras</Link>
        </div>
 
        <div className="footer-column">
          <h4>Atendimento</h4>
-         <a href="#">Suporte</a>
-         <a href="#">Entregas</a>
-         <a href="#">Termos</a>
-         <a href="#">Privacidade</a>
+         <Link to="/informacoes/suporte">Suporte</Link>
+         <Link to="/informacoes/entregas">Entregas</Link>
+         <Link to="/informacoes/termos">Termos</Link>
+         <Link to="/informacoes/privacidade">Privacidade</Link>
        </div>
 
        <div className="footer-column">
          <h4>FAQ</h4>
-         <a href="#">Conta</a>
-         <a href="#">Pedidos</a>
-         <a href="#">Pagamentos</a>
-         <a href="#">Devoluções</a>
+         <Link to="/conta">Conta</Link>
+         <Link to="/pedidos">Pedidos</Link>
+         <Link to="/informacoes/pagamentos">Pagamentos</Link>
+         <Link to="/informacoes/devolucoes">Devoluções</Link>
        </div>
 
        <div className="footer-column">
          <h4>Recursos</h4>
-         <a href="#">Blog</a>
-         <a href="#">Guias</a>
-         <a href="#">Dicas</a>
-         <a href="#">Newsletter</a>
+         <Link to="/informacoes/blog">Blog</Link>
+         <Link to="/informacoes/guias">Guias</Link>
+         <Link to="/informacoes/dicas">Dicas</Link>
+         <Link to="/#newsletter">Newsletter</Link>
        </div>
      </div>
 

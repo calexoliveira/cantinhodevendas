@@ -10,7 +10,8 @@ export function Produtos() {
   const storeName = searchParams.get('storeName');
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [sortBy, setSortBy] = useState<'featured' | 'priceAsc' | 'priceDesc'>('featured');
-  const [maxPrice, setMaxPrice] = useState(500);
+  const [maxPrice, setMaxPrice] = useState(800);
+  const [unlimitedPrice, setUnlimitedPrice] = useState(false);
   const [freeShippingOnly, setFreeShippingOnly] = useState(false);
   const [offersOnly, setOffersOnly] = useState(false);
   const [newOnly, setNewOnly] = useState(false);
@@ -33,11 +34,11 @@ export function Produtos() {
         product.description.toLowerCase().includes(query) ||
         (product.storeName ?? '').toLowerCase().includes(query);
 
-      const matchesPrice = product.price <= maxPrice;
+      const matchesPrice = unlimitedPrice || product.price <= maxPrice;
       const matchesShipping = !freeShippingOnly || product.price >= 200;
       const matchesOffers = !offersOnly || Boolean(product.originalPrice && product.originalPrice > product.price);
-      const matchesNew = !newOnly || (product.badge ? ['Novidade', 'Novo', 'Oferta', 'Mais vendido', 'Top review'].includes(product.badge) : false);
-      const matchesUsed = !usedOnly || product.condition !== undefined;
+      const matchesNew = !newOnly || !product.condition || product.condition === 'novo';
+      const matchesUsed = !usedOnly || product.condition === 'seminovo' || product.condition === 'usado';
 
       return matchesSearch && matchesPrice && matchesShipping && matchesOffers && matchesNew && matchesUsed;
     });
@@ -57,7 +58,7 @@ export function Produtos() {
     }
 
     return sortedProducts;
-  }, [selectedCategory, query, sortBy, maxPrice, freeShippingOnly, offersOnly, newOnly, usedOnly, storeId, products]);
+  }, [selectedCategory, query, sortBy, maxPrice, unlimitedPrice, freeShippingOnly, offersOnly, newOnly, usedOnly, storeId, products]);
 
   const usedProducts = products.filter((product) => product.condition);
 
@@ -110,14 +111,25 @@ export function Produtos() {
           </div>
 
           <div className="filter-price">
-            <label htmlFor="price-limit">Máximo: R$ {maxPrice}</label>
+            <label htmlFor="price-limit">
+              Máximo: {unlimitedPrice ? 'Sem limite' : `R$ ${maxPrice}`}
+            </label>
+            <label className="filter-price-unlimited">
+              <input
+                type="checkbox"
+                checked={unlimitedPrice}
+                onChange={(event) => setUnlimitedPrice(event.target.checked)}
+              />
+              <span>Sem limite</span>
+            </label>
             <input
               id="price-limit"
               type="range"
               min={50}
-              max={500}
+              max={800}
               step={10}
               value={maxPrice}
+              disabled={unlimitedPrice}
               onChange={(event) => setMaxPrice(Number(event.target.value))}
             />
           </div>
