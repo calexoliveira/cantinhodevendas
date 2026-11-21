@@ -52,6 +52,10 @@ npm run dev
 - Admin: `admin@minhaloja.com` / `admin123`
 - Cliente: `cliente@minhaloja.com` / `cliente123`
 
+O catálogo de lojistas inclui uma loja de demonstração, vinculada aos produtos iniciais.
+Ela é apenas uma vitrine e não possui conta de acesso. Produtos cadastrados por lojistas
+continuam vinculados às respectivas lojas.
+
 ## Estrutura do projeto
 
 - `src/pages/Home` — landing page com hero, coleções e destaques

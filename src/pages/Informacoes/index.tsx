@@ -122,6 +122,15 @@ const informationPages: Record<string, InformationPage> = {
     ],
     actions: [{ label: 'Começar a explorar', to: '/produtos' }],
   },
+  noticias: {
+    title: 'Notícias e novidades',
+    description: 'Acompanhe lançamentos, ofertas e novidades do Cantinho de Vendas.',
+    paragraphs: [
+      'Confira as novidades mais recentes do marketplace: coleções selecionadas, produtos em destaque e oportunidades no Bazar Colaborativo.',
+      'Assine a newsletter para receber ofertas exclusivas, lançamentos e conteúdos do Cantinho de Vendas diretamente no seu e-mail.',
+    ],
+    actions: [{ label: 'Assinar newsletter', to: '/#newsletter' }, { label: 'Ver novidades', to: '/produtos' }],
+  },
 };
 
 export function Informacoes() {

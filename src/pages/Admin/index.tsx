@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { demoStore } from '../../data/stores';
 import {
   addProductToCatalog,
   getCatalogProducts,
@@ -51,6 +52,7 @@ export function Admin() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const merchant = merchants.find((store) => store.id !== demoStore.id);
     const newProduct: Product = {
       id: Date.now(),
       name: form.name,
@@ -63,8 +65,8 @@ export function Admin() {
       badge: form.badge || 'Novo',
       description: form.description || 'Produto cadastrado no catálogo.',
       featured: true,
-      storeId: merchants[0]?.id,
-      storeName: merchants[0]?.name,
+      storeId: merchant?.id,
+      storeName: merchant?.name,
       stock: Number(form.stock),
       sku: form.sku.trim() || undefined,
       brand: form.brand.trim() || undefined,

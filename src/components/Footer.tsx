@@ -52,7 +52,7 @@ export function Footer() {
          <Link to="/informacoes/blog">Blog</Link>
          <Link to="/informacoes/guias">Guias</Link>
          <Link to="/informacoes/dicas">Dicas</Link>
-         <Link to="/#newsletter">Newsletter</Link>
+         <Link to="/informacoes/noticias">Newsletter</Link>
        </div>
      </div>
 

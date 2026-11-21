@@ -7,6 +7,9 @@ import './services-hero.css';
 const featuredProducts = products.filter((product) => product.featured).slice(0, 4);
 
 const usedProducts = products.filter((product) => product.condition).slice(0, 3);
+const spotlightOffer =
+  products.find((product) => product.originalPrice && !product.featured) ?? products[0];
+const homeFeatureSlides = ['Novidades', 'Serviços', 'Ofertas'];
 
 const curatedCollections = [
   {
@@ -29,6 +32,15 @@ const curatedCollections = [
 export function Home() {
   const [email, setEmail] = useState('');
   const [newsletterMessage, setNewsletterMessage] = useState('');
+  const [activeFeatureSlide, setActiveFeatureSlide] = useState(
+    () => Math.floor(Math.random() * homeFeatureSlides.length),
+  );
+
+  const moveFeatureSlide = (direction: number) => {
+    setActiveFeatureSlide((current) =>
+      (current + direction + homeFeatureSlides.length) % homeFeatureSlides.length,
+    );
+  };
 
   const handleNewsletterSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,7 +56,9 @@ export function Home() {
 
   return (
     <main className="page-shell">
-      <section className="hero">
+      <div className="home-feature-carousel" role="region" aria-roledescription="carrossel" aria-label="Destaques do Cantinho de Vendas">
+        <div className="home-feature-slide-stage">
+          <section className={`hero home-feature-slide${activeFeatureSlide === 0 ? ' is-active' : ''}`} aria-hidden={activeFeatureSlide !== 0}>
         <div className="hero-copy">
          <span className="eyebrow">Novidades da semana</span>
          <h1>Encontre peças que refletem seu estilo.</h1>
@@ -85,7 +99,78 @@ export function Home() {
            <span>Afiliadas</span>
          </div>
         </div>
-      </section>
+          </section>
+
+          <section className={`services-hero home-feature-slide${activeFeatureSlide === 1 ? ' is-active' : ''}`} aria-hidden={activeFeatureSlide !== 1}>
+            <div className="services-hero-copy">
+              <span className="eyebrow">Cuidado em cada etapa</span>
+              <h2>Encontre profissionais para ajudar em cada etapa.</h2>
+              <p>
+                Serviços e orientações para facilitar sua rotina e suas escolhas.
+              </p>
+              <Link to="/servicos" className="primary-btn">
+                Explorar serviços <span aria-hidden="true">→</span>
+              </Link>
+              <Link to="/servicos#cadastrar-servico" className="secondary-btn service-provider-cta">
+                Cadastre seu serviço
+              </Link>
+            </div>
+
+            <div className="services-hero-note">
+              <span className="services-note-icon" aria-hidden="true">✦</span>
+              <p>Seu estilo, suas escolhas e uma loja pronta para acompanhar você.</p>
+              <span className="services-note-caption">CANTINHO DE VENDAS · SERVIÇOS</span>
+            </div>
+          </section>
+
+          <section className={`home-offer-slide home-feature-slide${activeFeatureSlide === 2 ? ' is-active' : ''}`} aria-hidden={activeFeatureSlide !== 2}>
+            <div className="home-offer-copy">
+              <span className="eyebrow">Oferta em destaque</span>
+              <h2>{spotlightOffer.name}</h2>
+              <p>{spotlightOffer.description}</p>
+              <div className="home-offer-prices">
+                <strong>{spotlightOffer.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong>
+                {spotlightOffer.originalPrice ? (
+                  <del>{spotlightOffer.originalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</del>
+                ) : null}
+              </div>
+              <Link to={`/produtos/${spotlightOffer.id}`} className="primary-btn">Ver oferta</Link>
+            </div>
+            <div className="hero-visual home-offer-visual">
+              <img src={spotlightOffer.image} alt={spotlightOffer.name} />
+            </div>
+          </section>
+        </div>
+
+        <button
+          type="button"
+          className="home-feature-arrow previous"
+          aria-label="Destaque anterior"
+          onClick={() => moveFeatureSlide(-1)}
+        >
+          ‹
+        </button>
+        <button
+          type="button"
+          className="home-feature-arrow next"
+          aria-label="Próximo destaque"
+          onClick={() => moveFeatureSlide(1)}
+        >
+          ›
+        </button>
+        <nav className="home-feature-pagination" aria-label="Selecionar destaque">
+          {homeFeatureSlides.map((label, index) => (
+            <button
+              key={label}
+              type="button"
+              className={activeFeatureSlide === index ? 'active' : ''}
+              aria-label={`Exibir destaque: ${label}`}
+              aria-current={activeFeatureSlide === index ? 'true' : undefined}
+              onClick={() => setActiveFeatureSlide(index)}
+            />
+          ))}
+        </nav>
+      </div>
 
       <div className="brand-strip">
         <span>Versace</span>
@@ -94,29 +179,6 @@ export function Home() {
         <span>Prada</span>
         <span>Calvin Klein</span>
       </div>
-
-      <section className="services-hero">
-        <div className="services-hero-copy">
-          <span className="eyebrow">Cuidado em cada etapa</span>
-          <h2>Trabalhos técnico, intelectual ou operacional feito por profissionais qualificados.</h2>
-          <p>
-            Estamos aqui para ajudar você a escolher, contratar e encontrar as informações de que
-            precisa de acordo com a sua necessidade.
-          </p>
-          <Link to="/servicos" className="primary-btn">
-            Explorar serviços <span aria-hidden="true">→</span>
-          </Link>
-          <Link to="/servicos#cadastrar-servico" className="secondary-btn service-provider-cta">
-            Cadastre seu serviço
-          </Link>
-        </div>
-
-        <div className="services-hero-note">
-          <span className="services-note-icon" aria-hidden="true">✦</span>
-          <p>Seu estilo, suas escolhas e uma loja pronta para acompanhar você.</p>
-          <span className="services-note-caption">CANTINHO DE VENDAS · SERVIÇOS</span>
-        </div>
-      </section>
 
       <section className="section">
         <div className="section-header">

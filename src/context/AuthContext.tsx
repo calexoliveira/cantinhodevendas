@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
+import { demoStore } from '../data/stores';
 import {
   getDocumentDigits,
   identifyBrazilianDocument,
@@ -124,8 +125,8 @@ const getStoredUsers = (): StoredUser[] => {
   }
 };
 
-const getMerchantDirectory = (): MerchantStore[] =>
-  getStoredUsers().flatMap((account) => {
+const getMerchantDirectory = (): MerchantStore[] => [
+  ...getStoredUsers().flatMap((account) => {
     if (account.accountType !== 'merchant' || !account.storeName?.trim()) {
       return [];
     }
@@ -135,7 +136,9 @@ const getMerchantDirectory = (): MerchantStore[] =>
       name: account.storeName,
       address: account.businessAddress ?? '',
     }];
-  });
+  }),
+  demoStore,
+];
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 

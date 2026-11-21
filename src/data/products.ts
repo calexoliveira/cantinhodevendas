@@ -8,6 +8,7 @@ import bolsa from '../image/Bolsa_Crossbody.png';
 import relogio from '../image/relogio.png';
 import heroImage from '../image/marketplace.jpg';
 import computador from '../image/computador.png';
+import { demoStore } from './stores';
 
 export type Product = {
   id: number;
@@ -42,7 +43,7 @@ export const categoryImages: Record<Product['category'], string> = {
   'Eletrônicos': computador,
 };
 
-const defaultProducts: Product[] = [
+const defaultProducts = ([
   {
     id: 1,
     name: 'Camiseta Premium Essentials',
@@ -177,7 +178,11 @@ const defaultProducts: Product[] = [
     condition: 'seminovo',
     description: 'Computador de bom desempenho, ideal para tarefas de escritório.',
   },
-];
+] satisfies Product[]).map((product) => ({
+  ...product,
+  storeId: demoStore.id,
+  storeName: demoStore.name,
+}));
 
 const PRODUCTS_STORAGE_KEY = 'minhaloja.products';
 

@@ -41,7 +41,6 @@
     --branco-principal: #FFFFFF;
     --cinza-secundario: #C0C0C0;
     --preto-terciario: #00030C;
-    --botao-azul: #167BF7;
     --cor-de-fundo-branco: #ffffff;
     --cor-de-fundo-preto: #000000;
     --font-grande: 70px;
@@ -409,7 +408,7 @@
     .sections .section-1 .setas {
         font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         font-size: auto;
-        color: #167BF7;
+        color: var(--gold);
     }
     .sections .section-1 .after {
         flex: 5%;
@@ -1016,7 +1015,7 @@ align-items: center;
     .sections .section-1 .setas {
         font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         font-size: auto;
-        color: #167BF7;
+        color: var(--gold);
     }
     .sections .section-1 .after {
         flex: 2%;

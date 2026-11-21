@@ -52,9 +52,9 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
         {product.condition ? (
           <div className="community-seller">
-            <span className="community-seller-avatar" aria-hidden="true">VC</span>
+            <span className="community-seller-avatar" aria-hidden="true">{product.storeName ? 'LO' : 'VC'}</span>
             <span>
-              <strong>Vendedor da comunidade</strong>
+              <strong>{product.storeName ?? 'Vendedor da comunidade'}</strong>
               <small>Anúncio do Bazar Colaborativo</small>
             </span>
           </div>

@@ -49,9 +49,9 @@ export function Detalhes() {
           <h1>{product.name}</h1>
           {product.condition ? (
             <div className="detail-community-seller">
-              <span className="community-seller-avatar" aria-hidden="true">VC</span>
+              <span className="community-seller-avatar" aria-hidden="true">{product.storeName ? 'LO' : 'VC'}</span>
               <span>
-                <strong>Anúncio da comunidade</strong>
+                <strong>{product.storeName ?? 'Anúncio da comunidade'}</strong>
                 <small>Produto de segunda mão · condição: {product.condition}</small>
               </span>
             </div>
