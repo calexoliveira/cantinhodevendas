@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ProductCard } from '../../components/ProductCard';
-import { categories, getCatalogProducts } from '../../data/products';
+import { categories } from '../../data/products';
+import { useCatalog } from '../../context/useCatalog';
 
 export function Produtos() {
   const [searchParams] = useSearchParams();
-  const products = getCatalogProducts();
+  const { products } = useCatalog();
   const storeId = searchParams.get('storeId');
   const storeName = searchParams.get('storeName');
   const [selectedCategory, setSelectedCategory] = useState('Todos');
@@ -78,18 +79,14 @@ export function Produtos() {
         <aside className="filters-panel">
           <h3>Filtrar</h3>
 
-          <div className="filter-list">
-            {categories.map((category) => (
-              <button
-                key={category}
-                type="button"
-                className={`filter-btn${selectedCategory === category ? ' active' : ''}`}
-                onClick={() => setSelectedCategory(category)}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
+          <label className="filter-category">
+            Categoria
+            <select value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}>
+              {categories.map((category) => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+          </label>
 
           <div className="filter-group">
             <label>
@@ -125,9 +122,9 @@ export function Produtos() {
             <input
               id="price-limit"
               type="range"
-              min={50}
+              min={1}
               max={800}
-              step={10}
+              step={1}
               value={maxPrice}
               disabled={unlimitedPrice}
               onChange={(event) => setMaxPrice(Number(event.target.value))}
@@ -166,6 +163,7 @@ export function Produtos() {
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
+          {!visibleProducts.length ? <p>Nenhum produto encontrado com os filtros selecionados.</p> : null}
         </div>
       </div>
     </main>

@@ -1,35 +1,35 @@
 import { type FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProductCard } from '../../components/ProductCard';
-import { categoryImages, heroVisual, products } from '../../data/products';
+import { categoryImages, collectionImages, heroVisual } from '../../data/products';
+import { useCatalog } from '../../context/useCatalog';
 import './services-hero.css';
 
-const featuredProducts = products.filter((product) => product.featured).slice(0, 4);
-
-const usedProducts = products.filter((product) => product.condition).slice(0, 3);
-const spotlightOffer =
-  products.find((product) => product.originalPrice && !product.featured) ?? products[0];
 const homeFeatureSlides = ['Novidades', 'Serviços', 'Ofertas'];
 
 const curatedCollections = [
   {
     title: 'Essentials Premium',
     description: 'Peças fundamentais com corte impecável para o dia a dia.',
-    image: products[0].image,
+    image: collectionImages[0],
   },
   {
     title: 'Street Edit',
     description: 'Visual urbano, conforto e versatilidade em um só look.',
-    image: products[5].image,
+    image: collectionImages[1],
   },
   {
     title: 'Work & Travel',
     description: 'Estilo sofisticado para reuniões, viagens e rotina intensa.',
-    image: products[2].image,
+    image: collectionImages[2],
   },
 ];
 
 export function Home() {
+  const { products } = useCatalog();
+  const featuredProducts = products.filter((product) => product.featured).slice(0, 4);
+  const usedProducts = products.filter((product) => product.condition).slice(0, 3);
+  const spotlightOffer = products.find((product) => product.originalPrice && !product.featured) ?? products[0];
   const [email, setEmail] = useState('');
   const [newsletterMessage, setNewsletterMessage] = useState('');
   const [activeFeatureSlide, setActiveFeatureSlide] = useState(
@@ -124,6 +124,8 @@ export function Home() {
           </section>
 
           <section className={`home-offer-slide home-feature-slide${activeFeatureSlide === 2 ? ' is-active' : ''}`} aria-hidden={activeFeatureSlide !== 2}>
+            {spotlightOffer ? (
+            <>
             <div className="home-offer-copy">
               <span className="eyebrow">Oferta em destaque</span>
               <h2>{spotlightOffer.name}</h2>
@@ -139,6 +141,8 @@ export function Home() {
             <div className="hero-visual home-offer-visual">
               <img src={spotlightOffer.image} alt={spotlightOffer.name} />
             </div>
+            </>
+            ) : <p>Ainda não há produtos disponíveis.</p>}
           </section>
         </div>
 
@@ -305,7 +309,7 @@ export function Home() {
          </div>
 
          <div className="hero-visual" style={{ minHeight: 360 }}>
-           <img src={products[5].image} alt="Tênis premium" />
+           <img src={collectionImages[1]} alt="Tênis premium" />
          </div>
         </div>
       </section>

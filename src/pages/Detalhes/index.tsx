@@ -1,14 +1,15 @@
 import { Link, useParams } from 'react-router-dom';
 import { useCart } from '../../context/useCart';
 import { useFavorites } from '../../context/useFavorites';
-import { getCatalogProducts } from '../../data/products';
+import { useCatalog } from '../../context/useCatalog';
 
 export function Detalhes() {
   const { id } = useParams();
   const productId = Number(id);
   const { addItem } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const product = getCatalogProducts().find((item) => item.id === productId);
+  const { products } = useCatalog();
+  const product = products.find((item) => item.id === productId);
 
   if (!product) {
     return (

@@ -1,14 +1,21 @@
 import { useState, type FormEvent } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
-import { addProductToCatalog, getCatalogProducts, persistCatalogProducts, type Product } from '../../data/products';
+import { useCatalog } from '../../context/useCatalog';
+import { errorMessage } from '../../api';
+import {
+  parseProductCategory,
+  productCategories,
+  type Product,
+} from '../../data/products';
 import { formatBrazilianDocument } from '../../utils/brazilianDocument';
 
 export function PainelLojista() {
   const { user } = useAuth();
-  const [products, setProducts] = useState<Product[]>(() =>
-    getCatalogProducts().filter((product) => product.storeId === user?.email),
-  );
+  const { products: catalogProducts, addProduct, removeProduct } = useCatalog();
+  const products = catalogProducts.filter((product) => product.storeId === user?.storeId);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
     name: '',
     category: 'Roupas',
@@ -31,13 +38,13 @@ export function PainelLojista() {
     return <Navigate to="/conta" replace />;
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError('');
 
-    const product: Product = {
-      id: Date.now(),
+    const product: Omit<Product, 'id' | 'storeName' | 'soldCount'> = {
       name: form.name.trim(),
-      category: form.category as Product['category'],
+      category: parseProductCategory(form.category),
       price: Number(form.price),
       originalPrice: form.originalPrice ? Number(form.originalPrice) : undefined,
       rating: 0,
@@ -46,26 +53,32 @@ export function PainelLojista() {
       badge: 'Novo',
       description: form.description.trim() || 'Produto cadastrado pela loja.',
       featured: true,
-      storeId: user.email,
-      storeName: user.storeName,
       stock: Number(form.stock),
       sku: form.sku.trim() || undefined,
       brand: form.brand.trim() || undefined,
       warrantyMonths: Number(form.warrantyMonths),
       deliveryDays: Number(form.deliveryDays),
       freeShipping: form.freeShipping,
-      soldCount: 0,
     };
 
-    const nextProducts = addProductToCatalog(product);
-    setProducts(nextProducts.filter((item) => item.storeId === user.email));
-    setForm({ name: '', category: 'Roupas', price: '', originalPrice: '', description: '', stock: '10', sku: '', brand: '', warrantyMonths: '12', deliveryDays: '3', freeShipping: false });
+    setBusy(true);
+    try {
+      await addProduct(product);
+      setForm({ name: '', category: 'Roupas', price: '', originalPrice: '', description: '', stock: '10', sku: '', brand: '', warrantyMonths: '12', deliveryDays: '3', freeShipping: false });
+    } catch (reason) {
+      setError(errorMessage(reason));
+    } finally {
+      setBusy(false);
+    }
   };
 
-  const removeProduct = (productId: number) => {
-    const nextProducts = getCatalogProducts().filter((product) => product.id !== productId);
-    persistCatalogProducts(nextProducts);
-    setProducts(nextProducts.filter((item) => item.storeId === user.email));
+  const handleRemove = async (productId: number) => {
+    setError('');
+    try {
+      await removeProduct(productId);
+    } catch (reason) {
+      setError(errorMessage(reason));
+    }
   };
 
   return (
@@ -74,6 +87,7 @@ export function PainelLojista() {
         <h1>Área do lojista</h1>
         <p>Gerencie seu perfil comercial no Cantinho de Vendas.</p>
       </header>
+      {error ? <p className="auth-error" role="alert">{error}</p> : null}
 
       <section className="merchant-card merchant-profile-card">
         <span className="account-label">Perfil comercial</span>
@@ -106,10 +120,9 @@ export function PainelLojista() {
               <label>
                 Categoria
                 <select value={form.category} onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))}>
-                  <option value="Roupas">Roupas</option>
-                  <option value="Calçados">Calçados</option>
-                  <option value="Acessórios">Acessórios</option>
-                  <option value="Eletrônicos">Eletrônicos</option>
+                  {productCategories.map((category) => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
                 </select>
               </label>
               <label>
@@ -155,7 +168,7 @@ export function PainelLojista() {
               Descrição
               <textarea rows={4} value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} />
             </label>
-            <button type="submit" className="primary-btn">Publicar produto</button>
+            <button type="submit" className="primary-btn" disabled={busy}>Publicar produto</button>
           </form>
         </section>
 
@@ -170,7 +183,7 @@ export function PainelLojista() {
                   <span>{product.category}</span>
                   <small>R$ {product.price}</small>
                 </div>
-                <button type="button" className="remove-item" onClick={() => removeProduct(product.id)}>Remover</button>
+                <button type="button" className="remove-item" onClick={() => void handleRemove(product.id)}>Remover</button>
               </article>
             ))}
             {!products.length ? <p>Sua loja ainda não publicou produtos.</p> : null}

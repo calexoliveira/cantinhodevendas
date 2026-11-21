@@ -4,6 +4,7 @@ import { Footer } from './components/Footer';
 import { NavBar } from './components/NavBar';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { CatalogProvider } from './context/CatalogContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import { AppRoutes } from './routes';
 import './styles.css';
@@ -26,6 +27,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <CatalogProvider>
         <CartProvider>
           <FavoritesProvider>
             <div className="app-shell">
@@ -35,6 +37,7 @@ function App() {
             <Footer />
           </FavoritesProvider>
         </CartProvider>
+        </CatalogProvider>
       </AuthProvider>
     </BrowserRouter>
   );

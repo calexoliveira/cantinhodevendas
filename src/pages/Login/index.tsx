@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
+import { errorMessage } from '../../api';
 
 export function Login() {
   const navigate = useNavigate();
@@ -8,23 +9,25 @@ export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
 
   if (user) {
     return <Navigate to={user.accountType === 'merchant' ? '/lojista/painel' : '/conta'} replace />;
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
 
-    const accountType = login(email, password);
-
-    if (!accountType) {
-      setError('E-mail ou senha inválidos.');
-      return;
+    setBusy(true);
+    try {
+      const accountType = await login(email, password);
+      navigate(accountType === 'merchant' ? '/lojista/painel' : '/conta');
+    } catch (reason) {
+      setError(errorMessage(reason));
+    } finally {
+      setBusy(false);
     }
-
-    navigate(accountType === 'merchant' ? '/lojista/painel' : '/conta');
   };
 
   return (
@@ -60,7 +63,7 @@ export function Login() {
 
           {error ? <p className="auth-error" role="alert">{error}</p> : null}
 
-          <button type="submit" className="login-btn">
+          <button type="submit" className="login-btn" disabled={busy}>
             Fazer login
           </button>
         </form>

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { ProductCard } from '../../components/ProductCard';
 import { ServiceListingCard } from '../../components/ServiceListingCard';
 import { getServiceListings, type ServiceListing } from '../../data/services';
-import { products } from '../../data/products';
+import { useCatalog } from '../../context/useCatalog';
 import { useSearchParams } from 'react-router-dom';
 import './styles.css';
 
@@ -10,6 +10,7 @@ const normalizeSearchText = (value: string) =>
   value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 export function Busca() {
+  const { products } = useCatalog();
   const [searchParams] = useSearchParams();
   const [services] = useState<ServiceListing[]>(getServiceListings);
   const searchTerm = (searchParams.get('search') ?? '').trim();
@@ -27,7 +28,7 @@ export function Busca() {
         ),
       );
     },
-    [normalizedSearchTerm],
+    [normalizedSearchTerm, products],
   );
 
   const matchingServices = useMemo(

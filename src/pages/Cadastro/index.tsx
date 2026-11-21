@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import type { AccountType } from '../../context/AuthContext';
 import { useAuth } from '../../context/useAuth';
+import { errorMessage } from '../../api';
 import {
   formatBrazilianDocument,
   getDocumentDigits,
@@ -20,6 +21,7 @@ function Cadastro({ accountType }: { accountType: AccountType }) {
   const [storeName, setStoreName] = useState('');
   const [businessAddress, setBusinessAddress] = useState('');
   const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
   const isMerchant = accountType === 'merchant';
   const accountPath = isMerchant ? '/lojista/painel' : '/conta';
   const documentType = identifyBrazilianDocument(documentNumber);
@@ -30,7 +32,7 @@ function Cadastro({ accountType }: { accountType: AccountType }) {
     return <Navigate to={user.accountType === 'merchant' ? '/lojista/painel' : '/conta'} replace />;
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
 
@@ -39,23 +41,24 @@ function Cadastro({ accountType }: { accountType: AccountType }) {
       return;
     }
 
-    const success = register({
-      name,
-      email,
-      password,
-      accountType,
-      documentNumber,
-      phone,
-      storeName,
-      businessAddress,
-    });
-
-    if (!success) {
-      setError('Não foi possível concluir o cadastro. Confira os dados ou tente outro e-mail.');
-      return;
+    setBusy(true);
+    try {
+      await register({
+        name,
+        email,
+        password,
+        accountType,
+        documentNumber,
+        phone,
+        storeName,
+        businessAddress,
+      });
+      navigate(accountPath);
+    } catch (reason) {
+      setError(errorMessage(reason));
+    } finally {
+      setBusy(false);
     }
-
-    navigate(accountPath);
   };
 
   return (
@@ -168,6 +171,8 @@ function Cadastro({ accountType }: { accountType: AccountType }) {
               type="password"
               autoComplete="new-password"
               placeholder="Crie uma senha"
+              minLength={8}
+              maxLength={72}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
@@ -176,7 +181,7 @@ function Cadastro({ accountType }: { accountType: AccountType }) {
 
           {error ? <p className="auth-error" role="alert">{error}</p> : null}
 
-          <button type="submit" className="login-btn">
+          <button type="submit" className="login-btn" disabled={busy}>
             {isMerchant ? 'Criar cadastro da loja' : 'Criar conta'}
           </button>
         </form>

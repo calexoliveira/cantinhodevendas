@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
+import { useCatalog } from '../../context/useCatalog';
+import { errorMessage } from '../../api';
 import { demoStore } from '../../data/stores';
 import {
-  addProductToCatalog,
-  getCatalogProducts,
-  persistCatalogProducts,
+  parseProductCategory,
+  productCategories,
   type Product,
 } from '../../data/products';
 
@@ -27,8 +28,10 @@ const defaultForm = {
 
 export function Admin() {
   const { user, merchants } = useAuth();
-  const [products, setProducts] = useState<Product[]>(() => getCatalogProducts());
+  const { products, addProduct, removeProduct } = useCatalog();
   const [form, setForm] = useState(defaultForm);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
 
   const hasAccess = Boolean(user?.isAdmin);
 
@@ -49,14 +52,14 @@ export function Admin() {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError('');
 
     const merchant = merchants.find((store) => store.id !== demoStore.id);
-    const newProduct: Product = {
-      id: Date.now(),
+    const newProduct: Omit<Product, 'id' | 'storeName' | 'soldCount'> = {
       name: form.name,
-      category: form.category as Product['category'],
+      category: parseProductCategory(form.category),
       price: Number(form.price),
       originalPrice: form.originalPrice ? Number(form.originalPrice) : undefined,
       rating: Number(form.rating),
@@ -66,24 +69,31 @@ export function Admin() {
       description: form.description || 'Produto cadastrado no catálogo.',
       featured: true,
       storeId: merchant?.id,
-      storeName: merchant?.name,
       stock: Number(form.stock),
       sku: form.sku.trim() || undefined,
       brand: form.brand.trim() || undefined,
       warrantyMonths: Number(form.warrantyMonths),
       deliveryDays: Number(form.deliveryDays),
-      soldCount: 0,
     };
 
-    const nextProducts = addProductToCatalog(newProduct);
-    setProducts(nextProducts);
-    setForm(defaultForm);
+    setBusy(true);
+    try {
+      await addProduct(newProduct);
+      setForm(defaultForm);
+    } catch (reason) {
+      setError(errorMessage(reason));
+    } finally {
+      setBusy(false);
+    }
   };
 
-  const removeProduct = (productId: number) => {
-    const nextProducts = getCatalogProducts().filter((product) => product.id !== productId);
-    persistCatalogProducts(nextProducts);
-    setProducts(nextProducts);
+  const handleRemove = async (productId: number) => {
+    setError('');
+    try {
+      await removeProduct(productId);
+    } catch (reason) {
+      setError(errorMessage(reason));
+    }
   };
 
   return (
@@ -92,6 +102,7 @@ export function Admin() {
         <h1>Painel administrativo</h1>
         <p>Gerencie os produtos, campanhas e ofertas do marketplace.</p>
       </header>
+      {error ? <p className="auth-error" role="alert">{error}</p> : null}
 
       <section className="admin-metrics">
         <div className="metric-card">
@@ -122,10 +133,9 @@ export function Admin() {
               <label>
                 Categoria
                 <select value={form.category} onChange={(event) => handleChange('category', event.target.value)}>
-                  <option value="Roupas">Roupas</option>
-                  <option value="Calçados">Calçados</option>
-                  <option value="Acessórios">Acessórios</option>
-                  <option value="Eletrônicos">Eletrônicos</option>
+                  {productCategories.map((category) => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
                 </select>
               </label>
 
@@ -191,7 +201,7 @@ export function Admin() {
               <input type="number" min="0" value={form.warrantyMonths} onChange={(event) => handleChange('warrantyMonths', event.target.value)} />
             </label>
 
-            <button type="submit" className="primary-btn">
+            <button type="submit" className="primary-btn" disabled={busy}>
               Publicar produto
             </button>
           </form>
@@ -209,7 +219,7 @@ export function Admin() {
                   <span>{product.category}</span>
                   <small>R$ {product.price}</small>
                 </div>
-                <button type="button" className="remove-item" onClick={() => removeProduct(product.id)}>
+                <button type="button" className="remove-item" onClick={() => void handleRemove(product.id)}>
                   Remover
                 </button>
               </article>

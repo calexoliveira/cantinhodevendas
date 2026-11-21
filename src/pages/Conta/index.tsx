@@ -3,12 +3,14 @@ import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import { useFavorites } from '../../context/useFavorites';
 import { formatBrazilianDocument } from '../../utils/brazilianDocument';
+import { errorMessage } from '../../api';
 
 export function Conta() {
   const { user, logout, updateAddress } = useAuth();
   const { favorites } = useFavorites();
   const [address, setAddress] = useState(user?.address ?? '');
   const [addressSaved, setAddressSaved] = useState(false);
+  const [addressError, setAddressError] = useState('');
 
   if (user?.accountType === 'merchant') {
     return <Navigate to="/lojista/painel" replace />;
@@ -49,10 +51,15 @@ export function Conta() {
           </div>
           <form
             className="account-address-form"
-            onSubmit={(event) => {
+            onSubmit={async (event) => {
               event.preventDefault();
-              updateAddress(address);
-              setAddressSaved(true);
+              setAddressError('');
+              try {
+                await updateAddress(address);
+                setAddressSaved(true);
+              } catch (reason) {
+                setAddressError(errorMessage(reason));
+              }
             }}
           >
             <label htmlFor="delivery-address">Endereço de entrega</label>
@@ -71,6 +78,7 @@ export function Conta() {
               Salvar endereço
             </button>
             {addressSaved ? <p className="account-feedback" role="status">Endereço salvo.</p> : null}
+            {addressError ? <p className="auth-error" role="alert">{addressError}</p> : null}
           </form>
           <button type="button" className="primary-btn" onClick={logout}>
             Sair da conta

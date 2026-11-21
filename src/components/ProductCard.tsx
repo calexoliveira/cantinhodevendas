@@ -15,22 +15,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <article className={`product-card${product.condition ? ' bazar-product-card' : ''}`}>
       <div className="product-image-wrap">
-        {product.condition ? (
-          <>
-            <span className="product-badge bazar-product-badge">Bazar</span>
-            <span className="product-condition">{product.condition}</span>
-          </>
-        ) : product.badge ? (
-          <span className="product-badge">{product.badge}</span>
-        ) : product.storeName ? (
-          <div className="community-seller">
-            <span className="community-seller-avatar" aria-hidden="true">LO</span>
-            <span>
-              <strong>{product.storeName}</strong>
-              <small>Loja parceira</small>
-            </span>
-          </div>
-        ) : null}
+
         <button
           type="button"
           className={`favorite-toggle ${favorite ? 'active' : ''}`}
@@ -56,6 +41,22 @@ export function ProductCard({ product }: ProductCardProps) {
             <span>
               <strong>{product.storeName ?? 'Vendedor da comunidade'}</strong>
               <small>Anúncio do Bazar Colaborativo</small>
+            </span>
+          </div>
+        ) : null}
+                {product.condition ? (
+          <>
+            <span className="product-badge bazar-product-badge">Bazar</span>
+            <span className="product-condition">{product.condition}</span>
+          </>
+        ) : product.badge ? (
+          <span className="product-badge">{product.badge}</span>
+        ) : product.storeName ? (
+          <div className="community-seller">
+            <span className="community-seller-avatar" aria-hidden="true">LO</span>
+            <span>
+              <strong>{product.storeName}</strong>
+              <small>Loja parceira</small>
             </span>
           </div>
         ) : null}
