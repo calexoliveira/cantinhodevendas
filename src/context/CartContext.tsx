@@ -1,12 +1,13 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Product } from '../data/products';
+import { CartContext } from './useCart';
 
 export type CartItem = Product & {
   quantity: number;
 };
 
-type CartContextValue = {
+export type CartContextValue = {
   items: CartItem[];
   savedItems: CartItem[];
   addItem: (product: Product) => void;
@@ -26,8 +27,6 @@ type CartContextValue = {
 
 const CART_STORAGE_KEY = 'minhaloja.cart';
 const SAVED_STORAGE_KEY = 'minhaloja.savedItems';
-
-const CartContext = createContext<CartContextValue | undefined>(undefined);
 
 const readStoredItems = () => {
   if (typeof window === 'undefined') {
@@ -65,25 +64,25 @@ const readStoredSavedItems = () => {
   }
 };
 
+const persistCart = (nextItems: CartItem[]) => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(nextItems));
+  }
+  return nextItems;
+};
+
+const persistSavedItems = (nextSavedItems: CartItem[]) => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify(nextSavedItems));
+  }
+  return nextSavedItems;
+};
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(() => readStoredItems());
   const [savedItems, setSavedItems] = useState<CartItem[]>(() => readStoredSavedItems());
 
-  const persistCart = (nextItems: CartItem[]) => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(nextItems));
-    }
-    return nextItems;
-  };
-
-  const persistSavedItems = (nextSavedItems: CartItem[]) => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify(nextSavedItems));
-    }
-    return nextSavedItems;
-  };
-
-  const addItem = (product: Product) => {
+  const addItem = useCallback((product: Product) => {
     setItems((currentItems) => {
       const existingItem = currentItems.find((item) => item.id === product.id);
       const availableStock = product.stock ?? 10;
@@ -101,9 +100,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const nextItems = [...currentItems, { ...product, quantity: 1 }];
       return persistCart(nextItems);
     });
-  };
+  }, []);
 
-  const saveForLater = (productId: number) => {
+  const saveForLater = useCallback((productId: number) => {
     setItems((currentItems) => {
       const itemToSave = currentItems.find((item) => item.id === productId);
       if (!itemToSave) {
@@ -126,9 +125,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       return nextItems;
     });
-  };
+  }, []);
 
-  const moveToCart = (productId: number) => {
+  const moveToCart = useCallback((productId: number) => {
     setSavedItems((currentSavedItems) => {
       const itemToMove = currentSavedItems.find((item) => item.id === productId);
       if (!itemToMove) {
@@ -150,23 +149,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       return nextSavedItems;
     });
-  };
+  }, []);
 
-  const removeItem = (productId: number) => {
+  const removeItem = useCallback((productId: number) => {
     setItems((currentItems) => {
       const nextItems = currentItems.filter((item) => item.id !== productId);
       return persistCart(nextItems);
     });
-  };
+  }, []);
 
-  const removeSavedItem = (productId: number) => {
+  const removeSavedItem = useCallback((productId: number) => {
     setSavedItems((currentSavedItems) => {
       const nextSavedItems = currentSavedItems.filter((item) => item.id !== productId);
       return persistSavedItems(nextSavedItems);
     });
-  };
+  }, []);
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = useCallback((productId: number, quantity: number) => {
     if (quantity <= 0) {
       removeItem(productId);
       return;
@@ -180,15 +179,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
       );
       return persistCart(nextItems);
     });
-  };
+  }, [removeItem]);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setItems(() => persistCart([]));
-  };
+  }, []);
 
-  const clearSavedItems = () => {
+  const clearSavedItems = useCallback(() => {
     setSavedItems(() => persistSavedItems([]));
-  };
+  }, []);
 
   const itemCount = useMemo(
     () => items.reduce((count, item) => count + item.quantity, 0),
@@ -222,18 +221,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       total,
       freeShippingThreshold,
     }),
-    [items, savedItems, itemCount, subtotal, shipping, total],
+    [
+      items, savedItems, addItem, saveForLater, moveToCart, removeItem,
+      removeSavedItem, updateQuantity, clearCart, clearSavedItems,
+      itemCount, subtotal, shipping, total,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
-}
-
-export function useCart() {
-  const context = useContext(CartContext);
-
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-
-  return context;
 }

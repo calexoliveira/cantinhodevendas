@@ -1,8 +1,8 @@
 import { type FormEvent, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext';
-import { useFavorites } from '../context/FavoritesContext';
+import { useAuth } from '../context/useAuth';
+import { useCart } from '../context/useCart';
+import { useFavorites } from '../context/useFavorites';
 import brandImage from '../image/cantinhodevendas.png';
 
 const menuItems = [

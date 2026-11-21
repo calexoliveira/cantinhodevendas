@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
-import { useCart } from '../../context/CartContext';
-import { useFavorites } from '../../context/FavoritesContext';
+import { useCart } from '../../context/useCart';
+import { useFavorites } from '../../context/useFavorites';
 import { getCatalogProducts } from '../../data/products';
 
 export function Detalhes() {

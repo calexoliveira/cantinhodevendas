@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { demoStore } from '../data/stores';
+import { AuthContext } from './useAuth';
 import {
   getDocumentDigits,
   identifyBrazilianDocument,
@@ -49,7 +50,7 @@ type RegistrationData = {
   businessAddress?: string;
 };
 
-type AuthContextValue = {
+export type AuthContextValue = {
   user: AuthUser | null;
   merchants: MerchantStore[];
   login: (email: string, password: string) => AccountType | null;
@@ -139,8 +140,6 @@ const getMerchantDirectory = (): MerchantStore[] => [
   }),
   demoStore,
 ];
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(() => {
@@ -311,14 +310,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-
-  return context;
 }

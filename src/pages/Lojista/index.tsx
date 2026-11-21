@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { addProductToCatalog, getCatalogProducts, persistCatalogProducts, type Product } from '../../data/products';
 import { formatBrazilianDocument } from '../../utils/brazilianDocument';
 

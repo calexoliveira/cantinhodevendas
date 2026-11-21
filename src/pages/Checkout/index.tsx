@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/useAuth';
+import { useCart } from '../../context/useCart';
 import { addOrder } from '../../data/orders';
 
 export function Checkout() {

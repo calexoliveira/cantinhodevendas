@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { useAuth, type AccountType } from '../../context/AuthContext';
+import type { AccountType } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import {
   formatBrazilianDocument,
   getDocumentDigits,

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { useFavorites } from '../../context/FavoritesContext';
+import { useAuth } from '../../context/useAuth';
+import { useFavorites } from '../../context/useFavorites';
 import { formatBrazilianDocument } from '../../utils/brazilianDocument';
 
 export function Conta() {
