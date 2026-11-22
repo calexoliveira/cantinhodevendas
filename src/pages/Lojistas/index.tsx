@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
+import { StoreLinks } from '../../components/StoreLinks';
 
 export function Lojistas() {
   const { merchants } = useAuth();
@@ -16,8 +17,10 @@ export function Lojistas() {
           {merchants.map((merchant) => (
             <article className="merchant-card" key={merchant.id}>
               <span className="account-label">Loja cadastrada</span>
+              {merchant.logo ? <img className="store-logo" src={merchant.logo} alt={`Logo de ${merchant.name}`} /> : null}
               <h2>{merchant.name}</h2>
               <p>{merchant.address || 'Endereço comercial não informado.'}</p>
+              <StoreLinks website={merchant.website} socialLinks={merchant.socialLinks} />
               <Link
                 to={`/produtos?storeId=${encodeURIComponent(merchant.id)}&storeName=${encodeURIComponent(merchant.name)}`}
                 className="secondary-btn"

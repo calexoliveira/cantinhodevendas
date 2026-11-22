@@ -1,57 +1,46 @@
-export type ServiceProviderType = 'individual' | 'company';
+import { z } from 'zod';
+import { apiRequest } from '../api';
+import { serviceRegistrationSchema, type ServiceRegistration } from '../../shared/services';
 
-export type ServiceListing = {
-  id: string;
-  providerType: ServiceProviderType;
-  providerName: string;
-  businessName?: string;
-  documentNumber: string;
-  serviceName: string;
-  category: string;
-  description: string;
-  phone: string;
-  city: string;
-  startingPrice?: number;
-};
-
-export const serviceCategories = [
-  'Casa e manutenção',
-  'Beleza e bem-estar',
-  'Consultoria',
-  'Educação',
-  'Tecnologia',
-  'Outros',
-];
+export { serviceCategories } from '../../shared/services';
+export type { ServiceListing, ServiceProviderType, ServiceRegistration } from '../../shared/services';
 
 const SERVICES_STORAGE_KEY = 'minhaloja.services';
 
-export function getServiceListings(): ServiceListing[] {
-  if (typeof window === 'undefined') {
-    return [];
-  }
-
-  const storedValue = window.localStorage.getItem(SERVICES_STORAGE_KEY);
-
-  if (!storedValue) {
-    return [];
-  }
-
-  try {
-    const storedServices = JSON.parse(storedValue) as ServiceListing[];
-    if (Array.isArray(storedServices)) {
-      return storedServices;
-    }
-
-    console.error('Os dados salvos de serviços não estão no formato esperado.');
-    return [];
-  } catch (error) {
-    console.error('Não foi possível carregar os serviços cadastrados.', error);
-    return [];
-  }
+export function getServiceListings() {
+  return apiRequest<import('../../shared/services').ServiceListing[]>('/services');
 }
 
-export function addServiceListing(service: ServiceListing) {
-  const nextServices = [service, ...getServiceListings()];
-  window.localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify(nextServices));
-  return nextServices;
+export function getLegacyServices(): { services: { legacyId: string; service: ServiceRegistration }[]; invalidCount: number } {
+  return parseLegacyServices(window.localStorage.getItem(SERVICES_STORAGE_KEY));
+}
+
+export function parseLegacyServices(storedValue: string | null): { services: { legacyId: string; service: ServiceRegistration }[]; invalidCount: number } {
+  if (!storedValue) return { services: [], invalidCount: 0 };
+
+  const entries = z.array(z.unknown()).parse(JSON.parse(storedValue));
+  const services: { legacyId: string; service: ServiceRegistration }[] = [];
+  let invalidCount = 0;
+  for (const entry of entries) {
+    const parsedEntry = z.object({ id: z.string().min(1).max(200) }).passthrough().safeParse(entry);
+    if (!parsedEntry.success) {
+      invalidCount++;
+      continue;
+    }
+    const { id, ...service } = parsedEntry.data;
+    const parsedService = serviceRegistrationSchema.safeParse(service);
+    if (!parsedService.success) {
+      invalidCount++;
+      continue;
+    }
+    services.push({ legacyId: id, service: parsedService.data });
+  }
+  return { services, invalidCount };
+}
+
+export function importLegacyServices(entries: { legacyId: string; service: ServiceRegistration }[]) {
+  return apiRequest<import('../../shared/services').ServiceListing[]>('/services/import', {
+    method: 'POST',
+    body: JSON.stringify({ services: entries }),
+  });
 }

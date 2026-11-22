@@ -1175,6 +1175,60 @@ a {
   max-width: 760px;
 }
 
+.store-logo {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.store-logo-preview, .store-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.store-links a {
+  overflow-wrap: anywhere;
+}
+
+.store-profile-editor {
+  max-width: 760px;
+  margin-top: 20px;
+}
+
+.store-profile-fields,
+.product-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.product-upload-preview {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.service-social-admin {
+  margin-top: 24px;
+}
+
+.service-social-admin-item {
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+
+.service-social-admin-item > p {
+  color: var(--muted);
+  margin: 8px 0 16px;
+}
+
 .registration-links {
   display: flex;
   flex-direction: column;
@@ -1835,7 +1889,8 @@ a {
   font-weight: 600;
 }
 
-.login-form input:not([type='radio']) {
+.login-form input:not([type='radio']),
+.login-form textarea {
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--accent-soft);

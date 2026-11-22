@@ -24,12 +24,12 @@ try {
   for (const product of products) {
     await client.query(
       `INSERT INTO products
-       (id, store_id, name, category, price, original_price, rating, reviews, image, badge, featured, condition, description, created_at)
-       VALUES ($1, 'demo-store', $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, TIMESTAMPTZ 'epoch')
+       (id, store_id, name, category, price, original_price, rating, reviews, image, badge, featured, condition, description, created_at, is_bazaar)
+       VALUES ($1, 'demo-store', $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, TIMESTAMPTZ 'epoch', $13)
        ON CONFLICT (id) DO NOTHING`,
       [product.id, product.name, product.category, product.price, product.originalPrice ?? null, product.rating,
         product.reviews, `demo:${product.id}`, product.badge ?? null, product.featured ?? false,
-        product.condition ?? null, product.description],
+        product.condition ?? null, product.description, Boolean(product.condition)],
     );
   }
   await client.query(

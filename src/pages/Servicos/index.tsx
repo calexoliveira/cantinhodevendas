@@ -1,7 +1,11 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { ServiceListingCard } from '../../components/ServiceListingCard';
-import { addServiceListing, getServiceListings, serviceCategories, type ServiceListing, type ServiceProviderType } from '../../data/services';
+import { apiRequest, errorMessage } from '../../api';
+import { getLegacyServices, importLegacyServices, serviceCategories, type ServiceListing, type ServiceProviderType, type ServiceRegistration } from '../../data/services';
+import { useServices } from '../../context/useServices';
+import { serviceRegistrationSchema } from '../../../shared/services';
+import { parseSocialLinks } from '../../../shared/socialLinks';
 import {
   formatBrazilianDocument,
   getDocumentDigits,
@@ -52,6 +56,7 @@ type ServiceForm = {
   phone: string;
   city: string;
   startingPrice: string;
+  socialLinks: string;
 };
 
 const initialForm: ServiceForm = {
@@ -65,11 +70,15 @@ const initialForm: ServiceForm = {
   phone: '',
   city: '',
   startingPrice: '',
+  socialLinks: '',
 };
 
 export function Servicos() {
   const [form, setForm] = useState(initialForm);
-  const [registeredServices, setRegisteredServices] = useState<ServiceListing[]>(getServiceListings);
+  const { services: registeredServices, error: loadError, loading, addServices, retry } = useServices();
+  const [legacyServices, setLegacyServices] = useState<{ legacyId: string; service: ServiceRegistration }[]>([]);
+  const [legacyError, setLegacyError] = useState('');
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const documentType = identifyBrazilianDocument(form.documentNumber);
@@ -78,12 +87,24 @@ export function Servicos() {
     isValidBrazilianDocument(form.documentNumber) &&
     documentType === (form.providerType === 'individual' ? 'cpf' : 'cnpj');
 
+  useEffect(() => {
+    try {
+      const { services, invalidCount } = getLegacyServices();
+      setLegacyServices(services);
+      if (invalidCount) {
+        setLegacyError(`${invalidCount} serviço(s) antigo(s) possuem dados inválidos e não serão importados. Os dados locais foram preservados.`);
+      }
+    } catch {
+      setLegacyError('Não foi possível ler os serviços antigos deste navegador. Os dados locais foram preservados.');
+    }
+  }, []);
+
   const updateForm = <K extends keyof ServiceForm>(field: K, value: ServiceForm[K]) => {
     setForm((current) => ({ ...current, [field]: value }));
     setSuccessMessage('');
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
     setSuccessMessage('');
@@ -97,8 +118,13 @@ export function Servicos() {
       return;
     }
 
-    const listing: ServiceListing = {
-      id: `${Date.now()}-${registeredServices.length}`,
+    const links = parseSocialLinks(form.socialLinks);
+    if (!links.success) {
+      setError('Informe até 10 links de redes sociais completos, iniciados por http:// ou https://.');
+      return;
+    }
+
+    const listing = {
       providerType: form.providerType,
       providerName: form.providerName.trim(),
       businessName: form.businessName.trim() || undefined,
@@ -109,16 +135,45 @@ export function Servicos() {
       phone: form.phone.trim(),
       city: form.city.trim(),
       startingPrice: form.startingPrice ? Number(form.startingPrice) : undefined,
+      socialLinks: links.data,
     };
 
+    const parsed = serviceRegistrationSchema.safeParse(listing);
+    if (!parsed.success) {
+      setError('Confira os campos informados, incluindo o telefone e o valor inicial.');
+      return;
+    }
+    setBusy(true);
     try {
-      const nextServices = addServiceListing(listing);
-      setRegisteredServices(nextServices);
+      const saved = await apiRequest<ServiceListing>('/services', {
+        method: 'POST',
+        body: JSON.stringify(parsed.data),
+      });
+      addServices([saved]);
       setForm(initialForm);
       setSuccessMessage('Serviço cadastrado e publicado no catálogo.');
-    } catch (storageError) {
-      console.error('Não foi possível salvar o cadastro de serviço.', storageError);
-      setError('Não foi possível salvar o cadastro. Confira as permissões de armazenamento do navegador.');
+    } catch (reason) {
+      setError(errorMessage(reason));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleImport = async () => {
+    if (!window.confirm('Os serviços locais serão publicados para todos, incluindo nome, cidade e telefone. CPF e CNPJ não serão exibidos. Os dados locais serão mantidos. Deseja continuar?')) return;
+    setError('');
+    setSuccessMessage('');
+    setBusy(true);
+    try {
+      for (let index = 0; index < legacyServices.length; index += 100) {
+        const imported = await importLegacyServices(legacyServices.slice(index, index + 100));
+        addServices(imported);
+      }
+      setSuccessMessage('Serviços locais válidos importados. Os dados originais continuam neste navegador.');
+    } catch (reason) {
+      setError(`Não foi possível concluir a importação: ${errorMessage(reason)} Os dados locais foram preservados; você pode tentar novamente.`);
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -136,7 +191,14 @@ export function Servicos() {
           </a>
         </div>
 
-        {registeredServices.length ? (
+        {loading ? (
+          <p>Carregando serviços...</p>
+        ) : loadError ? (
+          <div role="alert">
+            <p>Não foi possível carregar os serviços: {loadError}</p>
+            <button type="button" className="secondary-btn" onClick={retry}>Tentar novamente</button>
+          </div>
+        ) : registeredServices.length ? (
           <div className="registered-services-grid">
             {registeredServices.map((service) => (
               <ServiceListingCard key={service.id} service={service} />
@@ -176,9 +238,11 @@ export function Servicos() {
           <span className="eyebrow">Para profissionais e empresas</span>
           <h2>Cadastre seu serviço</h2>
           <p>Divulgue seu trabalho como pessoa física ou jurídica e apareça no catálogo.</p>
+          <p>Nome, cidade e telefone serão públicos. CPF ou CNPJ não aparecem no catálogo.</p>
         </div>
 
         <form className="service-registration-form" onSubmit={handleSubmit}>
+          <fieldset className="service-fields" disabled={busy}>
           <fieldset className="service-provider-type">
             <legend>Você está cadastrando como</legend>
             <label>
@@ -215,6 +279,7 @@ export function Servicos() {
               <input
                 type="text"
                 autoComplete="name"
+                maxLength={120}
                 value={form.providerName}
                 onChange={(event) => updateForm('providerName', event.target.value)}
                 required
@@ -227,6 +292,7 @@ export function Servicos() {
                 <input
                   type="text"
                   autoComplete="organization"
+                  maxLength={120}
                   value={form.businessName}
                   onChange={(event) => updateForm('businessName', event.target.value)}
                 />
@@ -270,6 +336,7 @@ export function Servicos() {
               <input
                 type="tel"
                 autoComplete="tel"
+                maxLength={30}
                 value={form.phone}
                 onChange={(event) => updateForm('phone', event.target.value)}
                 required
@@ -280,6 +347,7 @@ export function Servicos() {
               Nome do serviço
               <input
                 type="text"
+                maxLength={200}
                 value={form.serviceName}
                 onChange={(event) => updateForm('serviceName', event.target.value)}
                 required
@@ -300,6 +368,7 @@ export function Servicos() {
               <input
                 type="text"
                 autoComplete="address-level2"
+                maxLength={120}
                 value={form.city}
                 onChange={(event) => updateForm('city', event.target.value)}
                 required
@@ -311,6 +380,7 @@ export function Servicos() {
               <input
                 type="number"
                 min="0"
+                max="9999999999"
                 step="0.01"
                 inputMode="decimal"
                 placeholder="A combinar"
@@ -323,17 +393,39 @@ export function Servicos() {
               Descrição do serviço
               <textarea
                 rows={4}
+                maxLength={5000}
                 value={form.description}
                 onChange={(event) => updateForm('description', event.target.value)}
                 required
               />
             </label>
+
+            <label className="service-description-field">
+              Redes sociais (opcional)
+              <textarea
+                rows={3}
+                placeholder={'Um link por linha, por exemplo:\nhttps://instagram.com/seuperfil'}
+                value={form.socialLinks}
+                onChange={(event) => updateForm('socialLinks', event.target.value)}
+              />
+              <small>Informe até 10 links completos, um por linha.</small>
+            </label>
           </div>
+          </fieldset>
 
           {error ? <p className="service-form-error" role="alert">{error}</p> : null}
           {successMessage ? <p className="service-form-success" role="status">{successMessage}</p> : null}
-          <button type="submit" className="primary-btn">Publicar serviço</button>
+          <button type="submit" className="primary-btn" disabled={busy || loading || Boolean(loadError)}>Publicar serviço</button>
         </form>
+        {legacyError ? <p className="service-form-error" role="alert">{legacyError}</p> : null}
+        {legacyServices.length ? (
+          <div>
+            <p>Este navegador contém {legacyServices.length} serviço(s) antigo(s) válido(s). A importação é opcional e não apaga os dados locais.</p>
+            <button type="button" className="secondary-btn" disabled={busy || loading || Boolean(loadError)} onClick={() => void handleImport()}>
+              Importar serviços deste navegador
+            </button>
+          </div>
+        ) : null}
       </section>
 
       <section className="services-guidance">

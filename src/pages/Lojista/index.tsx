@@ -3,32 +3,60 @@ import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import { useCatalog } from '../../context/useCatalog';
 import { errorMessage } from '../../api';
-import {
-  parseProductCategory,
-  productCategories,
-  type Product,
-} from '../../data/products';
+import { StoreLinks } from '../../components/StoreLinks';
+import { StoreProfileFields } from '../../components/StoreProfileFields';
+import { ProductForm } from '../../components/ProductForm';
+import { parseStoreProfile, type StoreProfileForm } from '../../utils/storeProfile';
+import type { AuthUser } from '../../context/AuthContext';
 import { formatBrazilianDocument } from '../../utils/brazilianDocument';
+
+function StoreProfileEditor({ user }: { user: AuthUser }) {
+  const { updateStoreProfile } = useAuth();
+  const [form, setForm] = useState<StoreProfileForm>({
+    logo: user.storeLogo ?? null,
+    website: user.storeWebsite ?? '',
+    socialLinks: (user.storeSocialLinks ?? []).join('\n'),
+  });
+  const [busy, setBusy] = useState(false);
+  const [logoLoading, setLogoLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [saved, setSaved] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError('');
+    setSaved(false);
+    setBusy(true);
+    try {
+      await updateStoreProfile(parseStoreProfile(form));
+      setSaved(true);
+    } catch (reason) {
+      setError(errorMessage(reason));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <section className="admin-form-card store-profile-editor">
+      <h2>Editar marca e contatos da loja</h2>
+      <form className="admin-form" onSubmit={handleSubmit}>
+        <fieldset className="store-profile-fields" disabled={busy}>
+          <StoreProfileFields value={form} onChange={(next) => { setSaved(false); setForm(next); }} onReadingChange={setLogoLoading} />
+        </fieldset>
+        {error ? <p className="auth-error" role="alert">{error}</p> : null}
+        {saved ? <p role="status">Informações da loja salvas.</p> : null}
+        <button type="submit" className="primary-btn" disabled={busy || logoLoading}>Salvar informações</button>
+      </form>
+    </section>
+  );
+}
 
 export function PainelLojista() {
   const { user } = useAuth();
   const { products: catalogProducts, addProduct, removeProduct } = useCatalog();
   const products = catalogProducts.filter((product) => product.storeId === user?.storeId);
   const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [form, setForm] = useState({
-    name: '',
-    category: 'Roupas',
-    price: '',
-    originalPrice: '',
-    description: '',
-    stock: '10',
-    sku: '',
-    brand: '',
-    warrantyMonths: '12',
-    deliveryDays: '3',
-    freeShipping: false,
-  });
 
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -37,40 +65,6 @@ export function PainelLojista() {
   if (user.accountType !== 'merchant') {
     return <Navigate to="/conta" replace />;
   }
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError('');
-
-    const product: Omit<Product, 'id' | 'storeName' | 'soldCount'> = {
-      name: form.name.trim(),
-      category: parseProductCategory(form.category),
-      price: Number(form.price),
-      originalPrice: form.originalPrice ? Number(form.originalPrice) : undefined,
-      rating: 0,
-      reviews: 0,
-      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80',
-      badge: 'Novo',
-      description: form.description.trim() || 'Produto cadastrado pela loja.',
-      featured: true,
-      stock: Number(form.stock),
-      sku: form.sku.trim() || undefined,
-      brand: form.brand.trim() || undefined,
-      warrantyMonths: Number(form.warrantyMonths),
-      deliveryDays: Number(form.deliveryDays),
-      freeShipping: form.freeShipping,
-    };
-
-    setBusy(true);
-    try {
-      await addProduct(product);
-      setForm({ name: '', category: 'Roupas', price: '', originalPrice: '', description: '', stock: '10', sku: '', brand: '', warrantyMonths: '12', deliveryDays: '3', freeShipping: false });
-    } catch (reason) {
-      setError(errorMessage(reason));
-    } finally {
-      setBusy(false);
-    }
-  };
 
   const handleRemove = async (productId: number) => {
     setError('');
@@ -91,6 +85,7 @@ export function PainelLojista() {
 
       <section className="merchant-card merchant-profile-card">
         <span className="account-label">Perfil comercial</span>
+        {user.storeLogo ? <img className="store-logo" src={user.storeLogo} alt={`Logo de ${user.storeName}`} /> : null}
         <h2>{user.storeName}</h2>
         <div className="account-profile-details">
           <p><strong>Responsável:</strong> {user.name}</p>
@@ -101,6 +96,7 @@ export function PainelLojista() {
             {user.documentNumber ? formatBrazilianDocument(user.documentNumber) : 'Não informado'}
           </p>
           <p><strong>Endereço comercial:</strong> {user.businessAddress || 'Não informado'}</p>
+          <StoreLinks website={user.storeWebsite} socialLinks={user.storeSocialLinks} />
         </div>
         <div className="account-actions">
           <Link to="/lojistas" className="secondary-btn">Ver catálogo de lojistas</Link>
@@ -108,68 +104,12 @@ export function PainelLojista() {
         </div>
       </section>
 
+      <StoreProfileEditor key={user.id} user={user} />
+
       <div className="admin-layout">
         <section className="admin-form-card">
           <h2>Cadastrar produto da loja</h2>
-          <form className="admin-form" onSubmit={handleSubmit}>
-            <label>
-              Nome
-              <input value={form.name} onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} required />
-            </label>
-            <div className="two-column">
-              <label>
-                Categoria
-                <select value={form.category} onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))}>
-                  {productCategories.map((category) => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Preço
-                <input type="number" min="0" step="0.01" value={form.price} onChange={(event) => setForm((current) => ({ ...current, price: event.target.value }))} required />
-              </label>
-            </div>
-            <label>
-              Preço original
-              <input type="number" min="0" step="0.01" value={form.originalPrice} onChange={(event) => setForm((current) => ({ ...current, originalPrice: event.target.value }))} />
-            </label>
-            <div className="two-column">
-              <label>
-                Estoque
-                <input type="number" min="0" step="1" value={form.stock} onChange={(event) => setForm((current) => ({ ...current, stock: event.target.value }))} required />
-              </label>
-              <label>
-                SKU
-                <input value={form.sku} onChange={(event) => setForm((current) => ({ ...current, sku: event.target.value }))} placeholder="Opcional" />
-              </label>
-            </div>
-            <div className="two-column">
-              <label>
-                Marca
-                <input value={form.brand} onChange={(event) => setForm((current) => ({ ...current, brand: event.target.value }))} placeholder="Opcional" />
-              </label>
-              <label>
-                Prazo de entrega (dias)
-                <input type="number" min="1" value={form.deliveryDays} onChange={(event) => setForm((current) => ({ ...current, deliveryDays: event.target.value }))} />
-              </label>
-            </div>
-            <div className="two-column">
-              <label>
-                Garantia (meses)
-                <input type="number" min="0" value={form.warrantyMonths} onChange={(event) => setForm((current) => ({ ...current, warrantyMonths: event.target.value }))} />
-              </label>
-              <label>
-                Frete grátis
-                <input type="checkbox" checked={form.freeShipping} onChange={(event) => setForm((current) => ({ ...current, freeShipping: event.target.checked }))} />
-              </label>
-            </div>
-            <label>
-              Descrição
-              <textarea rows={4} value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} />
-            </label>
-            <button type="submit" className="primary-btn" disabled={busy}>Publicar produto</button>
-          </form>
+          <ProductForm isAdmin={false} onSubmit={addProduct} />
         </section>
 
         <section className="admin-products">

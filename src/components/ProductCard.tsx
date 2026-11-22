@@ -13,7 +13,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const favorite = isFavorite(product.id);
 
   return (
-    <article className={`product-card${product.condition ? ' bazar-product-card' : ''}`}>
+    <article className={`product-card${product.isBazaar ? ' bazar-product-card' : ''}`}>
       <div className="product-image-wrap">
 
         <button
@@ -35,7 +35,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <strong>{product.rating}</strong>
           <small>({product.reviews})</small>
         </div>
-        {product.condition ? (
+        {product.isBazaar ? (
           <div className="community-seller">
             <span className="community-seller-avatar" aria-hidden="true">{product.storeName ? 'LO' : 'VC'}</span>
             <span>
@@ -44,7 +44,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </span>
           </div>
         ) : null}
-                {product.condition ? (
+        {product.isBazaar ? (
           <>
             <span className="product-badge bazar-product-badge">Bazar</span>
             <span className="product-condition">{product.condition}</span>
@@ -60,12 +60,13 @@ export function ProductCard({ product }: ProductCardProps) {
             </span>
           </div>
         ) : null}
+        {!product.isBazaar && product.condition ? <span className="product-condition">{product.condition}</span> : null}
         <div className="product-price-row">
           <span className="product-price">R$ {product.price}</span>
           {product.originalPrice ? (
             <>
               <span className="product-original-price">R$ {product.originalPrice}</span>
-              <span className="product-discount">-{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%</span>
+              <span className="product-discount">-{product.discountPercent ?? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%</span>
             </>
           ) : null}
         </div>

@@ -39,7 +39,7 @@ export function Produtos() {
       const matchesShipping = !freeShippingOnly || product.price >= 200;
       const matchesOffers = !offersOnly || Boolean(product.originalPrice && product.originalPrice > product.price);
       const matchesNew = !newOnly || !product.condition || product.condition === 'novo';
-      const matchesUsed = !usedOnly || product.condition === 'seminovo' || product.condition === 'usado';
+      const matchesUsed = !usedOnly || product.isBazaar;
 
       return matchesSearch && matchesPrice && matchesShipping && matchesOffers && matchesNew && matchesUsed;
     });
@@ -61,7 +61,7 @@ export function Produtos() {
     return sortedProducts;
   }, [selectedCategory, query, sortBy, maxPrice, unlimitedPrice, freeShippingOnly, offersOnly, newOnly, usedOnly, storeId, products]);
 
-  const usedProducts = products.filter((product) => product.condition);
+  const usedProducts = products.filter((product) => product.isBazaar);
 
   return (
     <main className="page-shell">

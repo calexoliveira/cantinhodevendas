@@ -1,9 +1,9 @@
 import { createContext, useContext } from 'react';
-import type { Product } from '../data/products';
+import type { NewProduct, Product } from '../data/products';
 
 export type CatalogContextValue = {
   products: Product[];
-  addProduct: (product: Omit<Product, 'id' | 'storeName' | 'soldCount'>) => Promise<void>;
+  addProduct: (product: NewProduct) => Promise<void>;
   removeProduct: (id: number) => Promise<void>;
 };
 

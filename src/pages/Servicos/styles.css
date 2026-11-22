@@ -177,6 +177,15 @@
   box-shadow: var(--shadow);
 }
 
+.service-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+}
+
 .service-provider-type {
   display: flex;
   flex-wrap: wrap;

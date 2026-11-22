@@ -1,38 +1,16 @@
 import { useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import { ProductForm } from '../../components/ProductForm';
 import { useAuth } from '../../context/useAuth';
 import { useCatalog } from '../../context/useCatalog';
 import { errorMessage } from '../../api';
 import { demoStore } from '../../data/stores';
-import {
-  parseProductCategory,
-  productCategories,
-  type Product,
-} from '../../data/products';
-
-const defaultForm = {
-  name: '',
-  category: 'Roupas',
-  price: '',
-  originalPrice: '',
-  rating: '4.8',
-  reviews: '0',
-  badge: 'Novo',
-  description: '',
-  stock: '10',
-  sku: '',
-  brand: '',
-  warrantyMonths: '12',
-  deliveryDays: '3',
-};
+import { ServiceSocialAdmin } from './ServiceSocialAdmin';
 
 export function Admin() {
   const { user, merchants } = useAuth();
   const { products, addProduct, removeProduct } = useCatalog();
-  const [form, setForm] = useState(defaultForm);
   const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-
   const hasAccess = Boolean(user?.isAdmin);
 
   const metrics = useMemo(
@@ -47,45 +25,6 @@ export function Admin() {
   if (!hasAccess) {
     return <Navigate to="/login" replace />;
   }
-
-  const handleChange = (field: keyof typeof defaultForm, value: string) => {
-    setForm((current) => ({ ...current, [field]: value }));
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError('');
-
-    const merchant = merchants.find((store) => store.id !== demoStore.id);
-    const newProduct: Omit<Product, 'id' | 'storeName' | 'soldCount'> = {
-      name: form.name,
-      category: parseProductCategory(form.category),
-      price: Number(form.price),
-      originalPrice: form.originalPrice ? Number(form.originalPrice) : undefined,
-      rating: Number(form.rating),
-      reviews: Number(form.reviews),
-      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80',
-      badge: form.badge || 'Novo',
-      description: form.description || 'Produto cadastrado no catálogo.',
-      featured: true,
-      storeId: merchant?.id,
-      stock: Number(form.stock),
-      sku: form.sku.trim() || undefined,
-      brand: form.brand.trim() || undefined,
-      warrantyMonths: Number(form.warrantyMonths),
-      deliveryDays: Number(form.deliveryDays),
-    };
-
-    setBusy(true);
-    try {
-      await addProduct(newProduct);
-      setForm(defaultForm);
-    } catch (reason) {
-      setError(errorMessage(reason));
-    } finally {
-      setBusy(false);
-    }
-  };
 
   const handleRemove = async (productId: number) => {
     setError('');
@@ -122,94 +61,17 @@ export function Admin() {
       <div className="admin-layout">
         <section className="admin-form-card">
           <h2>Novo produto</h2>
-
-          <form className="admin-form" onSubmit={handleSubmit}>
-            <label>
-              Nome
-              <input value={form.name} onChange={(event) => handleChange('name', event.target.value)} required />
-            </label>
-
-            <div className="two-column">
-              <label>
-                Categoria
-                <select value={form.category} onChange={(event) => handleChange('category', event.target.value)}>
-                  {productCategories.map((category) => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-              </label>
-
-              <label>
-                Preço
-                <input type="number" value={form.price} onChange={(event) => handleChange('price', event.target.value)} required />
-              </label>
-            </div>
-
-            <div className="two-column">
-              <label>
-                Preço original
-                <input type="number" value={form.originalPrice} onChange={(event) => handleChange('originalPrice', event.target.value)} />
-              </label>
-
-              <label>
-                Avaliação
-                <input type="number" step="0.1" value={form.rating} onChange={(event) => handleChange('rating', event.target.value)} />
-              </label>
-            </div>
-
-            <div className="two-column">
-              <label>
-                Reviews
-                <input type="number" value={form.reviews} onChange={(event) => handleChange('reviews', event.target.value)} />
-              </label>
-
-              <label>
-                Badge
-                <input value={form.badge} onChange={(event) => handleChange('badge', event.target.value)} />
-              </label>
-            </div>
-
-            <label>
-              Descrição
-              <textarea value={form.description} onChange={(event) => handleChange('description', event.target.value)} rows={4} />
-            </label>
-
-            <div className="two-column">
-              <label>
-                Estoque
-                <input type="number" min="0" step="1" value={form.stock} onChange={(event) => handleChange('stock', event.target.value)} required />
-              </label>
-              <label>
-                SKU
-                <input value={form.sku} onChange={(event) => handleChange('sku', event.target.value)} />
-              </label>
-            </div>
-
-            <div className="two-column">
-              <label>
-                Marca
-                <input value={form.brand} onChange={(event) => handleChange('brand', event.target.value)} />
-              </label>
-              <label>
-                Prazo de entrega (dias)
-                <input type="number" min="1" value={form.deliveryDays} onChange={(event) => handleChange('deliveryDays', event.target.value)} />
-              </label>
-            </div>
-
-            <label>
-              Garantia (meses)
-              <input type="number" min="0" value={form.warrantyMonths} onChange={(event) => handleChange('warrantyMonths', event.target.value)} />
-            </label>
-
-            <button type="submit" className="primary-btn" disabled={busy}>
-              Publicar produto
-            </button>
-          </form>
+          <ProductForm
+            isAdmin
+            onSubmit={(product) => addProduct({
+              ...product,
+              storeId: merchants.find((store) => store.id !== demoStore.id)?.id,
+            })}
+          />
         </section>
 
         <section className="admin-products">
           <h2>Produtos cadastrados</h2>
-
           <div className="admin-product-list">
             {products.slice(0, 6).map((product) => (
               <article key={product.id} className="admin-product-item">
@@ -227,6 +89,7 @@ export function Admin() {
           </div>
         </section>
       </div>
+      <ServiceSocialAdmin />
     </main>
   );
 }

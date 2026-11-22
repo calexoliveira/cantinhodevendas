@@ -59,6 +59,12 @@ O frontend usa a porta 4173 e encaminha `/api` para a API na porta 3001. Se muda
 
 As migrações em `server/migrations` são aplicadas uma vez, em ordem de nome. Para mudanças futuras no banco, adicione uma nova migração numerada; não altere as já aplicadas. O seed insere a loja e os produtos de demonstração; execute-o com a API parada.
 
+No cadastro e no painel do lojista, é possível informar um logo (PNG, JPEG, WebP ou GIF de até 256 KB), site e até 10 links de redes sociais. Essas informações são opcionais e aparecem no catálogo de lojistas.
+
+No cadastro de produtos, envie uma imagem (PNG, JPEG, WebP ou GIF de até 2 MB), informe o preço antes do desconto percentual e selecione a condição. Para produtos novos é obrigatório um código universal válido (GTIN-8, GTIN-12, GTIN-13 ou GTIN-14). Marca, modelo, cor, tamanho, peso e dimensões da embalagem são opcionais.
+
+Serviços publicados são armazenados no PostgreSQL e exibidos no catálogo público com nome, cidade, telefone e até 10 links opcionais de redes sociais; CPF e CNPJ não são exibidos. Administradores podem editar os links dos serviços no painel administrativo. Serviços antigos salvos apenas no navegador podem ser importados manualmente na página de serviços, após confirmação; os dados locais não são apagados.
+
 ### Criar um administrador local
 
 Não há credenciais de administrador predefinidas no banco. No PowerShell, defina o nome e o e-mail desejados e informe a senha sem exibi-la:

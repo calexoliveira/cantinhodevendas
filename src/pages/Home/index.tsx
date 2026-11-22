@@ -28,7 +28,7 @@ const curatedCollections = [
 export function Home() {
   const { products } = useCatalog();
   const featuredProducts = products.filter((product) => product.featured).slice(0, 4);
-  const usedProducts = products.filter((product) => product.condition).slice(0, 3);
+  const usedProducts = products.filter((product) => product.isBazaar).slice(0, 3);
   const spotlightOffer = products.find((product) => product.originalPrice && !product.featured) ?? products[0];
   const [email, setEmail] = useState('');
   const [newsletterMessage, setNewsletterMessage] = useState('');

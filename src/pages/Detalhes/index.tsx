@@ -39,7 +39,7 @@ export function Detalhes() {
 
       <section className="product-detail-card">
         <div className="product-detail-image-wrap">
-          {product.condition ? (
+          {product.isBazaar ? (
             <span className="detail-condition-badge">Bazar · {product.condition}</span>
           ) : null}
           <img src={product.image} alt={product.name} />
@@ -48,7 +48,7 @@ export function Detalhes() {
         <div className="product-detail-info">
           <span className="product-category">{product.category}</span>
           <h1>{product.name}</h1>
-          {product.condition ? (
+          {product.isBazaar ? (
             <div className="detail-community-seller">
               <span className="community-seller-avatar" aria-hidden="true">{product.storeName ? 'LO' : 'VC'}</span>
               <span>
@@ -76,7 +76,7 @@ export function Detalhes() {
             {product.originalPrice ? (
               <>
                 <span className="product-original-price">R$ {product.originalPrice}</span>
-                <span className="product-discount">-{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%</span>
+                <span className="product-discount">-{product.discountPercent ?? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%</span>
               </>
             ) : null}
           </div>
@@ -89,6 +89,14 @@ export function Detalhes() {
             </strong>
             {product.sku ? <span>SKU: {product.sku}</span> : null}
             {product.brand ? <span>Marca: {product.brand}</span> : null}
+            {product.model ? <span>Modelo: {product.model}</span> : null}
+            {product.color ? <span>Cor: {product.color}</span> : null}
+            {product.size ? <span>Tamanho: {product.size}</span> : null}
+            {product.gtin ? <span>Código universal: {product.gtin}</span> : null}
+            {product.weightKg != null ? <span>Peso da embalagem: {product.weightKg} kg</span> : null}
+            {product.packageLengthCm != null ? <span>Comprimento da embalagem: {product.packageLengthCm} cm</span> : null}
+            {product.packageWidthCm != null ? <span>Largura da embalagem: {product.packageWidthCm} cm</span> : null}
+            {product.packageHeightCm != null ? <span>Altura da embalagem: {product.packageHeightCm} cm</span> : null}
             {product.soldCount ? <span>{product.soldCount}+ vendidos</span> : null}
           </div>
 
@@ -112,7 +120,7 @@ export function Detalhes() {
           </div>
 
           <div className="detail-benefits">
-            {product.condition ? (
+            {product.isBazaar ? (
               <>
                 <div>
                   <strong>Origem</strong>

@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { ProductCard } from '../../components/ProductCard';
 import { ServiceListingCard } from '../../components/ServiceListingCard';
-import { getServiceListings, type ServiceListing } from '../../data/services';
 import { useCatalog } from '../../context/useCatalog';
+import { useServices } from '../../context/useServices';
 import { useSearchParams } from 'react-router-dom';
 import './styles.css';
 
@@ -12,7 +12,7 @@ const normalizeSearchText = (value: string) =>
 export function Busca() {
   const { products } = useCatalog();
   const [searchParams] = useSearchParams();
-  const [services] = useState<ServiceListing[]>(getServiceListings);
+  const { services, loading, error, retry } = useServices();
   const searchTerm = (searchParams.get('search') ?? '').trim();
   const normalizedSearchTerm = normalizeSearchText(searchTerm);
 
@@ -67,6 +67,13 @@ export function Busca() {
         )}
       </header>
 
+      {searchTerm && loading ? <p>Carregando serviços...</p> : null}
+      {searchTerm && error ? (
+        <div role="alert">
+          <p>Não foi possível pesquisar serviços: {error}</p>
+          <button type="button" className="secondary-btn" onClick={retry}>Tentar novamente</button>
+        </div>
+      ) : null}
       {searchTerm && hasResults ? (
         <>
           {matchingProducts.length ? (
@@ -97,17 +104,17 @@ export function Busca() {
             </section>
           ) : null}
         </>
-      ) : searchTerm ? (
+      ) : searchTerm && !loading && !error ? (
         <section className="search-empty" aria-live="polite">
           <h2>Nenhum resultado encontrado</h2>
           <p>Tente buscar por outro nome, categoria, descrição ou cidade.</p>
         </section>
-      ) : (
+      ) : !searchTerm ? (
         <section className="search-empty">
           <h2>Encontre o que você procura</h2>
           <p>Use a busca no menu para pesquisar no catálogo de produtos e serviços.</p>
         </section>
-      )}
+      ) : null}
     </main>
   );
 }

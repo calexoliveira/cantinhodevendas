@@ -24,18 +24,30 @@ export type Product = {
   image: string;
   badge?: string;
   featured?: boolean;
-  condition?: 'novo' | 'seminovo' | 'usado';
+  condition?: 'novo' | 'seminovo' | 'usado' | 'recondicionado';
+  isBazaar?: boolean;
   description: string;
   storeId?: string;
   storeName?: string;
   stock?: number;
   sku?: string;
   brand?: string;
+  model?: string;
+  color?: string;
+  size?: string;
+  gtin?: string;
+  weightKg?: number;
+  packageLengthCm?: number;
+  packageWidthCm?: number;
+  packageHeightCm?: number;
+  discountPercent?: number;
   warrantyMonths?: number;
   deliveryDays?: number;
   freeShipping?: boolean;
   soldCount?: number;
 };
+
+export type NewProduct = Omit<Product, 'id' | 'storeName' | 'soldCount' | 'originalPrice' | 'isBazaar'>;
 
 export const heroVisual = heroImage;
 

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { apiRequest, errorMessage } from '../api';
-import { demoProductImages, type Product } from '../data/products';
+import { demoProductImages, type NewProduct, type Product } from '../data/products';
 import { CatalogContext, type CatalogContextValue } from './useCatalog';
 
-type NullableProductField = 'originalPrice' | 'badge' | 'condition' | 'storeId' | 'storeName' | 'sku' | 'brand';
+type NullableProductField = 'originalPrice' | 'badge' | 'condition' | 'storeId' | 'storeName' | 'sku' | 'brand'
+  | 'model' | 'color' | 'size' | 'gtin' | 'weightKg' | 'packageLengthCm' | 'packageWidthCm' | 'packageHeightCm' | 'discountPercent';
 type ApiProduct = Omit<Product, NullableProductField> & {
   [K in NullableProductField]: Product[K] | null;
 };
@@ -21,6 +22,15 @@ function normalizeProduct(product: ApiProduct): Product {
     storeName: product.storeName ?? undefined,
     sku: product.sku ?? undefined,
     brand: product.brand ?? undefined,
+    model: product.model ?? undefined,
+    color: product.color ?? undefined,
+    size: product.size ?? undefined,
+    gtin: product.gtin ?? undefined,
+    weightKg: product.weightKg ?? undefined,
+    packageLengthCm: product.packageLengthCm ?? undefined,
+    packageWidthCm: product.packageWidthCm ?? undefined,
+    packageHeightCm: product.packageHeightCm ?? undefined,
+    discountPercent: product.discountPercent ?? undefined,
   };
 }
 
@@ -42,7 +52,7 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
     return () => { active = false; };
   }, [attempt]);
 
-  const addProduct = useCallback(async (product: Omit<Product, 'id' | 'storeName' | 'soldCount'>) => {
+  const addProduct = useCallback(async (product: NewProduct) => {
     const created = normalizeProduct(await apiRequest<ApiProduct>('/products', {
       method: 'POST',
       body: JSON.stringify(product),

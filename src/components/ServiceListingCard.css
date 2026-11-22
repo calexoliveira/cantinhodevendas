@@ -129,6 +129,10 @@
   font-weight: 700;
 }
 
+.registered-service-card-content .store-links {
+  margin-bottom: 16px;
+}
+
 .registered-service-contact {
   width: 100%;
   margin-top: auto;

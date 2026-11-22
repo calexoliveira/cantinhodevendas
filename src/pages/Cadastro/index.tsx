@@ -3,6 +3,8 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import type { AccountType } from '../../context/AuthContext';
 import { useAuth } from '../../context/useAuth';
 import { errorMessage } from '../../api';
+import { StoreProfileFields } from '../../components/StoreProfileFields';
+import { parseStoreProfile, type StoreProfileForm } from '../../utils/storeProfile';
 import {
   formatBrazilianDocument,
   getDocumentDigits,
@@ -20,6 +22,8 @@ function Cadastro({ accountType }: { accountType: AccountType }) {
   const [documentNumber, setDocumentNumber] = useState('');
   const [storeName, setStoreName] = useState('');
   const [businessAddress, setBusinessAddress] = useState('');
+  const [storeProfile, setStoreProfile] = useState<StoreProfileForm>({ logo: null, website: '', socialLinks: '' });
+  const [logoLoading, setLogoLoading] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const isMerchant = accountType === 'merchant';
@@ -52,6 +56,7 @@ function Cadastro({ accountType }: { accountType: AccountType }) {
         phone,
         storeName,
         businessAddress,
+        ...(isMerchant ? parseStoreProfile(storeProfile) : {}),
       });
       navigate(accountPath);
     } catch (reason) {
@@ -150,6 +155,7 @@ function Cadastro({ accountType }: { accountType: AccountType }) {
                   required
                 />
               </label>
+              <StoreProfileFields value={storeProfile} onChange={setStoreProfile} onReadingChange={setLogoLoading} />
             </>
           ) : null}
 
@@ -181,7 +187,7 @@ function Cadastro({ accountType }: { accountType: AccountType }) {
 
           {error ? <p className="auth-error" role="alert">{error}</p> : null}
 
-          <button type="submit" className="login-btn" disabled={busy}>
+          <button type="submit" className="login-btn" disabled={busy || logoLoading}>
             {isMerchant ? 'Criar cadastro da loja' : 'Criar conta'}
           </button>
         </form>

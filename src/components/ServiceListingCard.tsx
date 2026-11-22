@@ -1,4 +1,5 @@
 import type { ServiceListing } from '../data/services';
+import { StoreLinks } from './StoreLinks';
 import './ServiceListingCard.css';
 
 type ServiceListingCardProps = {
@@ -45,6 +46,7 @@ export function ServiceListingCard({ service }: ServiceListingCardProps) {
           </span>
         </div>
 
+        <StoreLinks socialLinks={service.socialLinks} />
         <a className="registered-service-contact" href={`tel:${phoneNumber}`}>
           Entrar em contato <span aria-hidden="true">→</span>
         </a>

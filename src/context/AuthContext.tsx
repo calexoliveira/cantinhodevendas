@@ -17,6 +17,9 @@ export type AuthUser = {
   storeId?: string | null;
   storeName?: string | null;
   businessAddress?: string | null;
+  storeLogo?: string | null;
+  storeWebsite?: string | null;
+  storeSocialLinks?: string[] | null;
   address?: string | null;
 };
 
@@ -24,6 +27,15 @@ export type MerchantStore = {
   id: string;
   name: string;
   address: string;
+  logo: string | null;
+  website: string | null;
+  socialLinks: string[];
+};
+
+export type StoreProfile = {
+  storeLogo: string | null;
+  storeWebsite: string | null;
+  storeSocialLinks: string[];
 };
 
 export type RegistrationData = {
@@ -35,6 +47,9 @@ export type RegistrationData = {
   phone: string;
   storeName?: string;
   businessAddress?: string;
+  storeLogo?: string | null;
+  storeWebsite?: string | null;
+  storeSocialLinks?: string[];
 };
 
 export type AuthContextValue = {
@@ -43,6 +58,7 @@ export type AuthContextValue = {
   login: (email: string, password: string) => Promise<AccountType>;
   register: (registration: RegistrationData) => Promise<void>;
   updateAddress: (address: string) => Promise<void>;
+  updateStoreProfile: (profile: StoreProfile) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -86,10 +102,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       body: JSON.stringify(registration),
     });
     setUser(result.user);
-    const { storeId, storeName, businessAddress } = result.user;
+    const { storeId, storeName, businessAddress, storeLogo, storeWebsite, storeSocialLinks } = result.user;
     if (storeId && storeName) {
-      setMerchants((current) => [...current, { id: storeId, name: storeName, address: businessAddress ?? '' }]);
+      setMerchants((current) => [...current, {
+        id: storeId, name: storeName, address: businessAddress ?? '', logo: storeLogo ?? null,
+        website: storeWebsite ?? null, socialLinks: storeSocialLinks ?? [],
+      }]);
     }
+  }, []);
+
+  const updateStoreProfile = useCallback(async (profile: StoreProfile) => {
+    const result = await apiRequest<{ user: AuthUser }>('/stores/profile', {
+      method: 'PATCH',
+      body: JSON.stringify(profile),
+    });
+    setUser(result.user);
+    setMerchants((current) => current.map((store) => store.id === result.user.storeId
+      ? {
+        ...store, logo: result.user.storeLogo ?? null, website: result.user.storeWebsite ?? null,
+        socialLinks: result.user.storeSocialLinks ?? [],
+      }
+      : store));
   }, []);
 
   const updateAddress = useCallback(async (address: string) => {
@@ -110,8 +143,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<AuthContextValue>(
-    () => ({ user, merchants, login, register, updateAddress, logout }),
-    [user, merchants, login, register, updateAddress, logout],
+    () => ({ user, merchants, login, register, updateAddress, updateStoreProfile, logout }),
+    [user, merchants, login, register, updateAddress, updateStoreProfile, logout],
   );
 
   if (error) {
