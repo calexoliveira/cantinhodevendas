@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { errorMessage } from '../api';
-import { getServiceListings, type ServiceListing } from '../data/services';
+import {
+  deleteServiceListing,
+  getServiceListings,
+  updateServiceListing,
+  type ServiceListing,
+} from '../data/services';
+import type { ServiceAdminUpdate } from '../../shared/services';
 
 export function useServices() {
   const [services, setServices] = useState<ServiceListing[]>([]);
@@ -29,5 +35,16 @@ export function useServices() {
       return [...unique, ...current.filter((service) => !ids.has(service.id))];
     });
   };
-  return { services, error, loading, addServices, retry: () => setAttempt((current) => current + 1) };
+  const updateService = async (id: string, service: ServiceAdminUpdate) => {
+    const updated = await updateServiceListing(id, service);
+    setServices((current) => current.map((item) => item.id === id ? updated : item));
+  };
+  const removeService = async (id: string) => {
+    await deleteServiceListing(id);
+    setServices((current) => current.filter((item) => item.id !== id));
+  };
+  return {
+    services, error, loading, addServices, updateService, removeService,
+    retry: () => setAttempt((current) => current + 1),
+  };
 }

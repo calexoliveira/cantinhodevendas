@@ -7,7 +7,12 @@ import { z } from 'zod';
 import { productCategories } from '../shared/categories';
 import { isValidGtin } from '../shared/gtin';
 import { discountedPrice } from '../shared/productPrice';
-import { serviceRegistrationSchema, type ServiceListing, type ServiceRegistration } from '../shared/services';
+import {
+  serviceAdminUpdateSchema,
+  serviceRegistrationSchema,
+  type ServiceListing,
+  type ServiceRegistration,
+} from '../shared/services';
 import { socialLinksSchema, webLink } from '../shared/socialLinks';
 import { getDocumentDigits, identifyBrazilianDocument, isValidBrazilianDocument } from '../src/utils/brazilianDocument';
 import { pool } from './db';
@@ -18,6 +23,7 @@ type UserRow = {
   email: string;
   accountType: 'customer' | 'merchant';
   isAdmin: boolean;
+  storeApproved: boolean | null;
   documentNumber: string | null;
   documentType: 'cpf' | 'cnpj' | null;
   phone: string | null;
@@ -33,6 +39,7 @@ type UserRow = {
 const userQuery = `SELECT u.id, u.name, u.email, u.account_type AS "accountType",
   u.is_admin AS "isAdmin", u.document_number AS "documentNumber",
   u.document_type AS "documentType", u.phone, u.address, s.id AS "storeId",
+  s.is_approved AS "storeApproved",
   s.name AS "storeName", s.address AS "businessAddress", s.logo AS "storeLogo",
   s.website AS "storeWebsite", s.social_links AS "storeSocialLinks"
   FROM users u LEFT JOIN stores s ON s.owner_id = u.id`;
@@ -88,7 +95,7 @@ const productImage = z.string().max(2796230).regex(/^data:image\/(?:png|jpeg|web
     if (header === 'data:image/gif;base64') return ['GIF87a', 'GIF89a'].includes(bytes.subarray(0, 6).toString('ascii'));
     return bytes.subarray(0, 4).toString('ascii') === 'RIFF' && bytes.subarray(8, 12).toString('ascii') === 'WEBP';
   });
-const productSchema = z.object({
+const productFieldsSchema = z.object({
   name: z.string().trim().min(1).max(200),
   category: z.enum(productCategories),
   price: z.number().finite().min(0).max(9999999999).multipleOf(0.01),
@@ -96,7 +103,7 @@ const productSchema = z.object({
   discountPercent: z.number().finite().min(0).max(100).multipleOf(0.01).optional(),
   rating: z.number().min(0).max(5),
   reviews: z.number().int().min(0).max(100000000),
-  image: z.union([productImage, webLink]),
+  image: z.union([productImage, webLink]).optional(),
   badge: z.string().max(100).optional(),
   featured: z.boolean().optional(),
   condition: z.enum(['novo', 'seminovo', 'usado', 'recondicionado']).default('novo'),
@@ -116,7 +123,16 @@ const productSchema = z.object({
   warrantyMonths: z.number().int().min(0).max(1200),
   deliveryDays: z.number().int().min(1).max(3650),
   freeShipping: z.boolean().optional(),
-}).strict().refine((data) => data.condition !== 'novo' || Boolean(data.gtin), {
+}).strict();
+const productSchema = productFieldsSchema.extend({
+  image: z.union([productImage, webLink]),
+}).refine((data) => data.condition !== 'novo' || Boolean(data.gtin), {
+  message: 'Informe o código universal (GTIN) para produtos novos.',
+  path: ['gtin'],
+}).refine((data) => data.discountPercent === undefined || data.originalPrice === undefined, {
+  message: 'Informe desconto ou preço original, não ambos.',
+});
+const productUpdateSchema = productFieldsSchema.refine((data) => data.condition !== 'novo' || Boolean(data.gtin), {
   message: 'Informe o código universal (GTIN) para produtos novos.',
   path: ['gtin'],
 }).refine((data) => data.discountPercent === undefined || data.originalPrice === undefined, {
@@ -201,14 +217,15 @@ function publicService(row: ServiceRow): ServiceListing {
 
 const insertServiceSql = `INSERT INTO services
   (id, provider_type, provider_name, business_name, document_number, service_name, category, description,
-   phone, city, starting_price, legacy_key, social_links)
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-  ON CONFLICT (legacy_key) DO NOTHING RETURNING id`;
+   phone, city, starting_price, legacy_key, social_links, owner_id)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  ON CONFLICT (legacy_key) DO UPDATE SET owner_id = COALESCE(services.owner_id, EXCLUDED.owner_id)
+  RETURNING id`;
 
-function serviceValues(service: ServiceRegistration, legacyKey: string | null) {
+function serviceValues(service: ServiceRegistration, legacyKey: string | null, ownerId: string) {
   return [randomUUID(), service.providerType, service.providerName, service.businessName || null,
     service.documentNumber, service.serviceName, service.category, service.description,
-    service.phone, service.city, service.startingPrice ?? null, legacyKey, service.socialLinks ?? []];
+    service.phone, service.city, service.startingPrice ?? null, legacyKey, service.socialLinks ?? [], ownerId];
 }
 
 app.get('/api/services', asyncRoute(async (_req, res) => {
@@ -217,12 +234,17 @@ app.get('/api/services', asyncRoute(async (_req, res) => {
 }));
 
 app.post('/api/services', serviceLimit, asyncRoute(async (req, res) => {
+  const user = await authenticatedUser(req);
+  if (!user) {
+    res.status(401).json({ error: 'Faça login para cadastrar um serviço.' });
+    return;
+  }
   const parsed = serviceRegistrationSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: 'Dados do serviço inválidos. Confira os campos e o CPF ou CNPJ.' });
     return;
   }
-  const inserted = await pool.query<{ id: string }>(insertServiceSql, serviceValues(parsed.data, null));
+  const inserted = await pool.query<{ id: string }>(insertServiceSql, serviceValues(parsed.data, null, user.id));
   const result = await pool.query<ServiceRow>(`${serviceQuery} WHERE id = $1`, [inserted.rows[0].id]);
   res.status(201).json(publicService(result.rows[0]));
 }));
@@ -235,6 +257,11 @@ const importServicesSchema = z.object({
 }).strict();
 
 app.post('/api/services/import', serviceLimit, asyncRoute(async (req, res) => {
+  const user = await authenticatedUser(req);
+  if (!user) {
+    res.status(401).json({ error: 'Faça login para importar serviços.' });
+    return;
+  }
   const parsed = importServicesSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: 'Dados locais inválidos. Nenhum serviço deste lote foi importado.' });
@@ -246,7 +273,7 @@ app.post('/api/services/import', serviceLimit, asyncRoute(async (req, res) => {
     await client.query('BEGIN');
     for (const entry of parsed.data.services) {
       const key = createHash('sha256').update(JSON.stringify([entry.legacyId, entry.service])).digest('hex');
-      await client.query(insertServiceSql, serviceValues(entry.service, key));
+      await client.query(insertServiceSql, serviceValues(entry.service, key, user.id));
       const result = await client.query<ServiceRow>(`${serviceQuery} WHERE legacy_key = $1`, [key]);
       services.push(publicService(result.rows[0]));
     }
@@ -285,6 +312,74 @@ app.patch('/api/services/:id/social-links', asyncRoute(async (req, res) => {
   }
   const result = await pool.query<ServiceRow>(`${serviceQuery} WHERE id = $1`, [id.data]);
   res.json(publicService(result.rows[0]));
+}));
+
+app.put('/api/services/:id', asyncRoute(async (req, res) => {
+  const user = await authenticatedUser(req);
+  if (!user) {
+    res.status(401).json({ error: 'Faça login para continuar.' });
+    return;
+  }
+  if (!user.isAdmin) {
+    res.status(403).json({ error: 'Apenas administradores podem editar serviços.' });
+    return;
+  }
+  const id = z.string().uuid().safeParse(req.params.id);
+  const parsed = serviceAdminUpdateSchema.safeParse(req.body);
+  if (!id.success || !parsed.success) {
+    res.status(400).json({ error: parsed.success ? 'Serviço inválido.' : parsed.error.issues[0]?.message ?? 'Dados do serviço inválidos.' });
+    return;
+  }
+  const data = parsed.data;
+  const existingService = await pool.query<{ document_number: string }>(
+    'SELECT document_number FROM services WHERE id = $1', [id.data],
+  );
+  if (!existingService.rowCount) {
+    res.status(404).json({ error: 'Serviço não encontrado.' });
+    return;
+  }
+  const documentType = identifyBrazilianDocument(existingService.rows[0].document_number);
+  if (documentType !== (data.providerType === 'individual' ? 'cpf' : 'cnpj')) {
+    res.status(400).json({ error: 'O tipo de prestador deve corresponder ao documento cadastrado.' });
+    return;
+  }
+  const updated = await pool.query<{ id: string }>(
+    `UPDATE services SET provider_type = $1, provider_name = $2, business_name = $3,
+      service_name = $4, category = $5, description = $6, phone = $7, city = $8,
+      starting_price = $9, social_links = $10 WHERE id = $11 RETURNING id`,
+    [data.providerType, data.providerName, data.businessName ?? null, data.serviceName,
+      data.category, data.description, data.phone, data.city, data.startingPrice ?? null,
+      data.socialLinks ?? [], id.data],
+  );
+  if (!updated.rowCount) {
+    res.status(404).json({ error: 'Serviço não encontrado.' });
+    return;
+  }
+  const result = await pool.query<ServiceRow>(`${serviceQuery} WHERE id = $1`, [id.data]);
+  res.json(publicService(result.rows[0]));
+}));
+
+app.delete('/api/services/:id', asyncRoute(async (req, res) => {
+  const user = await authenticatedUser(req);
+  if (!user) {
+    res.status(401).json({ error: 'Faça login para continuar.' });
+    return;
+  }
+  if (!user.isAdmin) {
+    res.status(403).json({ error: 'Apenas administradores podem excluir serviços.' });
+    return;
+  }
+  const id = z.string().uuid().safeParse(req.params.id);
+  if (!id.success) {
+    res.status(400).json({ error: 'Serviço inválido.' });
+    return;
+  }
+  const result = await pool.query('DELETE FROM services WHERE id = $1 RETURNING id', [id.data]);
+  if (!result.rowCount) {
+    res.status(404).json({ error: 'Serviço não encontrado.' });
+    return;
+  }
+  res.status(204).end();
 }));
 
 app.get('/api/health', asyncRoute(async (_req, res) => {
@@ -328,7 +423,12 @@ app.post('/api/auth/register', authLimit, asyncRoute(async (req, res) => {
   } catch (error) {
     await client.query('ROLLBACK');
     if (typeof error === 'object' && error !== null && 'code' in error && error.code === '23505') {
-      res.status(409).json({ error: 'Este e-mail já está cadastrado.' });
+      const constraint = 'constraint' in error ? error.constraint : undefined;
+      res.status(409).json({
+        error: constraint === 'users_document_number_uidx'
+          ? 'Este CPF/CNPJ já está cadastrado em uma conta.'
+          : 'Este e-mail já está cadastrado.',
+      });
       return;
     }
     throw error;
@@ -386,8 +486,62 @@ app.patch('/api/auth/address', asyncRoute(async (req, res) => {
   res.json({ user: { ...user, address: parsed.data.address } });
 }));
 
+app.get('/api/admin/stores/pending', asyncRoute(async (req, res) => {
+  const user = await authenticatedUser(req);
+  if (!user) {
+    res.status(401).json({ error: 'Faça login para continuar.' });
+    return;
+  }
+  if (!user.isAdmin) {
+    res.status(403).json({ error: 'Apenas administradores podem revisar lojas.' });
+    return;
+  }
+  const result = await pool.query(
+    `SELECT s.id, s.name, s.address, u.name AS "ownerName", u.email AS "ownerEmail"
+     FROM stores s JOIN users u ON u.id = s.owner_id
+     WHERE NOT s.is_approved ORDER BY s.name`,
+  );
+  res.json(result.rows);
+}));
+
+app.patch('/api/admin/stores/:id/approval', asyncRoute(async (req, res) => {
+  const user = await authenticatedUser(req);
+  if (!user) {
+    res.status(401).json({ error: 'Faça login para continuar.' });
+    return;
+  }
+  if (!user.isAdmin) {
+    res.status(403).json({ error: 'Apenas administradores podem aprovar lojas.' });
+    return;
+  }
+  const id = z.string().uuid().safeParse(req.params.id);
+  if (!id.success) {
+    res.status(400).json({ error: 'Loja inválida.' });
+    return;
+  }
+  const approved = await pool.query(
+    `UPDATE stores SET is_approved = true WHERE id = $1 AND NOT is_approved
+     AND EXISTS (SELECT 1 FROM users WHERE id = $2 AND is_admin = true) RETURNING id`,
+    [id.data, user.id],
+  );
+  if (!approved.rowCount) {
+    const existing = await pool.query<{ is_approved: boolean }>(
+      'SELECT is_approved FROM stores WHERE id = $1', [id.data],
+    );
+    if (!existing.rowCount) {
+      res.status(404).json({ error: 'Loja não encontrada.' });
+      return;
+    }
+    res.status(409).json({ error: 'A loja já foi aprovada.' });
+    return;
+  }
+  res.json({ id: approved.rows[0].id, isApproved: true });
+}));
+
 app.get('/api/stores', asyncRoute(async (_req, res) => {
-  const result = await pool.query('SELECT id, name, address, logo, website, social_links AS "socialLinks" FROM stores ORDER BY name');
+  const result = await pool.query(
+    'SELECT id, name, address, logo, website, social_links AS "socialLinks" FROM stores WHERE is_approved ORDER BY name',
+  );
   res.json(result.rows);
 }));
 
@@ -418,7 +572,9 @@ app.patch('/api/stores/profile', asyncRoute(async (req, res) => {
 }));
 
 app.get('/api/products', asyncRoute(async (_req, res) => {
-  const result = await pool.query(`${productQuery} ORDER BY p.created_at DESC, p.id ASC`);
+  const result = await pool.query(
+    `${productQuery} WHERE p.store_id IS NULL OR s.is_approved = true ORDER BY p.created_at DESC, p.id ASC`,
+  );
   res.json(result.rows);
 }));
 
@@ -429,7 +585,8 @@ app.get('/api/products/:id/image', asyncRoute(async (req, res) => {
     return;
   }
   const result = await pool.query<{ image_data: Buffer; image_type: string }>(
-    'SELECT image_data, image_type FROM products WHERE id = $1 AND image_data IS NOT NULL', [id],
+    `SELECT p.image_data, p.image_type FROM products p LEFT JOIN stores s ON s.id = p.store_id
+     WHERE p.id = $1 AND p.image_data IS NOT NULL AND (p.store_id IS NULL OR s.is_approved = true)`, [id],
   );
   const image = result.rows[0];
   if (!image) {
@@ -449,6 +606,10 @@ app.post('/api/products', asyncRoute(async (req, res) => {
     res.status(403).json({ error: 'Apenas lojistas podem cadastrar produtos.' });
     return;
   }
+  if (!user.isAdmin && (!user.storeId || !user.storeApproved)) {
+    res.status(403).json({ error: 'A loja precisa ser aprovada antes de cadastrar produtos.' });
+    return;
+  }
   const parsed = productSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.issues[0]?.message ?? 'Dados do produto inválidos.' });
@@ -461,9 +622,15 @@ app.post('/api/products', asyncRoute(async (req, res) => {
     return;
   }
   if (storeId) {
-    const store = await pool.query('SELECT id FROM stores WHERE id = $1', [storeId]);
+    const store = await pool.query<{ is_approved: boolean }>(
+      'SELECT is_approved FROM stores WHERE id = $1', [storeId],
+    );
     if (!store.rowCount) {
       res.status(400).json({ error: 'Loja não encontrada.' });
+      return;
+    }
+    if (!store.rows[0].is_approved) {
+      res.status(403).json({ error: 'A loja precisa ser aprovada antes de cadastrar produtos.' });
       return;
     }
   }
@@ -494,6 +661,74 @@ app.post('/api/products', asyncRoute(async (req, res) => {
   res.status(201).json(product.rows[0]);
 }));
 
+app.put('/api/products/:id', asyncRoute(async (req, res) => {
+  const user = await authenticatedUser(req);
+  if (!user) {
+    res.status(401).json({ error: 'Faça login para continuar.' });
+    return;
+  }
+  if (!user.isAdmin) {
+    res.status(403).json({ error: 'Apenas administradores podem editar produtos.' });
+    return;
+  }
+  const id = Number(req.params.id);
+  if (!Number.isSafeInteger(id) || id < 1 || id > 2147483647) {
+    res.status(400).json({ error: 'Produto inválido.' });
+    return;
+  }
+  const parsed = productUpdateSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? 'Dados do produto inválidos.' });
+    return;
+  }
+  const data = parsed.data;
+  if (data.storeId) {
+    const store = await pool.query<{ is_approved: boolean }>(
+      'SELECT is_approved FROM stores WHERE id = $1', [data.storeId],
+    );
+    if (!store.rowCount) {
+      res.status(400).json({ error: 'Loja não encontrada.' });
+      return;
+    }
+    if (!store.rows[0].is_approved) {
+      res.status(403).json({ error: 'A loja precisa ser aprovada antes de associar produtos.' });
+      return;
+    }
+  }
+  const hasImage = data.image !== undefined;
+  const uploadedImage = data.image?.startsWith('data:image/') ? data.image : undefined;
+  const uploaded = Boolean(uploadedImage);
+  const imageData = uploadedImage ? Buffer.from(uploadedImage.slice(uploadedImage.indexOf(',') + 1), 'base64') : null;
+  const imageType = uploadedImage ? uploadedImage.slice(5, uploadedImage.indexOf(';')) : null;
+  const discount = data.discountPercent ?? 0;
+  const salePrice = discount > 0 ? discountedPrice(data.price, discount) : data.price;
+  const originalPrice = discount > 0 ? data.price : data.originalPrice ?? null;
+  const updated = await pool.query<{ id: number }>(
+    `UPDATE products SET store_id = COALESCE($1, store_id), name = $2, category = $3, price = $4,
+      original_price = $5, rating = $6, reviews = $7, badge = $8, featured = $9, condition = $10,
+      description = $11, stock = $12, sku = $13, brand = $14, warranty_months = $15,
+      delivery_days = $16, free_shipping = $17, model = $18, color = $19, size = $20, gtin = $21,
+      weight_kg = $22, package_length_cm = $23, package_width_cm = $24, package_height_cm = $25,
+      discount_percent = $26, image = CASE WHEN $27 THEN $28 ELSE image END,
+      image_data = CASE WHEN $27 THEN $29 ELSE image_data END,
+      image_type = CASE WHEN $27 THEN $30 ELSE image_type END
+      WHERE id = $31 RETURNING id`,
+    [data.storeId ?? null, data.name, data.category, salePrice, originalPrice, data.rating, data.reviews,
+      data.badge ?? null, data.featured ?? false, data.condition, data.description, data.stock,
+      data.sku ?? null, data.brand ?? null, data.warrantyMonths, data.deliveryDays, data.freeShipping ?? false,
+      data.model ?? null, data.color ?? null, data.size ?? null, data.gtin ?? null, data.weightKg ?? null,
+      data.packageLengthCm ?? null, data.packageWidthCm ?? null, data.packageHeightCm ?? null,
+      data.discountPercent ?? null, hasImage, uploaded ? 'uploaded' : data.image ?? null,
+      imageData, imageType, id],
+  );
+  if (!updated.rowCount) {
+    res.status(404).json({ error: 'Produto não encontrado.' });
+    return;
+  }
+  const product = await pool.query(`${productQuery} WHERE p.id = $1`, [id]);
+  res.json(product.rows[0]);
+}));
+
 app.delete('/api/products/:id', asyncRoute(async (req, res) => {
   const user = await authenticatedUser(req);
   if (!user) {
@@ -518,6 +753,13 @@ app.delete('/api/products/:id', asyncRoute(async (req, res) => {
 
 app.use((error: unknown, _req: express.Request, res: express.Response, next: express.NextFunction) => {
   void next;
+  if (typeof error === 'object' && error !== null && 'code' in error && error.code === '23505') {
+    const constraint = 'constraint' in error ? error.constraint : undefined;
+    if (constraint === 'services_document_number_uidx') {
+      res.status(409).json({ error: 'Este CPF/CNPJ já está cadastrado em um serviço.' });
+      return;
+    }
+  }
   if (typeof error === 'object' && error !== null && 'type' in error) {
     if (error.type === 'entity.parse.failed') {
       res.status(400).json({ error: 'JSON inválido.' });

@@ -1,6 +1,10 @@
 import { z } from 'zod';
 import { apiRequest } from '../api';
-import { serviceRegistrationSchema, type ServiceRegistration } from '../../shared/services';
+import {
+  serviceRegistrationSchema,
+  type ServiceAdminUpdate,
+  type ServiceRegistration,
+} from '../../shared/services';
 
 export { serviceCategories } from '../../shared/services';
 export type { ServiceListing, ServiceProviderType, ServiceRegistration } from '../../shared/services';
@@ -9,6 +13,17 @@ const SERVICES_STORAGE_KEY = 'minhaloja.services';
 
 export function getServiceListings() {
   return apiRequest<import('../../shared/services').ServiceListing[]>('/services');
+}
+
+export function updateServiceListing(id: string, service: ServiceAdminUpdate) {
+  return apiRequest<import('../../shared/services').ServiceListing>(`/services/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    body: JSON.stringify(service),
+  });
+}
+
+export function deleteServiceListing(id: string) {
+  return apiRequest<void>(`/services/${encodeURIComponent(id)}`, { method: 'DELETE' });
 }
 
 export function getLegacyServices(): { services: { legacyId: string; service: ServiceRegistration }[]; invalidCount: number } {

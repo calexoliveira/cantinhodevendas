@@ -4,6 +4,7 @@ import { ServiceListingCard } from '../../components/ServiceListingCard';
 import { apiRequest, errorMessage } from '../../api';
 import { getLegacyServices, importLegacyServices, serviceCategories, type ServiceListing, type ServiceProviderType, type ServiceRegistration } from '../../data/services';
 import { useServices } from '../../context/useServices';
+import { useAuth } from '../../context/useAuth';
 import { serviceRegistrationSchema } from '../../../shared/services';
 import { parseSocialLinks } from '../../../shared/socialLinks';
 import {
@@ -75,6 +76,7 @@ const initialForm: ServiceForm = {
 
 export function Servicos() {
   const [form, setForm] = useState(initialForm);
+  const { user } = useAuth();
   const { services: registeredServices, error: loadError, loading, addServices, retry } = useServices();
   const [legacyServices, setLegacyServices] = useState<{ legacyId: string; service: ServiceRegistration }[]>([]);
   const [legacyError, setLegacyError] = useState('');
@@ -241,6 +243,8 @@ export function Servicos() {
           <p>Nome, cidade e telefone serão públicos. CPF ou CNPJ não aparecem no catálogo.</p>
         </div>
 
+        {user ? (
+          <>
         <form className="service-registration-form" onSubmit={handleSubmit}>
           <fieldset className="service-fields" disabled={busy}>
           <fieldset className="service-provider-type">
@@ -426,6 +430,13 @@ export function Servicos() {
             </button>
           </div>
         ) : null}
+          </>
+        ) : (
+          <div className="service-form-success">
+            <p>Entre na sua conta para cadastrar ou importar um serviço.</p>
+            <Link to="/login" className="secondary-btn">Entrar ou criar conta</Link>
+          </div>
+        )}
       </section>
 
       <section className="services-guidance">

@@ -2264,6 +2264,23 @@ a {
   gap: 16px;
 }
 
+.product-form-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.product-form-actions > button {
+  width: auto;
+}
+
+.product-form-actions .remove-item {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 14px 22px;
+}
+
 .admin-form label,
 .checkout-form label {
   display: flex;

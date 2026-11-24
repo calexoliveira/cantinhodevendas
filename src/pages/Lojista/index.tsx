@@ -82,6 +82,11 @@ export function PainelLojista() {
         <p>Gerencie seu perfil comercial no Cantinho de Vendas.</p>
       </header>
       {error ? <p className="auth-error" role="alert">{error}</p> : null}
+      {!user.storeApproved ? (
+        <p className="account-feedback" role="status">
+          Sua loja está aguardando aprovação administrativa. Você poderá cadastrar produtos após a aprovação.
+        </p>
+      ) : null}
 
       <section className="merchant-card merchant-profile-card">
         <span className="account-label">Perfil comercial</span>
@@ -109,7 +114,9 @@ export function PainelLojista() {
       <div className="admin-layout">
         <section className="admin-form-card">
           <h2>Cadastrar produto da loja</h2>
-          <ProductForm isAdmin={false} onSubmit={addProduct} />
+          {user.storeApproved
+            ? <ProductForm isAdmin={false} onSubmit={addProduct} />
+            : <p>A publicação de produtos ficará disponível após a aprovação da loja.</p>}
         </section>
 
         <section className="admin-products">

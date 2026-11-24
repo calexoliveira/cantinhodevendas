@@ -46,6 +46,7 @@ test('accounts and products enforce store ownership', async () => {
         oldService.category, oldService.description, oldService.phone, oldService.city, oldService.startingPrice, oldKey],
     );
     await control.query(await readFile(new URL('./migrations/006_service_social_links.sql', import.meta.url), 'utf8'));
+    await control.query(await readFile(new URL('./migrations/007_authorization_and_documents.sql', import.meta.url), 'utf8'));
     const { app } = await import('./app');
     testPool = (await import('./db')).pool;
     server = app.listen(0, '127.0.0.1');
@@ -65,21 +66,37 @@ test('accounts and products enforce store ownership', async () => {
       });
     };
 
+    const serviceUser = {
+      name: 'Cliente de serviços', email: 'service-owner@example.invalid', password: 'test-password',
+      accountType: 'customer', documentNumber: '11144477735', phone: '11999999998',
+    };
+    const serviceUserResponse = await request('/api/auth/register', 'POST', serviceUser);
+    assert.equal(serviceUserResponse.status, 201);
+    const serviceCookie = serviceUserResponse.headers.get('set-cookie')?.split(';')[0];
+    assert.ok(serviceCookie);
+    const serviceUserId = z.object({ user: z.object({ id: z.string() }) })
+      .parse(await serviceUserResponse.json()).user.id;
+    await assert.rejects(
+      control.query('INSERT INTO stores (id, owner_id, name) VALUES ($1, $2, $3)', [randomUUID(), serviceUserId, 'Loja inválida']),
+      { code: '23514' },
+    );
+
     const service = {
-      providerType: 'individual', providerName: 'Prestador Teste', documentNumber: '529.982.247-25',
+      providerType: 'individual', providerName: 'Prestador Teste', documentNumber: '111.444.777-35',
       serviceName: 'Reparo teste', category: 'Casa e manutenção', description: 'Serviço de teste',
       phone: '11999999999', city: 'Cidade teste', startingPrice: 12.5,
       socialLinks: [' https://social.example.invalid/um ', 'https://social.example.invalid/dois'],
     };
-    assert.equal((await request('/api/services', 'POST', { ...service, documentNumber: '123' })).status, 400);
-    assert.equal((await request('/api/services', 'POST', { ...service, providerType: 'company' })).status, 400);
-    assert.equal((await request('/api/services', 'POST', { ...service, startingPrice: -1 })).status, 400);
-    assert.equal((await request('/api/services', 'POST', { ...service, socialLinks: ['javascript:alert(1)'] })).status, 400);
-    assert.equal((await request('/api/services', 'POST', { ...service, socialLinks: Array(11).fill('https://social.example.invalid') })).status, 400);
+    assert.equal((await request('/api/services', 'POST', service)).status, 401);
+    assert.equal((await request('/api/services', 'POST', { ...service, documentNumber: '123' }, serviceCookie)).status, 400);
+    assert.equal((await request('/api/services', 'POST', { ...service, providerType: 'company' }, serviceCookie)).status, 400);
+    assert.equal((await request('/api/services', 'POST', { ...service, startingPrice: -1 }, serviceCookie)).status, 400);
+    assert.equal((await request('/api/services', 'POST', { ...service, socialLinks: ['javascript:alert(1)'] }, serviceCookie)).status, 400);
+    assert.equal((await request('/api/services', 'POST', { ...service, socialLinks: Array(11).fill('https://social.example.invalid') }, serviceCookie)).status, 400);
     const publicServiceSchema = z.object({
       id: z.string(), serviceName: z.string(), startingPrice: z.number().optional(), socialLinks: z.array(z.string()),
     }).passthrough();
-    const createdService = await request('/api/services', 'POST', service);
+    const createdService = await request('/api/services', 'POST', service, serviceCookie);
     assert.equal(createdService.status, 201);
     const publicService = publicServiceSchema.parse(await createdService.json());
     assert.equal(publicService.serviceName, service.serviceName);
@@ -87,33 +104,38 @@ test('accounts and products enforce store ownership', async () => {
     assert.deepEqual(publicService.socialLinks, ['https://social.example.invalid/um', 'https://social.example.invalid/dois']);
     assert.equal('documentNumber' in publicService, false);
     assert.equal('legacyKey' in publicService, false);
-    const persistedService = await control.query('SELECT document_number FROM services WHERE id = $1', [publicService.id]);
-    assert.equal(persistedService.rows[0].document_number, '52998224725');
+    assert.equal((await request('/api/services', 'POST', {
+      ...service, serviceName: 'Outro serviço com o mesmo documento',
+    }, serviceCookie)).status, 409);
+    const persistedService = await control.query('SELECT document_number, owner_id FROM services WHERE id = $1', [publicService.id]);
+    assert.equal(persistedService.rows[0].document_number, '11144477735');
+    assert.equal(persistedService.rows[0].owner_id, serviceUserId);
     const company = await request('/api/services', 'POST', {
       ...service, providerType: 'company', documentNumber: '11222333000181',
       businessName: 'Empresa teste', startingPrice: undefined, socialLinks: undefined,
-    });
+    }, serviceCookie);
     assert.equal(company.status, 201);
     const companyService = publicServiceSchema.parse(await company.json());
     assert.equal(companyService.startingPrice, undefined);
     assert.equal(companyService.businessName, 'Empresa teste');
     assert.deepEqual(companyService.socialLinks, []);
     assert.equal('documentNumber' in companyService, false);
-    const localService = { legacyId: 'legacy-test-1', service: { ...service, serviceName: 'Serviço antigo', socialLinks: undefined } };
-    const imported = await request('/api/services/import', 'POST', { services: [localService] });
+    const localService = { legacyId: 'legacy-test-1', service: { ...oldService, socialLinks: undefined } };
+    assert.equal((await request('/api/services/import', 'POST', { services: [localService] })).status, 401);
+    const imported = await request('/api/services/import', 'POST', { services: [localService] }, serviceCookie);
     assert.equal(imported.status, 200);
     const importedServices = z.array(publicServiceSchema).parse(await imported.json());
     assert.equal(importedServices.length, 1);
     assert.equal(importedServices[0].id, oldServiceId);
     assert.deepEqual(importedServices[0].socialLinks, []);
     assert.equal('documentNumber' in importedServices[0], false);
-    const repeated = await request('/api/services/import', 'POST', { services: [localService] });
+    const repeated = await request('/api/services/import', 'POST', { services: [localService] }, serviceCookie);
     assert.equal(repeated.status, 200);
     const repeatedServices = z.array(publicServiceSchema).parse(await repeated.json());
     assert.equal(repeatedServices[0].id, importedServices[0].id);
     const invalidBatch = await request('/api/services/import', 'POST', {
       services: [{ ...localService, legacyId: 'uncommitted' }, { ...localService, service: { ...service, phone: '' } }],
-    });
+    }, serviceCookie);
     assert.equal(invalidBatch.status, 400);
     const allServices = z.array(publicServiceSchema).parse(await (await request('/api/services')).json());
     assert.equal(allServices.length, 3);
@@ -142,15 +164,39 @@ test('accounts and products enforce store ownership', async () => {
     assert.match(created.headers.get('set-cookie') ?? '', /HttpOnly/i);
     const { user } = z.object({
       user: z.object({
-        id: z.string(), storeId: z.string(), isAdmin: z.boolean(), storeLogo: z.string(),
+        id: z.string(), storeId: z.string(), storeApproved: z.boolean(), isAdmin: z.boolean(), storeLogo: z.string(),
         storeWebsite: z.string(), storeSocialLinks: z.array(z.string()),
       }),
     }).parse(await created.json());
     assert.ok(user.storeId);
+    assert.equal(user.storeApproved, false);
     assert.equal(user.isAdmin, false);
-    const serviceLinksPath = `/api/services/${importedServices[0].id}/social-links`;
-    assert.equal((await request(serviceLinksPath, 'PATCH', { socialLinks: [] }, cookie)).status, 403);
+    assert.equal((await request('/api/admin/stores/pending')).status, 401);
+    assert.equal((await request(`/api/admin/stores/${user.storeId}/approval`, 'PATCH', undefined, cookie)).status, 403);
+    assert.equal((await request('/api/products', 'POST', {}, cookie)).status, 403);
+    await assert.rejects(
+      control.query(
+        `INSERT INTO products (store_id, name, category, price, image, description)
+         VALUES ($1, 'Bloqueado', 'Roupas', 10, 'https://example.invalid/item.png', 'Pendente')`,
+        [user.storeId],
+      ),
+      { code: '23514' },
+    );
+    const hiddenPendingStore = z.array(z.object({ id: z.string() }))
+      .parse(await (await request('/api/stores')).json());
+    assert.equal(hiddenPendingStore.some((store) => store.id === user.storeId), false);
     await control.query('UPDATE users SET is_admin = true WHERE id = $1', [user.id]);
+    const pendingStores = z.array(z.object({ id: z.string(), ownerEmail: z.string() }))
+      .parse(await (await request('/api/admin/stores/pending', 'GET', undefined, cookie)).json());
+    assert.ok(pendingStores.some((store) => store.id === user.storeId));
+    assert.equal((await request(`/api/admin/stores/${user.storeId}/approval`, 'PATCH', undefined, cookie)).status, 200);
+    const approvedSession = z.object({ user: z.object({ storeApproved: z.boolean() }) })
+      .parse(await (await request('/api/auth/me', 'GET', undefined, cookie)).json());
+    assert.equal(approvedSession.user.storeApproved, true);
+    const serviceLinksPath = `/api/services/${importedServices[0].id}/social-links`;
+    assert.equal((await request(`/api/services/${publicService.id}`, 'PUT')).status, 401);
+    assert.equal((await request(`/api/services/${publicService.id}`, 'DELETE')).status, 401);
+    assert.equal((await request(serviceLinksPath, 'PATCH', { socialLinks: [] }, cookie)).status, 403);
     assert.equal((await request(serviceLinksPath, 'PATCH', { socialLinks: ['javascript:alert(1)'] }, cookie)).status, 400);
     assert.equal((await request(serviceLinksPath, 'PATCH', { socialLinks: Array(11).fill('https://social.example.invalid') }, cookie)).status, 400);
     assert.equal((await request('/api/services/invalid/social-links', 'PATCH', { socialLinks: [] }, cookie)).status, 400);
@@ -160,13 +206,34 @@ test('accounts and products enforce store ownership', async () => {
     const updatedService = publicServiceSchema.parse(await updatedSocialLinks.json());
     assert.deepEqual(updatedService.socialLinks, ['https://social.example.invalid/novo']);
     assert.equal('documentNumber' in updatedService, false);
-    const reimported = z.array(publicServiceSchema).parse(await (await request('/api/services/import', 'POST', { services: [localService] })).json());
+    const reimported = z.array(publicServiceSchema).parse(await (await request(
+      '/api/services/import', 'POST', { services: [localService] }, serviceCookie,
+    )).json());
     assert.equal(reimported[0].id, oldServiceId);
     assert.deepEqual(reimported[0].socialLinks, updatedService.socialLinks);
     assert.equal((await request(serviceLinksPath, 'PATCH', { socialLinks: [] }, cookie)).status, 200);
     const cleared = z.array(publicServiceSchema).parse(await (await request('/api/services')).json()).find((entry) => entry.id === oldServiceId);
     assert.deepEqual(cleared?.socialLinks, []);
+    const serviceEdit = {
+      providerType: 'individual', providerName: 'Prestador editado', serviceName: 'Reparo editado',
+      category: 'Tecnologia', description: 'Descrição atualizada', phone: '11988887777',
+      city: 'Outra cidade', startingPrice: 30, socialLinks: ['https://social.example.invalid/atualizado'],
+    };
+    const editedServiceResponse = await request(`/api/services/${publicService.id}`, 'PUT', serviceEdit, cookie);
+    assert.equal(editedServiceResponse.status, 200);
+    const editedService = publicServiceSchema.parse(await editedServiceResponse.json());
+    assert.equal(editedService.serviceName, serviceEdit.serviceName);
+    assert.equal(editedService.city, serviceEdit.city);
+    assert.deepEqual(editedService.socialLinks, serviceEdit.socialLinks);
+    assert.equal('documentNumber' in editedService, false);
+    assert.equal((await request(`/api/services/${publicService.id}`, 'PUT', {
+      ...serviceEdit, providerType: 'company',
+    }, cookie)).status, 400);
+    assert.equal((await request(`/api/services/${publicService.id}`, 'DELETE', undefined, cookie)).status, 204);
+    assert.equal((await request(`/api/services/${publicService.id}`, 'DELETE', undefined, cookie)).status, 404);
     await control.query('UPDATE users SET is_admin = false WHERE id = $1', [user.id]);
+    assert.equal((await request(`/api/services/${oldServiceId}`, 'PUT', serviceEdit, cookie)).status, 403);
+    assert.equal((await request(`/api/services/${oldServiceId}`, 'DELETE', undefined, cookie)).status, 403);
     assert.equal(user.storeLogo, registration.storeLogo);
     assert.equal(user.storeWebsite, registration.storeWebsite);
     assert.deepEqual(user.storeSocialLinks, registration.storeSocialLinks);
@@ -193,6 +260,9 @@ test('accounts and products enforce store ownership', async () => {
     assert.equal(updatedStore?.website, null);
     assert.deepEqual(updatedStore?.socialLinks, profile.storeSocialLinks);
     assert.equal((await request('/api/auth/register', 'POST', registration)).status, 409);
+    assert.equal((await request('/api/auth/register', 'POST', {
+      ...registration, email: 'duplicate-document@example.invalid',
+    })).status, 409);
 
     const product = {
       name: 'Produto teste', category: 'Pet Shop', price: 25, rating: 5, reviews: 999,
@@ -203,6 +273,7 @@ test('accounts and products enforce store ownership', async () => {
       packageLengthCm: 12.5, packageWidthCm: 8, packageHeightCm: 3,
     };
     assert.equal((await request('/api/products', 'POST', product)).status, 401);
+    assert.equal((await request('/api/products/1', 'PUT', product)).status, 401);
     assert.equal((await request('/api/products', 'POST', { ...product, gtin: undefined }, cookie)).status, 400);
     assert.equal((await request('/api/products', 'POST', { ...product, condition: undefined, gtin: undefined }, cookie)).status, 400);
     assert.equal((await request('/api/products', 'POST', { ...product, gtin: '7894900011518' }, cookie)).status, 400);
@@ -242,6 +313,28 @@ test('accounts and products enforce store ownership', async () => {
     assert.equal(saved.packageLengthCm, product.packageLengthCm);
     assert.equal(saved.packageWidthCm, product.packageWidthCm);
     assert.equal(saved.packageHeightCm, product.packageHeightCm);
+    assert.equal((await request(`/api/products/${saved.id}`, 'PUT', { ...product, name: 'Alteração por lojista' }, cookie)).status, 403);
+    await control.query('UPDATE users SET is_admin = true WHERE id = $1', [user.id]);
+    const productEdit = {
+      ...product, image: undefined, name: 'Produto editado', price: 30, discountPercent: 10,
+      storeId: user.storeId, rating: 4.7, reviews: 7,
+    };
+    const editedProductResponse = await request(`/api/products/${saved.id}`, 'PUT', productEdit, cookie);
+    assert.equal(editedProductResponse.status, 200);
+    const editedProduct = z.object({
+      id: z.number(), name: z.string(), storeId: z.string(), price: z.number(),
+      originalPrice: z.number(), discountPercent: z.number(), rating: z.number(),
+      reviews: z.number(), image: z.string(),
+    }).parse(await editedProductResponse.json());
+    assert.equal(editedProduct.name, productEdit.name);
+    assert.equal(editedProduct.storeId, user.storeId);
+    assert.equal(editedProduct.price, 27);
+    assert.equal(editedProduct.originalPrice, 30);
+    assert.equal(editedProduct.discountPercent, 10);
+    assert.equal(editedProduct.rating, productEdit.rating);
+    assert.equal(editedProduct.reviews, productEdit.reviews);
+    assert.equal(editedProduct.image, saved.image);
+    await control.query('UPDATE users SET is_admin = false WHERE id = $1', [user.id]);
     const uploadedImage = await request(saved.image);
     assert.equal(uploadedImage.status, 200);
     assert.equal(uploadedImage.headers.get('content-type'), 'image/png');
@@ -278,9 +371,12 @@ test('accounts and products enforce store ownership', async () => {
     const secondCookie = second.headers.get('set-cookie')?.split(';')[0];
     assert.ok(secondCookie);
     const secondUser = z.object({ user: z.object({
-      storeLogo: z.null(), storeWebsite: z.null(), storeSocialLinks: z.array(z.string()),
+      storeId: z.string(), storeApproved: z.boolean(), storeLogo: z.null(),
+      storeWebsite: z.null(), storeSocialLinks: z.array(z.string()),
     }) }).parse(await second.json()).user;
+    assert.equal(secondUser.storeApproved, false);
     assert.deepEqual(secondUser.storeSocialLinks, []);
+    assert.equal((await request('/api/products', 'POST', {}, secondCookie)).status, 403);
     assert.equal((await request('/api/stores/profile', 'PATCH', {
       storeLogo: null, storeWebsite: 'https://other.example.invalid', storeSocialLinks: [],
     }, secondCookie)).status, 200);
@@ -292,6 +388,15 @@ test('accounts and products enforce store ownership', async () => {
       user: z.object({ storeWebsite: z.null(), storeSocialLinks: z.array(z.string()) }),
     }).parse(await (await request('/api/auth/me', 'GET', undefined, cookie)).json());
     assert.deepEqual(unchanged.user.storeSocialLinks, profile.storeSocialLinks);
+    await control.query('UPDATE users SET is_admin = true WHERE id = $1', [user.id]);
+    assert.equal((await request(`/api/admin/stores/${secondUser.storeId}/approval`, 'PATCH', undefined, cookie)).status, 200);
+    const anotherMerchantProduct = await request('/api/products', 'POST', {
+      ...product, name: 'Produto de outra loja',
+    }, secondCookie);
+    assert.equal(anotherMerchantProduct.status, 201);
+    const anotherProductId = z.object({ id: z.number() }).parse(await anotherMerchantProduct.json()).id;
+    assert.equal((await request(`/api/products/${anotherProductId}`, 'DELETE', undefined, cookie)).status, 204);
+    await control.query('UPDATE users SET is_admin = false WHERE id = $1', [user.id]);
     assert.equal((await request(`/api/products/${saved.id}`, 'DELETE', undefined, secondCookie)).status, 404);
     assert.equal((await request(`/api/products/${saved.id}`, 'DELETE', undefined, cookie)).status, 204);
     assert.equal((await request('/api/auth/logout', 'POST', undefined, cookie)).status, 204);

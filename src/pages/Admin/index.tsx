@@ -5,12 +5,15 @@ import { useAuth } from '../../context/useAuth';
 import { useCatalog } from '../../context/useCatalog';
 import { errorMessage } from '../../api';
 import { demoStore } from '../../data/stores';
-import { ServiceSocialAdmin } from './ServiceSocialAdmin';
+import { ServiceAdmin } from './ServiceAdmin';
+import { StoreApprovals } from './StoreApprovals';
+import type { Product } from '../../data/products';
 
 export function Admin() {
   const { user, merchants } = useAuth();
-  const { products, addProduct, removeProduct } = useCatalog();
+  const { products, addProduct, updateProduct, removeProduct } = useCatalog();
   const [error, setError] = useState('');
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const hasAccess = Boolean(user?.isAdmin);
 
   const metrics = useMemo(
@@ -27,6 +30,8 @@ export function Admin() {
   }
 
   const handleRemove = async (productId: number) => {
+    const product = products.find((item) => item.id === productId);
+    if (!window.confirm(`Deseja excluir o produto "${product?.name ?? ''}"?`)) return;
     setError('');
     try {
       await removeProduct(productId);
@@ -42,6 +47,7 @@ export function Admin() {
         <p>Gerencie os produtos, campanhas e ofertas do marketplace.</p>
       </header>
       {error ? <p className="auth-error" role="alert">{error}</p> : null}
+      <StoreApprovals />
 
       <section className="admin-metrics">
         <div className="metric-card">
@@ -60,20 +66,30 @@ export function Admin() {
 
       <div className="admin-layout">
         <section className="admin-form-card">
-          <h2>Novo produto</h2>
+          <h2>{editingProduct ? 'Editar produto' : 'Novo produto'}</h2>
           <ProductForm
+            key={editingProduct?.id ?? 'new'}
             isAdmin
-            onSubmit={(product) => addProduct({
-              ...product,
-              storeId: merchants.find((store) => store.id !== demoStore.id)?.id,
-            })}
+            initialProduct={editingProduct ?? undefined}
+            onCancel={editingProduct ? () => setEditingProduct(null) : undefined}
+            onSubmit={async (product) => {
+              if (editingProduct) {
+                await updateProduct(editingProduct.id, { ...product, storeId: editingProduct.storeId });
+                setEditingProduct(null);
+                return;
+              }
+              await addProduct({
+                ...product,
+                storeId: merchants.find((store) => store.id !== demoStore.id)?.id,
+              });
+            }}
           />
         </section>
 
         <section className="admin-products">
           <h2>Produtos cadastrados</h2>
           <div className="admin-product-list">
-            {products.slice(0, 6).map((product) => (
+            {products.map((product) => (
               <article key={product.id} className="admin-product-item">
                 <img src={product.image} alt={product.name} />
                 <div>
@@ -81,6 +97,9 @@ export function Admin() {
                   <span>{product.category}</span>
                   <small>R$ {product.price}</small>
                 </div>
+                <button type="button" className="secondary-btn" onClick={() => setEditingProduct(product)}>
+                  Editar
+                </button>
                 <button type="button" className="remove-item" onClick={() => void handleRemove(product.id)}>
                   Remover
                 </button>
@@ -89,7 +108,7 @@ export function Admin() {
           </div>
         </section>
       </div>
-      <ServiceSocialAdmin />
+      <ServiceAdmin />
     </main>
   );
 }

@@ -2,22 +2,54 @@ import { useState, type FormEvent } from 'react';
 import { errorMessage } from '../api';
 import { isValidGtin } from '../../shared/gtin';
 import { discountedPrice } from '../../shared/productPrice';
-import { parseProductCategory, productCategories, type NewProduct } from '../data/products';
+import { parseProductCategory, productCategories, type NewProduct, type Product } from '../data/products';
 
 const initialForm = {
-  name: '', category: 'Roupas', price: '', discount: '', gtin: '',
+  name: '', category: 'Roupas', price: '', discount: '', originalPrice: '', gtin: '',
   brand: '', model: '', color: '', size: '', weightKg: '', packageLengthCm: '',
   packageWidthCm: '', packageHeightCm: '', description: '', stock: '10', sku: '',
   warrantyMonths: '12', deliveryDays: '3', freeShipping: false,
-  rating: '4.8', reviews: '0', badge: '',
+  rating: '4.8', reviews: '0', badge: '', featured: true,
 };
 
-export function ProductForm({ isAdmin, onSubmit }: {
+function createInitialForm(product?: Product) {
+  if (!product) return initialForm;
+  return {
+    name: product.name,
+    category: product.category,
+    price: String(product.discountPercent ? product.originalPrice ?? product.price : product.price),
+    discount: product.discountPercent ? String(product.discountPercent) : '',
+    originalPrice: !product.discountPercent && product.originalPrice !== undefined ? String(product.originalPrice) : '',
+    gtin: product.gtin ?? '',
+    brand: product.brand ?? '',
+    model: product.model ?? '',
+    color: product.color ?? '',
+    size: product.size ?? '',
+    weightKg: product.weightKg === undefined ? '' : String(product.weightKg),
+    packageLengthCm: product.packageLengthCm === undefined ? '' : String(product.packageLengthCm),
+    packageWidthCm: product.packageWidthCm === undefined ? '' : String(product.packageWidthCm),
+    packageHeightCm: product.packageHeightCm === undefined ? '' : String(product.packageHeightCm),
+    description: product.description,
+    stock: String(product.stock ?? 10),
+    sku: product.sku ?? '',
+    warrantyMonths: String(product.warrantyMonths ?? 12),
+    deliveryDays: String(product.deliveryDays ?? 3),
+    freeShipping: product.freeShipping ?? false,
+    rating: String(product.rating),
+    reviews: String(product.reviews),
+    badge: product.badge ?? '',
+    featured: product.featured ?? false,
+  };
+}
+
+export function ProductForm({ isAdmin, initialProduct, onSubmit, onCancel }: {
   isAdmin: boolean;
+  initialProduct?: Product;
   onSubmit: (product: NewProduct) => Promise<void>;
+  onCancel?: () => void;
 }) {
-  const [form, setForm] = useState(initialForm);
-  const [condition, setCondition] = useState<'novo' | 'usado' | 'recondicionado'>('novo');
+  const [form, setForm] = useState(() => createInitialForm(initialProduct));
+  const [condition, setCondition] = useState<NonNullable<Product['condition']>>(initialProduct?.condition ?? 'novo');
   const [image, setImage] = useState('');
   const [imageKey, setImageKey] = useState(0);
   const [imageLoading, setImageLoading] = useState(false);
@@ -30,7 +62,7 @@ export function ProductForm({ isAdmin, onSubmit }: {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
-    if (!image) {
+    if (!image && !initialProduct) {
       setError('Selecione uma imagem do produto.');
       return;
     }
@@ -42,22 +74,24 @@ export function ProductForm({ isAdmin, onSubmit }: {
     const product: NewProduct = {
       name: form.name.trim(), category: parseProductCategory(form.category),
       price: Number(form.price), discountPercent: optionalNumber(form.discount),
+      originalPrice: form.discount ? undefined : optionalNumber(form.originalPrice),
       condition,
       gtin: condition === 'novo' ? form.gtin.trim() : undefined,
-      image, brand: form.brand.trim() || undefined, model: form.model.trim() || undefined,
+      image: image || initialProduct?.image || '', brand: form.brand.trim() || undefined, model: form.model.trim() || undefined,
       color: form.color.trim() || undefined, size: form.size.trim() || undefined,
       weightKg: optionalNumber(form.weightKg), packageLengthCm: optionalNumber(form.packageLengthCm),
       packageWidthCm: optionalNumber(form.packageWidthCm), packageHeightCm: optionalNumber(form.packageHeightCm),
       stock: Number(form.stock), sku: form.sku.trim() || undefined,
       warrantyMonths: Number(form.warrantyMonths), deliveryDays: Number(form.deliveryDays),
       freeShipping: form.freeShipping, description: form.description.trim() || 'Produto cadastrado pela loja.',
+      featured: form.featured,
       rating: isAdmin ? Number(form.rating) : 0, reviews: isAdmin ? Number(form.reviews) : 0,
-      badge: isAdmin ? form.badge.trim() || undefined : undefined, featured: true,
+      badge: isAdmin ? form.badge.trim() || undefined : undefined,
     };
     setBusy(true);
     try {
       await onSubmit(product);
-      setForm(initialForm);
+      setForm(createInitialForm());
       setCondition('novo');
       setImage('');
       setImageKey((current) => current + 1);
@@ -80,7 +114,7 @@ export function ProductForm({ isAdmin, onSubmit }: {
           <input value={form.name} maxLength={200} onChange={(event) => setField('name', event.target.value)} required />
         </label>
         <label>Imagem do produto
-          <input key={imageKey} type="file" accept="image/png,image/jpeg,image/webp,image/gif" required
+          <input key={imageKey} type="file" accept="image/png,image/jpeg,image/webp,image/gif" required={!initialProduct}
             onChange={(event) => {
               const input = event.currentTarget;
               const file = input.files?.[0];
@@ -108,9 +142,11 @@ export function ProductForm({ isAdmin, onSubmit }: {
               reader.readAsDataURL(file);
             }}
           />
-          <small>PNG, JPEG, WebP ou GIF, até 2 MB.</small>
+          <small>{initialProduct ? 'Selecione uma nova imagem para substituir a atual. ' : ''}PNG, JPEG, WebP ou GIF, até 2 MB.</small>
         </label>
-        {image ? <img className="product-upload-preview" src={image} alt="Prévia da imagem do produto" /> : null}
+        {image || initialProduct ? (
+          <img className="product-upload-preview" src={image || initialProduct?.image} alt="Prévia da imagem do produto" />
+        ) : null}
         <div className="two-column">
           <label>Categoria
             <select value={form.category} onChange={(event) => setField('category', event.target.value)}>
@@ -123,6 +159,7 @@ export function ProductForm({ isAdmin, onSubmit }: {
               if (value === 'novo' || value === 'usado' || value === 'recondicionado') setCondition(value);
             }}>
               <option value="novo">Novo</option>
+              <option value="seminovo">Seminovo</option>
               <option value="usado">Usado</option>
               <option value="recondicionado">Recondicionado</option>
             </select>
@@ -139,8 +176,18 @@ export function ProductForm({ isAdmin, onSubmit }: {
             <input type="number" min="0" max="9999999999" step="0.01" value={form.price} onChange={(event) => setField('price', event.target.value)} required />
           </label>
           <label>Desconto (%)
-            <input type="number" min="0" max="100" step="0.01" value={form.discount} onChange={(event) => setField('discount', event.target.value)} />
+            <input type="number" min="0" max="100" step="0.01" value={form.discount}
+              onChange={(event) => {
+                const value = event.target.value;
+                setForm((current) => ({ ...current, discount: value, originalPrice: value ? '' : current.originalPrice }));
+              }} />
           </label>
+          {isAdmin && !form.discount ? (
+            <label>Preço original (opcional)
+              <input type="number" min="0" max="9999999999" step="0.01" value={form.originalPrice}
+                onChange={(event) => setField('originalPrice', event.target.value)} />
+            </label>
+          ) : null}
         </div>
         {showFinalPrice ? <p>Preço após desconto: {discountedPrice(price, discount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p> : null}
         <div className="two-column">
@@ -196,6 +243,10 @@ export function ProductForm({ isAdmin, onSubmit }: {
         </label>
         {isAdmin ? (
           <>
+            <label>
+              Produto em destaque
+              <input type="checkbox" checked={form.featured} onChange={(event) => setField('featured', event.target.checked)} />
+            </label>
             <div className="two-column">
               <label>Avaliação
                 <input type="number" min="0" max="5" step="0.1" value={form.rating} onChange={(event) => setField('rating', event.target.value)} required />
@@ -214,7 +265,12 @@ export function ProductForm({ isAdmin, onSubmit }: {
         </label>
       </fieldset>
       {error ? <p className="auth-error" role="alert">{error}</p> : null}
-      <button type="submit" className="primary-btn" disabled={busy || imageLoading}>Publicar produto</button>
+      <div className="product-form-actions">
+        <button type="submit" className="primary-btn" disabled={busy || imageLoading}>
+          {initialProduct ? 'Salvar alterações' : 'Publicar produto'}
+        </button>
+        {onCancel ? <button type="button" className="secondary-btn" onClick={onCancel} disabled={busy}>Cancelar</button> : null}
+      </div>
     </form>
   );
 }

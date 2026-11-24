@@ -47,7 +47,7 @@ export type Product = {
   soldCount?: number;
 };
 
-export type NewProduct = Omit<Product, 'id' | 'storeName' | 'soldCount' | 'originalPrice' | 'isBazaar'>;
+export type NewProduct = Omit<Product, 'id' | 'storeName' | 'soldCount' | 'isBazaar'>;
 
 export const heroVisual = heroImage;
 

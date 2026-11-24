@@ -23,7 +23,7 @@ A proposta do projeto é demonstrar uma experiência de compra realista para um 
 - Fluxo de checkout com resumo do pedido
 - Autenticação por sessão para clientes, lojistas e administradores
 - Página de conta do cliente
-- Área administrativa para cadastrar novos produtos
+- Área administrativa para cadastrar, editar e excluir produtos e serviços
 - Tema claro e escuro com refinamento visual final
 
 ## Stack
@@ -57,13 +57,13 @@ npm run dev
 
 O frontend usa a porta 4173 e encaminha `/api` para a API na porta 3001. Se mudar `PORT` no `.env`, ajuste também `API_PROXY_TARGET` para a URL local correspondente. A API precisa estar disponível para carregar contas, lojas e catálogo.
 
-As migrações em `server/migrations` são aplicadas uma vez, em ordem de nome. Para mudanças futuras no banco, adicione uma nova migração numerada; não altere as já aplicadas. O seed insere a loja e os produtos de demonstração; execute-o com a API parada.
+As migrações em `server/migrations` são aplicadas uma vez, em ordem de nome. Para mudanças futuras no banco, adicione uma nova migração numerada; não altere as já aplicadas. A migração 007 exige CPF/CNPJ únicos dentro de cada tabela; se já houver duplicidades em contas ou serviços, resolva-as antes de migrar. O seed insere a loja e os produtos de demonstração; execute-o com a API parada.
 
 No cadastro e no painel do lojista, é possível informar um logo (PNG, JPEG, WebP ou GIF de até 256 KB), site e até 10 links de redes sociais. Essas informações são opcionais e aparecem no catálogo de lojistas.
 
-No cadastro de produtos, envie uma imagem (PNG, JPEG, WebP ou GIF de até 2 MB), informe o preço antes do desconto percentual e selecione a condição. Para produtos novos é obrigatório um código universal válido (GTIN-8, GTIN-12, GTIN-13 ou GTIN-14). Marca, modelo, cor, tamanho, peso e dimensões da embalagem são opcionais.
+No cadastro de produtos, envie uma imagem (PNG, JPEG, WebP ou GIF de até 2 MB), informe o preço antes do desconto percentual e selecione a condição. Para produtos novos é obrigatório um código universal válido (GTIN-8, GTIN-12, GTIN-13 ou GTIN-14). Marca, modelo, cor, tamanho, peso e dimensões da embalagem são opcionais. Lojas novas precisam de aprovação administrativa antes que o lojista possa publicar produtos; lojas existentes permanecem aprovadas na atualização.
 
-Serviços publicados são armazenados no PostgreSQL e exibidos no catálogo público com nome, cidade, telefone e até 10 links opcionais de redes sociais; CPF e CNPJ não são exibidos. Administradores podem editar os links dos serviços no painel administrativo. Serviços antigos salvos apenas no navegador podem ser importados manualmente na página de serviços, após confirmação; os dados locais não são apagados.
+O cadastro e a importação de serviços exigem login. CPF/CNPJ são únicos separadamente entre contas e entre serviços; a mesma identificação pode aparecer uma vez em cada tipo. Serviços publicados são armazenados no PostgreSQL e exibidos no catálogo público com nome, cidade, telefone e até 10 links opcionais de redes sociais; CPF e CNPJ não são exibidos. Administradores podem editar ou excluir serviços no painel administrativo; os dados de CPF/CNPJ são preservados e não aparecem no painel. Serviços antigos salvos apenas no navegador podem ser importados manualmente na página de serviços, após confirmação; os dados locais não são apagados.
 
 ### Criar um administrador local
 

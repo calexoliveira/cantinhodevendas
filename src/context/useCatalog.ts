@@ -4,6 +4,7 @@ import type { NewProduct, Product } from '../data/products';
 export type CatalogContextValue = {
   products: Product[];
   addProduct: (product: NewProduct) => Promise<void>;
+  updateProduct: (id: number, product: NewProduct) => Promise<void>;
   removeProduct: (id: number) => Promise<void>;
 };
 

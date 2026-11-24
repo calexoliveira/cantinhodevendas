@@ -18,7 +18,8 @@ const client = await pool.connect();
 try {
   await client.query('BEGIN');
   await client.query(
-    'INSERT INTO stores (id, name) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING',
+    `INSERT INTO stores (id, name, is_approved) VALUES ($1, $2, true)
+     ON CONFLICT (id) DO UPDATE SET is_approved = true`,
     ['demo-store', 'Cantinho de Vendas — Loja de demonstração'],
   );
   for (const product of products) {

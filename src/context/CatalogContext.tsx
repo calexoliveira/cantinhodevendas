@@ -60,14 +60,25 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
     setProducts((current) => current ? [created, ...current] : [created]);
   }, []);
 
+  const updateProduct = useCallback(async (id: number, product: NewProduct) => {
+    const currentProduct = products?.find((item) => item.id === id);
+    const { image, ...fields } = product;
+    const body = currentProduct?.image === image ? fields : product;
+    const updated = normalizeProduct(await apiRequest<ApiProduct>(`/products/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }));
+    setProducts((current) => current?.map((item) => item.id === id ? updated : item) ?? null);
+  }, [products]);
+
   const removeProduct = useCallback(async (id: number) => {
     await apiRequest<void>(`/products/${id}`, { method: 'DELETE' });
     setProducts((current) => current?.filter((product) => product.id !== id) ?? null);
   }, []);
 
   const value = useMemo<CatalogContextValue>(
-    () => ({ products: products ?? [], addProduct, removeProduct }),
-    [products, addProduct, removeProduct],
+    () => ({ products: products ?? [], addProduct, updateProduct, removeProduct }),
+    [products, addProduct, updateProduct, removeProduct],
   );
 
   if (error) {

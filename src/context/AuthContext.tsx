@@ -15,6 +15,7 @@ export type AuthUser = {
   documentType?: BrazilianDocumentType | null;
   phone?: string | null;
   storeId?: string | null;
+  storeApproved?: boolean | null;
   storeName?: string | null;
   businessAddress?: string | null;
   storeLogo?: string | null;
@@ -103,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     setUser(result.user);
     const { storeId, storeName, businessAddress, storeLogo, storeWebsite, storeSocialLinks } = result.user;
-    if (storeId && storeName) {
+    if (storeId && storeName && result.user.storeApproved !== false) {
       setMerchants((current) => [...current, {
         id: storeId, name: storeName, address: businessAddress ?? '', logo: storeLogo ?? null,
         website: storeWebsite ?? null, socialLinks: storeSocialLinks ?? [],
