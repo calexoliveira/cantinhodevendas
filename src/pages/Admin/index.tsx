@@ -6,6 +6,7 @@ import { useCatalog } from '../../context/useCatalog';
 import { errorMessage } from '../../api';
 import { demoStore } from '../../data/stores';
 import { ServiceAdmin } from './ServiceAdmin';
+import { ServiceApprovals } from './ServiceApprovals';
 import { StoreApprovals } from './StoreApprovals';
 import type { Product } from '../../data/products';
 
@@ -48,6 +49,7 @@ export function Admin() {
       </header>
       {error ? <p className="auth-error" role="alert">{error}</p> : null}
       <StoreApprovals />
+      <ServiceApprovals />
 
       <section className="admin-metrics">
         <div className="metric-card">

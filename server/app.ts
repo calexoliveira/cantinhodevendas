@@ -229,7 +229,7 @@ function serviceValues(service: ServiceRegistration, legacyKey: string | null, o
 }
 
 app.get('/api/services', asyncRoute(async (_req, res) => {
-  const result = await pool.query<ServiceRow>(`${serviceQuery} ORDER BY created_at DESC, id DESC`);
+  const result = await pool.query<ServiceRow>(`${serviceQuery} WHERE is_approved ORDER BY created_at DESC, id DESC`);
   res.json(result.rows.map(publicService));
 }));
 
@@ -246,7 +246,7 @@ app.post('/api/services', serviceLimit, asyncRoute(async (req, res) => {
   }
   const inserted = await pool.query<{ id: string }>(insertServiceSql, serviceValues(parsed.data, null, user.id));
   const result = await pool.query<ServiceRow>(`${serviceQuery} WHERE id = $1`, [inserted.rows[0].id]);
-  res.status(201).json(publicService(result.rows[0]));
+  res.status(202).json(publicService(result.rows[0]));
 }));
 
 const importServicesSchema = z.object({
@@ -284,7 +284,62 @@ app.post('/api/services/import', serviceLimit, asyncRoute(async (req, res) => {
   } finally {
     client.release();
   }
-  res.json(services);
+  res.status(202).json(services);
+}));
+
+app.get('/api/admin/services/pending', asyncRoute(async (req, res) => {
+  const user = await authenticatedUser(req);
+  if (!user) {
+    res.status(401).json({ error: 'Faça login para continuar.' });
+    return;
+  }
+  if (!user.isAdmin) {
+    res.status(403).json({ error: 'Apenas administradores podem revisar serviços.' });
+    return;
+  }
+  const result = await pool.query<ServiceRow & { ownerName: string; ownerEmail: string }>(
+    `SELECT s.id, s.provider_type AS "providerType", s.provider_name AS "providerName",
+       s.business_name AS "businessName", s.service_name AS "serviceName", s.category, s.description,
+       s.phone, s.city, s.starting_price::float8 AS "startingPrice", s.social_links AS "socialLinks",
+       u.name AS "ownerName", u.email AS "ownerEmail"
+     FROM services s JOIN users u ON u.id = s.owner_id
+     WHERE NOT s.is_approved ORDER BY s.created_at, s.id`,
+  );
+  res.json(result.rows.map((row) => ({ ...publicService(row), ownerName: row.ownerName, ownerEmail: row.ownerEmail })));
+}));
+
+app.patch('/api/admin/services/:id/approval', asyncRoute(async (req, res) => {
+  const user = await authenticatedUser(req);
+  if (!user) {
+    res.status(401).json({ error: 'Faça login para continuar.' });
+    return;
+  }
+  if (!user.isAdmin) {
+    res.status(403).json({ error: 'Apenas administradores podem aprovar serviços.' });
+    return;
+  }
+  const id = z.string().uuid().safeParse(req.params.id);
+  if (!id.success) {
+    res.status(400).json({ error: 'Serviço inválido.' });
+    return;
+  }
+  const approved = await pool.query(
+    'UPDATE services SET is_approved = true WHERE id = $1 AND NOT is_approved RETURNING id',
+    [id.data],
+  );
+  if (!approved.rowCount) {
+    const existing = await pool.query<{ is_approved: boolean }>(
+      'SELECT is_approved FROM services WHERE id = $1',
+      [id.data],
+    );
+    if (!existing.rowCount) {
+      res.status(404).json({ error: 'Serviço não encontrado.' });
+      return;
+    }
+    res.status(409).json({ error: 'O serviço já foi aprovado.' });
+    return;
+  }
+  res.json({ id: approved.rows[0].id, isApproved: true });
 }));
 
 app.patch('/api/services/:id/social-links', asyncRoute(async (req, res) => {

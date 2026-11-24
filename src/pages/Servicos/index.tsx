@@ -77,7 +77,7 @@ const initialForm: ServiceForm = {
 export function Servicos() {
   const [form, setForm] = useState(initialForm);
   const { user } = useAuth();
-  const { services: registeredServices, error: loadError, loading, addServices, retry } = useServices();
+  const { services: registeredServices, error: loadError, loading, retry } = useServices();
   const [legacyServices, setLegacyServices] = useState<{ legacyId: string; service: ServiceRegistration }[]>([]);
   const [legacyError, setLegacyError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -147,13 +147,12 @@ export function Servicos() {
     }
     setBusy(true);
     try {
-      const saved = await apiRequest<ServiceListing>('/services', {
+      await apiRequest<ServiceListing>('/services', {
         method: 'POST',
         body: JSON.stringify(parsed.data),
       });
-      addServices([saved]);
       setForm(initialForm);
-      setSuccessMessage('Serviço cadastrado e publicado no catálogo.');
+      setSuccessMessage('Serviço enviado para análise. Ele será publicado no catálogo após a aprovação do administrador.');
     } catch (reason) {
       setError(errorMessage(reason));
     } finally {
@@ -162,16 +161,15 @@ export function Servicos() {
   };
 
   const handleImport = async () => {
-    if (!window.confirm('Os serviços locais serão publicados para todos, incluindo nome, cidade e telefone. CPF e CNPJ não serão exibidos. Os dados locais serão mantidos. Deseja continuar?')) return;
+    if (!window.confirm('Os serviços locais serão enviados para aprovação, incluindo nome, cidade e telefone. CPF e CNPJ não serão exibidos. Os dados locais serão mantidos. Deseja continuar?')) return;
     setError('');
     setSuccessMessage('');
     setBusy(true);
     try {
       for (let index = 0; index < legacyServices.length; index += 100) {
-        const imported = await importLegacyServices(legacyServices.slice(index, index + 100));
-        addServices(imported);
+        await importLegacyServices(legacyServices.slice(index, index + 100));
       }
-      setSuccessMessage('Serviços locais válidos importados. Os dados originais continuam neste navegador.');
+      setSuccessMessage('Serviços locais válidos enviados para análise. Os dados originais continuam neste navegador.');
     } catch (reason) {
       setError(`Não foi possível concluir a importação: ${errorMessage(reason)} Os dados locais foram preservados; você pode tentar novamente.`);
     } finally {
@@ -239,7 +237,7 @@ export function Servicos() {
         <div className="services-section-heading">
           <span className="eyebrow">Para profissionais e empresas</span>
           <h2>Cadastre seu serviço</h2>
-          <p>Divulgue seu trabalho como pessoa física ou jurídica e apareça no catálogo.</p>
+          <p>Divulgue seu trabalho como pessoa física ou jurídica. O anúncio será exibido no catálogo após a aprovação do administrador.</p>
           <p>Nome, cidade e telefone serão públicos. CPF ou CNPJ não aparecem no catálogo.</p>
         </div>
 

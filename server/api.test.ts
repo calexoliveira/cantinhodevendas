@@ -47,6 +47,7 @@ test('accounts and products enforce store ownership', async () => {
     );
     await control.query(await readFile(new URL('./migrations/006_service_social_links.sql', import.meta.url), 'utf8'));
     await control.query(await readFile(new URL('./migrations/007_authorization_and_documents.sql', import.meta.url), 'utf8'));
+    await control.query(await readFile(new URL('./migrations/008_service_approval.sql', import.meta.url), 'utf8'));
     const { app } = await import('./app');
     testPool = (await import('./db')).pool;
     server = app.listen(0, '127.0.0.1');
@@ -88,6 +89,8 @@ test('accounts and products enforce store ownership', async () => {
       socialLinks: [' https://social.example.invalid/um ', 'https://social.example.invalid/dois'],
     };
     assert.equal((await request('/api/services', 'POST', service)).status, 401);
+    assert.equal((await request('/api/admin/services/pending')).status, 401);
+    assert.equal((await request('/api/admin/services/pending', 'GET', undefined, serviceCookie)).status, 403);
     assert.equal((await request('/api/services', 'POST', { ...service, documentNumber: '123' }, serviceCookie)).status, 400);
     assert.equal((await request('/api/services', 'POST', { ...service, providerType: 'company' }, serviceCookie)).status, 400);
     assert.equal((await request('/api/services', 'POST', { ...service, startingPrice: -1 }, serviceCookie)).status, 400);
@@ -97,13 +100,16 @@ test('accounts and products enforce store ownership', async () => {
       id: z.string(), serviceName: z.string(), startingPrice: z.number().optional(), socialLinks: z.array(z.string()),
     }).passthrough();
     const createdService = await request('/api/services', 'POST', service, serviceCookie);
-    assert.equal(createdService.status, 201);
+    assert.equal(createdService.status, 202);
     const publicService = publicServiceSchema.parse(await createdService.json());
     assert.equal(publicService.serviceName, service.serviceName);
     assert.equal(publicService.startingPrice, 12.5);
     assert.deepEqual(publicService.socialLinks, ['https://social.example.invalid/um', 'https://social.example.invalid/dois']);
     assert.equal('documentNumber' in publicService, false);
     assert.equal('legacyKey' in publicService, false);
+    assert.equal((await request(
+      `/api/admin/services/${publicService.id}/approval`, 'PATCH', undefined, serviceCookie,
+    )).status, 403);
     assert.equal((await request('/api/services', 'POST', {
       ...service, serviceName: 'Outro serviço com o mesmo documento',
     }, serviceCookie)).status, 409);
@@ -114,7 +120,7 @@ test('accounts and products enforce store ownership', async () => {
       ...service, providerType: 'company', documentNumber: '11222333000181',
       businessName: 'Empresa teste', startingPrice: undefined, socialLinks: undefined,
     }, serviceCookie);
-    assert.equal(company.status, 201);
+    assert.equal(company.status, 202);
     const companyService = publicServiceSchema.parse(await company.json());
     assert.equal(companyService.startingPrice, undefined);
     assert.equal(companyService.businessName, 'Empresa teste');
@@ -123,14 +129,14 @@ test('accounts and products enforce store ownership', async () => {
     const localService = { legacyId: 'legacy-test-1', service: { ...oldService, socialLinks: undefined } };
     assert.equal((await request('/api/services/import', 'POST', { services: [localService] })).status, 401);
     const imported = await request('/api/services/import', 'POST', { services: [localService] }, serviceCookie);
-    assert.equal(imported.status, 200);
+    assert.equal(imported.status, 202);
     const importedServices = z.array(publicServiceSchema).parse(await imported.json());
     assert.equal(importedServices.length, 1);
     assert.equal(importedServices[0].id, oldServiceId);
     assert.deepEqual(importedServices[0].socialLinks, []);
     assert.equal('documentNumber' in importedServices[0], false);
     const repeated = await request('/api/services/import', 'POST', { services: [localService] }, serviceCookie);
-    assert.equal(repeated.status, 200);
+    assert.equal(repeated.status, 202);
     const repeatedServices = z.array(publicServiceSchema).parse(await repeated.json());
     assert.equal(repeatedServices[0].id, importedServices[0].id);
     const invalidBatch = await request('/api/services/import', 'POST', {
@@ -138,7 +144,7 @@ test('accounts and products enforce store ownership', async () => {
     }, serviceCookie);
     assert.equal(invalidBatch.status, 400);
     const allServices = z.array(publicServiceSchema).parse(await (await request('/api/services')).json());
-    assert.equal(allServices.length, 3);
+    assert.equal(allServices.length, 1);
     assert.ok(allServices.every((entry: object) => !('documentNumber' in entry) && !('legacyKey' in entry)));
     assert.equal((await request(`/api/services/${publicService.id}/social-links`, 'PATCH', { socialLinks: [] })).status, 401);
 
@@ -186,6 +192,16 @@ test('accounts and products enforce store ownership', async () => {
       .parse(await (await request('/api/stores')).json());
     assert.equal(hiddenPendingStore.some((store) => store.id === user.storeId), false);
     await control.query('UPDATE users SET is_admin = true WHERE id = $1', [user.id]);
+    const pendingServices = z.array(z.object({ id: z.string(), ownerEmail: z.string() }))
+      .parse(await (await request('/api/admin/services/pending', 'GET', undefined, cookie)).json());
+    assert.equal(pendingServices.length, 2);
+    assert.ok(pendingServices.every((entry) => entry.ownerEmail === serviceUser.email));
+    assert.equal((await request(`/api/admin/services/${publicService.id}/approval`, 'PATCH', undefined, cookie)).status, 200);
+    assert.equal((await request(`/api/admin/services/${companyService.id}/approval`, 'PATCH', undefined, cookie)).status, 200);
+    assert.equal((await request(`/api/admin/services/${publicService.id}/approval`, 'PATCH', undefined, cookie)).status, 409);
+    assert.equal((await request('/api/admin/services/invalid/approval', 'PATCH', undefined, cookie)).status, 400);
+    const approvedServices = z.array(publicServiceSchema).parse(await (await request('/api/services')).json());
+    assert.equal(approvedServices.length, 3);
     const pendingStores = z.array(z.object({ id: z.string(), ownerEmail: z.string() }))
       .parse(await (await request('/api/admin/stores/pending', 'GET', undefined, cookie)).json());
     assert.ok(pendingStores.some((store) => store.id === user.storeId));
